@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ミミのマッドドクター・スタジアム — 新台</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="./visual.css">
+</head>
+<body class="stadium-page">
+  <main class="stadium-cabinet" id="stadiumCabinet" aria-label="マッドドクター・スタジアム スロット">
+    <header class="stadium-header">
+      <nav class="cabinet-return-links" aria-label="台から戻る"><a href="./index-v5.html?view=machines">← 台選択</a><a href="./index-v5.html?view=home" id="stadiumHome">島へ戻る</a></nav>
+      <h1><span>ミミの</span> マッドドクター・スタジアム</h1>
+      <button id="stadiumHelp" type="button">遊び方</button>
+      <button id="stadiumSound" type="button" aria-pressed="false">SOUND OFF</button>
+    </header>
+    <section class="stadium-theater" aria-label="野球演出">
+      <img id="stadiumField" class="stadium-field" src="./assets/stadium/bg_stadium_shirogane.png" alt="ネオ明治の野球場">
+      <div class="stadium-field-shade"></div>
+      <div class="stadium-match"><span id="stadiumRound">第1戦 / 4</span><strong id="stadiumOpponent"></strong><small id="stadiumStyle"></small></div>
+      <div class="stadium-score"><span>ヒノモト・エクスプロージョンズ</span><div><b id="stadiumRuns">0</b><em>得点 / 目標 <strong id="stadiumTarget">3</strong></em></div><small id="stadiumOuts">0 OUT</small><p id="stadiumRemaining"></p></div>
+      <img class="stadium-mimi" src="./assets/stadium/mimi_doctor.png" alt="白衣のミミ">
+      <img id="stadiumBatter" class="stadium-batter" src="./assets/stadium/player_08.png" alt="モチカネ・鈴木">
+      <div class="stadium-batter-name"><span id="stadiumPosition"></span><strong id="stadiumName"></strong></div>
+      <div class="stadium-diamond" aria-label="走者"><i data-base="2">二塁</i><i data-base="3">三塁</i><i data-base="1">一塁</i><b>本塁</b></div>
+      <div class="stadium-cinema" id="stadiumCinema" hidden><img id="stadiumBattingArt" alt=""><div class="stadium-hit-copy"><span id="stadiumHitActor"></span><strong id="stadiumHit"></strong><span id="stadiumHitRole"></span><b id="stadiumHitRuns"></b><p id="stadiumHitPayout"></p><small id="stadiumHitNext"></small></div></div>
+      <div class="stadium-reel-cue" id="stadiumReelCue" role="status" hidden><img id="stadiumCueSymbol" alt=""><strong>あとひとつ</strong><span id="stadiumCueText"></span></div>
+      <div class="stadium-armed" id="stadiumArmed" hidden><img id="stadiumArmedArt" alt=""><div><span>改造スタンバイ</span><strong id="stadiumArmedText"></strong></div></div>
+      <img class="stadium-surgery-art" id="stadiumSurgeryArt" src="./assets/stadium/generated-v1/surgery-stage.png" alt="改造装置を操るミミ" hidden>
+      <div class="stadium-dialogue" role="status" aria-live="polite"><b id="stadiumSpeaker">ミミ</b><p id="stadiumLine">いちばん上まで、改造していこう。</p></div>
+      <div class="stadium-command" id="stadiumCommand" hidden><span id="stadiumCommandLabel"></span><h2 id="stadiumCommandTitle"></h2><p id="stadiumCommandText"></p><div class="stadium-choices" id="stadiumChoices"></div></div>
+      <section class="stadium-victory" id="stadiumVictory" aria-label="勝利のウイニングラン" hidden>
+        <img class="stadium-victory-art" src="./assets/stadium/generated-v1/victory-stage.png" alt="勝利の球場で拳を上げるミミ">
+        <div class="stadium-victory-copy">
+          <div class="stadium-victory-top"><span id="stadiumVictoryLabel"></span><ol id="stadiumVictoryRounds" aria-label="球団突破"></ol></div>
+          <h2 id="stadiumVictoryTitle">WINNING RUN</h2><p class="stadium-victory-subtitle" id="stadiumVictorySubtitle"></p>
+          <div class="stadium-victory-values"><div><span id="stadiumVictoryCountLabel">残り</span><strong id="stadiumVictoryCount">10</strong><small id="stadiumVictoryCountUnit">G</small></div><div><span id="stadiumVictoryWinLabel">獲得配当</span><strong id="stadiumVictoryWin">+0</strong><small id="stadiumVictoryWinUnit">CREDIT</small></div></div>
+          <div class="stadium-bonus-track" id="stadiumBonusTrack" role="progressbar" aria-label="無料ボーナス消化数" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0"></div>
+          <p class="stadium-bonus-message" id="stadiumBonusMessage" role="status" aria-live="polite"></p>
+        </div>
+      </section>
+      <section class="stadium-feature" id="stadiumFeature" aria-label="改造演出" hidden><img class="stadium-feature-backdrop" id="stadiumFeatureBackdrop" alt=""><img class="stadium-feature-art" id="stadiumFeatureArt" alt=""><div class="stadium-feature-copy" role="status"><span id="stadiumFeatureLabel"></span><h2 id="stadiumFeatureTitle"></h2><p id="stadiumFeatureText"></p><small class="stadium-feature-rule" id="stadiumFeatureRule" hidden></small><div class="stadium-feature-outcome" id="stadiumFeatureOutcome" hidden><b id="stadiumFeatureRuns"></b><span id="stadiumFeatureGoal"></span></div><strong id="stadiumFeaturePayout"></strong><button type="button" id="stadiumFeatureContinue">PUSHで続ける</button></div></section>
+    </section>
+    <section class="stadium-deck" aria-label="リールと操作盤">
+      <aside class="stadium-ledger"><span>CREDIT</span><strong id="stadiumCredit">1,200</strong><div><span>BET</span><b id="stadiumBet">30</b></div><div><span>WIN</span><b id="stadiumWin">0</b></div><small id="stadiumSave" role="status">新台専用セーブ</small><nav class="stadium-playback" aria-label="遊技設定"><button id="stadiumAuto" type="button" aria-pressed="false">AUTO OFF</button><button id="stadiumTurbo" type="button" aria-pressed="false">TURBO OFF</button></nav></aside>
+      <div class="stadium-reel-block"><div class="stadium-reels" id="stadiumReels"></div><div class="stadium-stops"><button type="button" data-stadium-stop="0" disabled>STOP 1</button><button type="button" data-stadium-stop="1" disabled>STOP 2</button><button type="button" data-stadium-stop="2" disabled>STOP 3</button></div></div>
+      <aside class="stadium-lever"><div class="stadium-prep"><img src="./assets/stadium/nav_surgery.png" alt=""><div><span id="stadiumPrepLabel">改造のひらめき</span><strong id="stadiumPrep">0 / 4</strong><div class="stadium-charge-track" id="stadiumCharge" role="meter" aria-label="改造のひらめき" aria-valuemin="0" aria-valuemax="4" aria-valuenow="0"><i></i><i></i><i></i><i></i></div></div></div><button class="stadium-spin" id="stadiumSpin" type="button" disabled>SPIN</button><span class="stadium-input-hint" id="stadiumInputHint">ボタン / SPACE 連打で進む</span></aside>
+    </section>
+    <footer class="stadium-footer"><span id="stadiumProgress">固定ナインと頂点へ。</span><span id="stadiumGames">0 G</span></footer>
+    <dialog class="stadium-guide" id="stadiumGuide"><h2>改造して、打ち抜こう。</h2><p>大きいボタンかSPACEを連打すると、SPIN → STOP 1・2・3 → 次ゲームへ進みます。早押しは停止予約、判定中は次ゲームを1回だけ予約できます。個別STOP（数字1・2・3）は順番自由です。</p><p>AUTOは回転・停止・次戦への進行を自動化。改造選択・CREDIT補充・優勝後の再挑戦では待機します。TURBOは回転と待ち時間を短縮。改造演出もPUSHで進めます。遊び方を開く、別タブへ移る、再読み込みでAUTOはOFFになります。</p><dl><dt>チェリー・ベル</dt><dd>ヒット</dd><dt>ブドウ / スイカ</dt><dd>二塁打 / 三塁打</dd><dt>BAR・7</dt><dd>ホームラン</dd><dt>REPLAY</dt><dd>次の一球が無料。走者・改造準備を維持</dd></dl><p>4回の連続不発で改造チャンス。「確実な出塁」は次の非REPLAYで出塁、「一発の改造」は次の配当成立をホームランにします。改造は野球の進行だけに作用し、リール配当は変えません。</p><p>3アウトで走者をリセットし、得点は維持。目標得点で10Gの無料ボーナス、4球団突破で優勝です。BET 30・5ライン。CREDITは台専用、進行は自動保存されます。</p><button type="button" class="stadium-guide-close" id="stadiumGuideClose">台へ戻る</button></dialog>
+  </main>
+  <audio id="stadiumMusic" loop preload="none"></audio>
+  <script src="./slot-core.js"></script>
+  <script src="./spin-session.js"></script>
+  <script src="./sfx.js"></script>
+  <script src="./stadium-flow.js"></script>
+  <script src="./resort-rewards.js"></script>
+  <script src="./stadium-runtime.js"></script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ミミの嘘つきギャンブルギルド — スロット</title>
+  <link rel="icon" href="data:,"><link rel="stylesheet" href="./visual.css">
+</head>
+<body class="guild-page">
+<script src="./resort-rewards.js"></script>
+<main class="guild-cabinet" id="guildCabinet" aria-label="嘘つきギャンブルギルド スロット">
+  <header class="guild-header">
+    <nav class="cabinet-return-links" aria-label="台から戻る"><a href="./index-v5.html?view=machines">← 台選択</a><a id="guildHome" href="./index-v5.html?view=home">島へ戻る</a></nav>
+    <h1>ミミの嘘つきギャンブルギルド</h1>
+    <button id="guildHelp" type="button">遊び方</button>
+    <button id="guildSound" type="button" aria-pressed="false">SOUND OFF</button>
+  </header>
+  <section class="guild-stage" aria-label="ギルドの興行と勝負">
+    <img class="guild-scene" id="guildScene" src="./assets/guild/mimi-opening-v2.png" alt="興行へ招くミミ">
+    <div class="guild-scene-edge"></div>
+    <div class="guild-town" id="guildTown">欠け鐘区</div>
+    <section class="guild-story" id="guildStory" aria-label="今の勝負">
+      <ol class="guild-steps" id="guildSteps" aria-label="今夜の流れ"><li>客寄せ</li><li>興行</li><li>大物と勝負</li><li>無料10G</li></ol>
+      <span class="guild-phase" id="guildPhase">客寄せ</span>
+      <h2 id="guildTitle">今夜の興行を始めよう。</h2>
+      <div class="guild-values"><strong id="guildValue">0 / 6</strong><span id="guildValueLabel">客寄せ</span></div>
+      <div class="guild-meter" id="guildMeter" role="progressbar" aria-label="進行" aria-valuemin="0" aria-valuemax="6" aria-valuenow="0"></div>
+      <p id="guildRule">成立役でお客を集めよう。</p>
+      <div class="guild-nerve" id="guildNerve" hidden></div>
+      <div class="guild-command" id="guildCommand" hidden><p id="guildCommandText"></p><div id="guildChoices"></div></div>
+    </section>
+    <div class="guild-objective" id="guildObjective"><span id="guildObjectiveReward"></span><strong id="guildObjectiveTitle"></strong><p id="guildObjectiveDetail"></p></div>
+    <div class="guild-reaction" id="guildReaction" hidden><img id="guildReactionPortrait" alt=""><div><span id="guildReactionSpeaker"></span><strong id="guildReactionTitle"></strong><p id="guildReactionText"></p></div></div>
+    <div class="guild-result" id="guildResult" hidden><span id="guildResultLabel"></span><strong id="guildResultTitle"></strong><b class="guild-result-win" id="guildResultWin"></b><p id="guildResultDetail"></p></div>
+    <div class="guild-reel-cue" id="guildReelCue" role="status" hidden></div>
+    <section class="guild-feature" id="guildFeature" aria-label="勝負の見せ場" hidden>
+      <img id="guildFeatureArt" alt=""><div class="guild-feature-shade"></div>
+      <div class="guild-premium-symbols" id="guildPremiumSymbols" aria-hidden="true" hidden><img alt=""><img alt=""><img alt=""></div>
+      <div class="guild-feature-copy"><span id="guildFeatureLabel"></span><h2 id="guildFeatureTitle"></h2><p id="guildFeatureText"></p><strong id="guildFeatureValue"></strong><button type="button" id="guildFeatureContinue">PUSHで結果へ</button><button type="button" id="guildStorySkip" hidden>会話をスキップ</button></div>
+    </section>
+  </section>
+  <div class="guild-dialogue" role="status" aria-live="polite"><b id="guildSpeaker">ミミ</b><p id="guildLine">さあ、皆さん。今夜も開きます！</p></div>
+  <section class="guild-deck" aria-label="リールと操作盤">
+    <aside class="guild-ledger"><span>CREDIT</span><strong id="guildCredit">1,200</strong><div class="guild-money"><div><span>BET</span><b id="guildBet">30</b></div><div><span>WIN</span><b id="guildWin">0</b></div></div><nav aria-label="遊技設定"><button id="guildAuto" type="button" aria-pressed="false">AUTO OFF</button><button id="guildTurbo" type="button" aria-pressed="false">TURBO OFF</button></nav><small id="guildSave">台専用・自動保存</small></aside>
+    <div class="guild-reel-block"><div class="guild-reels" id="guildReels"></div><div class="guild-stops"><button type="button" data-guild-stop="0" disabled>STOP 1</button><button type="button" data-guild-stop="1" disabled>STOP 2</button><button type="button" data-guild-stop="2" disabled>STOP 3</button></div></div>
+    <aside class="guild-lever"><span id="guildPrepared"></span><button class="guild-spin" id="guildSpin" type="button">PUSH</button><small id="guildInputHint">SPACEでも操作</small></aside>
+  </section>
+  <footer class="guild-footer"><ol id="guildRoute" aria-label="旅と仲間"></ol><span id="guildGames">0 G</span></footer>
+  <dialog class="guild-guide" id="guildGuide"><h2>嘘つきたちと、今夜の興行へ。</h2>
+    <p>物語はPUSHで一言ずつ進みます。会話中はAUTOを停止し、再読み込みしても同じ台詞から再開します。<button type="button" id="guildStoryReplay">第1幕の出会いを読み返す</button></p>
+    <p><label><input type="checkbox" id="guildCalm"> 演出の動きを控える（結果をすぐ表示・回転の動きを省略）</label></p>
+    <p>大きいボタン／SPACEで SPIN → STOP 1・2・3。数字1・2・3でも、順番自由に止められます。早押しは停止予約、判定中の連打は次ゲームを一回だけ予約します。</p>
+    <p>AUTOは回転・停止・一つの進行ボタンを自動化します。助けの選択・再挑戦・CREDIT補充では待機。遊び方・別タブ・再読み込みでAUTOはOFF。TURBOは演出と待ち時間を短くします。</p>
+    <dl><dt>客寄せ → 興行</dt><dd>配当なし／REPLAYで1、配当で2、BAR・7の配当で3。客寄せ6点で興行へ。</dd><dt>3Gの興行</dt><dd>配当で拍手2、REPLAYで1。3点で大入り。失敗後は客席を保って次の3Gの演目へ。拍手を0に戻し、次の目標は1点ずつ減少（最低1）。通常BET・通常抽選です。</dd><dt>大物との勝負</dt><dd>チェリー・ベル2／ブドウ3／スイカ4／BAR6／青7は8／赤7は12点。複数配当は最も強い役を採用。目標12→16→20点。配当なしで粘り−1、6回負けると仕切り直し。REPLAYは粘り・準備を保ち、次ゲーム無料。</dd><dt>4連続不発の助け</dt><dd>「大入りの噂」は次の非REPLAYで4点追加。「お茶で一息」は粘り2回復（最大6）＋最低1点。どちらもリールの抽選・配当は変えません。</dd><dt>再挑戦・祝宴</dt><dd>再挑戦は勝負の得点を持ち越し、粘りを6に戻します。配当時の加点も＋1ずつ増加（最大＋3）。勝つと相手が仲間になり、10G無料の祝宴へ。三つの町を巡って帰還します。</dd></dl>
+    <p>BET30・5ライン。CREDITはこの台専用です。実際の配当と物語の点数は別々に表示します。原作の世界・人物を用いたスロット版で、40週の経営ゲームの移植ではありません。</p>
+    <button type="button" id="guildGuideClose">台へ戻る</button>
+  </dialog>
+</main>
+<audio id="guildMusic" preload="none" loop></audio>
+<script src="./slot-core.js"></script><script src="./spin-session.js"></script><script src="./sfx.js"></script><script src="./guild-flow.js"></script><script src="./guild-presentation.js"></script><script src="./guild-scenes.js"></script><script src="./guild-runtime.js"></script>
+</body>
+</html>

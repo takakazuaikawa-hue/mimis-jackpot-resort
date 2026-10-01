@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="ja" data-production-status="PRODUCTION UNAPPROVED">
+<head>
+  <meta charset="utf-8">
+  <base href="../../../">
+  <script>if(new URLSearchParams(location.search).get('machine')!=='dragon-race'){const u=new URL(location.href);u.searchParams.set('machine','dragon-race');history.replaceState(null,'',u);}</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#071a1f">
+  <meta name="mimi-art-status" content="PRODUCTION UNAPPROVED">
+  <meta name="description" content="ミミのジャックポットリゾート V5 production candidate">
+  <title>ミミのドラゴンレース紀行 — 2台目</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="./machines/dragon-race/player/visual.css">
+</head>
+<body data-art-status="candidate" data-release-status="PRODUCTION UNAPPROVED">
+  <div class="loading-screen" id="loadingScreen" aria-live="polite" aria-busy="true">
+    <div class="loading-mark" aria-hidden="true">M</div>
+    <strong>MIMI'S JACKPOT RESORT</strong>
+    <div class="loading-track" aria-hidden="true"><i id="loadingFill"></i></div>
+    <span id="loadingText">LOADING... 0%</span>
+  </div>
+
+  <aside class="rotate-hint" aria-label="画面方向のご案内">
+    <span class="rotate-icon" aria-hidden="true">↻</span>
+    <strong>端末を横向きにしてください</strong>
+    <p>上部演出と3リールを一緒に楽しめる横画面で遊べます。</p>
+  </aside>
+
+  <div class="app-root" id="appRoot">
+    <section class="app-view title-view is-active" data-view="title" aria-labelledby="titleHeading">
+      <div class="route-backdrop route-backdrop-entrance" data-production-asset="assets/title-v5/mimi-jackpot-resort-original-keyart-v1.png" aria-hidden="true"></div>
+      <div class="title-lockup">
+        <p class="title-series">MIMI'S</p>
+        <h1 id="titleHeading"><span>ミミの</span><strong>ジャックポット<br>リゾート</strong></h1>
+        <p class="title-english">JACKPOT RESORT</p>
+        <button class="command-primary title-start" data-route="machines" type="button"><span>台を選んで遊ぶ</span><small>PRESS START</small></button>
+      </div>
+    </section>
+
+    <section class="app-view home-view" data-view="home" aria-labelledby="homeHeading">
+      <div class="route-backdrop route-backdrop-lobby" data-production-asset="assets/casino-loop-v5/zone-02-main-floor.png" aria-hidden="true"></div>
+      <header class="app-bar">
+        <div class="brand-lockup"><strong>MIMI'S JACKPOT RESORT</strong><span>LUCKY LOBBY</span></div>
+        <div class="wallet" aria-label="コレクション用コイン残高">COINS <strong data-wallet>0</strong></div>
+      </header>
+      <img class="route-host route-host-home" src="./assets/character-animation-v8/unified-cast-v1/mimi.png" alt="" aria-hidden="true" data-production-asset="assets/character-animation-v8/unified-cast-v1/mimi.png">
+      <div class="home-copy">
+        <h2 id="homeHeading">今夜の幸運を、<br>探しにいこう。</h2>
+      </div>
+      <nav class="home-actions" aria-label="リゾートメニュー">
+        <button class="route-card route-card-primary" data-route="slot" type="button"><span>PLAY</span><strong>スロットで遊ぶ</strong></button>
+        <button class="route-card" data-route="machines" type="button"><span>MACHINES</span><strong>台を選ぶ</strong></button>
+        <button class="route-card" data-route="shop" type="button"><span>GALLERIA LAPIN</span><strong>衣装を見る</strong></button>
+      </nav>
+    </section>
+
+    <section class="app-view shop-view" data-view="shop" aria-labelledby="shopHeading">
+      <div class="route-backdrop route-backdrop-shop" data-candidate-asset="assets/backgrounds/v5-candidates/galleria_lapin_clean_v1.png" aria-hidden="true"></div>
+      <header class="app-bar">
+        <button class="back-command" data-route="home" type="button" aria-label="ロビーへ戻る">← HOME</button>
+        <div class="brand-lockup"><strong>GALLERIA LAPIN</strong><span>RESORT SHOP</span></div>
+        <div class="wallet" aria-label="コレクション用コイン残高">COINS <strong data-wallet>0</strong></div>
+      </header>
+      <img class="route-host route-host-shop" src="./assets/characters/v5-candidates/mimi_host_gentle.png" alt="" aria-hidden="true" data-candidate-asset="assets/characters/v5-candidates/mimi_host_gentle.png">
+      <main class="shop-shell">
+        <header class="shop-heading">
+          <div><p>あなたらしい幸運を選ぶ場所</p><h2 id="shopHeading">ガレリア・ラパン</h2></div>
+          <p id="shopMessage" role="status" aria-live="polite">アイテムを選んでください。</p>
+        </header>
+        <details class="collection-guide" id="collectionGuide">
+          <summary>COINSの獲得方法と残高ルール</summary>
+          <p><strong>COINSはコレクション専用、CREDITはスロット遊技専用です。相互交換はできません。</strong></p>
+          <button id="dailyCoinClaim" type="button">本日の300 COINSを受け取る</button>
+          <p id="dailyCoinStatus" role="status" aria-live="polite">JSTで1日1回受け取れます。</p>
+          <ul aria-label="COINSの4つの獲得経路">
+            <li><strong>デイリー</strong><span>JSTで1日1回、300 COINS</span></li>
+            <li><strong>有料SPIN節目</strong><span id="paidSpinRewardStatus">50Gごとに250 COINS</span></li>
+            <li><strong>有料SPINのWIN</strong><span>WIN CREDITの10%相当、最低1 COIN</span></li>
+            <li><strong>章ボス初回撃破</strong><span id="bossRewardStatus">各章1回、1,000〜3,000 COINS</span></li>
+          </ul>
+          <p id="collectionReceipt" aria-live="polite">COINSの獲得履歴はまだありません。</p>
+        </details>
+        <nav class="shop-tabs" aria-label="商品カテゴリ">
+          <button class="is-active" data-shop-tab="costume" type="button">コスチューム</button>
+          <button data-shop-tab="effect" type="button">エフェクト</button>
+          <button data-shop-tab="background" type="button">背景</button>
+        </nav>
+        <div class="shop-grid" id="shopGrid" aria-live="polite"></div>
+      </main>
+    </section>
+
+    <section class="app-view machines-view" data-view="machines" aria-labelledby="machinesHeading">
+      <div class="route-backdrop route-backdrop-machines" data-production-asset="assets/casino-loop-v5/zone-02-main-floor.png" aria-hidden="true"></div>
+      <header class="app-bar">
+        <button class="back-command" data-route="home" type="button" aria-label="ロビーへ戻る">← HOME</button>
+        <div class="brand-lockup"><strong>CASINO FLOOR</strong><span>MACHINE GALLERY</span></div>
+        <div class="wallet" aria-label="コレクション用コイン残高">COINS <strong data-wallet>0</strong></div>
+      </header>
+      <div class="machine-intro"><p>CASINO FLOOR / MACHINE GALLERY</p><h2 id="machinesHeading">今夜の物語を選ぶ</h2><span>リゾートで、今夜の台を選ぼう。</span><br><a class="stadium-gallery-link" data-machine-entry="dragon-race" href="./machines/dragon-race/player/index.html?machine=dragon-race">2台目：ドラゴンレース紀行 →</a> <a class="stadium-gallery-link" href="./index-stadium.html">マッドドクター・スタジアム →</a> <a class="stadium-gallery-link" href="./index-arena.html">ときめき裏ボス闘技場 →</a> <a class="stadium-gallery-link" href="./index-guild.html">嘘つきギャンブルギルド →</a></div>
+      <div class="machine-carousel" id="machineCarousel"></div>
+    </section>
+
+    <section class="app-view holdem-result-view" data-view="holdem-result" aria-labelledby="holdemResultHeading">
+      <div class="route-backdrop route-backdrop-slot" aria-hidden="true"></div>
+      <header class="app-bar">
+        <button class="back-command" data-route="home" type="button">← ロビー</button>
+        <div class="brand-lockup"><strong>MIMI'S JACKPOT RESORT</strong><span>TEXAS HOLD'EM</span></div>
+        <div class="wallet">COINS <strong data-wallet>0</strong></div>
+      </header>
+      <div class="holdem-result-stage">
+        <div class="holdem-result-prize">
+          <span>ミミたちの勝利！</span>
+          <div class="holdem-result-cast">
+            <img class="holdem-result-mimi" src="./assets/character-animation-v8/unified-cast-action-v1/mimi.png" alt="笑顔で手を差し出すミミ">
+            <img class="holdem-result-guest" data-result="guest" alt="">
+          </div>
+          <div class="holdem-result-invitation" aria-live="polite"><b data-result="speaker"></b><p data-result="invitation"></p></div>
+          <div class="holdem-replay-picker">
+            <p>キャラクターからのお題を選ぼう</p>
+            <div data-replay-order-choices role="group" aria-label="次の挑戦を選ぶ"></div>
+          </div>
+        </div>
+        <div class="holdem-result-copy">
+          <p class="holdem-result-eyebrow">TEXAS HOLD'EM · CLEAR</p>
+          <h2 id="holdemResultHeading">今夜の勝負は、<br>ミミたちの勝ち！</h2>
+          <strong class="holdem-result-award" data-result="award"></strong>
+          <p class="holdem-result-detail" data-result="detail"></p>
+          <dl class="holdem-result-stats">
+            <div><dt>4人との勝負</dt><dd data-result="games"></dd></div>
+            <div><dt>ヴェルベット挑戦</dt><dd data-result="attempts"></dd></div>
+            <div><dt>CROWN ARCHIVE</dt><dd data-result="archive"></dd></div>
+            <div><dt>現在のCREDIT</dt><dd data-result="credit"></dd></div>
+          </dl>
+          <div class="holdem-result-next" aria-live="polite"><span>4人の卓をもう一度 · 選んだお題でヴェルベットへ</span><b data-result="next"></b><p data-result="goal"></p><p class="holdem-replay-approach" data-result="approach"></p><small data-result="replay-reward"></small></div>
+          <div class="holdem-result-actions">
+            <button class="command-primary" data-holdem-replay type="button">次の挑戦へ</button>
+            <button class="back-command" data-route="machines" type="button">台選択へ戻る</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="app-view slot-view" data-view="slot" aria-label="ミミのジャックポットリゾート スロット">
+      <div class="route-backdrop route-backdrop-slot" data-production-asset="assets/casino-loop-v5/zone-03-vip-salon.png" aria-hidden="true"></div>
+      <nav class="slot-utility" aria-label="ゲームメニュー">
+        <a class="dragon-floor-return" href="./index-v5.html?view=machines">← 台選択</a>
+        <a class="dragon-floor-return" href="./index-v5.html?view=home">島へ戻る</a>
+        <button id="helpOpen" type="button" aria-haspopup="dialog">遊び方</button>
+      </nav>
+
+      <main class="game-shell" id="gameShell" data-art-status="candidate" data-cabinet-status="PRODUCTION UNAPPROVED">
+        <div class="cabinet-art" aria-hidden="true">
+          <img class="cabinet-layer cabinet-layer-outer" alt="" data-inactive-src="./assets/cabinet-v5-candidates/final/cabinet-outer-frame.png" data-candidate-asset="assets/cabinet-v5-candidates/final/cabinet-outer-frame.png">
+          <img class="cabinet-layer cabinet-layer-crystal" alt="" data-inactive-src="./assets/cabinet-v5-candidates/final/cabinet-crystal-finials.png" data-candidate-asset="assets/cabinet-v5-candidates/final/cabinet-crystal-finials.png">
+          <img class="cabinet-layer cabinet-layer-lcd" alt="" data-inactive-src="./assets/cabinet-v5-candidates/final/cabinet-lcd-frame.png" data-candidate-asset="assets/cabinet-v5-candidates/final/cabinet-lcd-frame.png">
+          <img class="cabinet-layer cabinet-layer-title" alt="" data-inactive-src="./assets/cabinet-v5-candidates/final/cabinet-title-bridge.png" data-candidate-asset="assets/cabinet-v5-candidates/final/cabinet-title-bridge.png">
+          <img class="cabinet-layer cabinet-layer-reel" alt="" data-inactive-src="./assets/cabinet-v5-candidates/final/cabinet-reel-bezel.png" data-candidate-asset="assets/cabinet-v5-candidates/final/cabinet-reel-bezel.png">
+          <img class="cabinet-layer cabinet-layer-controls" alt="" data-inactive-src="./assets/cabinet-v5-candidates/final/cabinet-control-deck.png" data-candidate-asset="assets/cabinet-v5-candidates/final/cabinet-control-deck.png">
+        </div>
+
+        <section class="theater" data-slot-region="theater" aria-label="物語演出液晶">
+          <div class="stage-bg stage-background-a" id="stageBg" data-stage-background="A" aria-hidden="true"></div>
+          <div class="stage-bg stage-background-b" data-stage-background="B" aria-hidden="true"></div>
+
+          <div class="casino-loop" data-zone="arrival" aria-hidden="true">
+            <div class="casino-loop-track">
+              <section class="casino-zone" data-casino-zone="arrival">
+                <img class="casino-zone-plate" src="./assets/casino-loop-v5/zone-01-arrival.png" alt="" decoding="async" fetchpriority="high">
+                <div class="casino-guest casino-guest-rico" role="presentation"></div>
+              </section>
+              <section class="casino-zone" data-casino-zone="main-floor">
+                <img class="casino-zone-plate" src="./assets/casino-loop-v5/zone-02-main-floor.png" alt="" decoding="async">
+                <div class="casino-guest casino-guest-polka" role="presentation"></div>
+              </section>
+              <section class="casino-zone" data-casino-zone="vip-salon">
+                <img class="casino-zone-plate" src="./assets/casino-loop-v5/zone-03-vip-salon.png" alt="" decoding="async">
+                <div class="casino-guest casino-guest-velvet" role="presentation"></div>
+              </section>
+              <section class="casino-zone" data-casino-zone="jewel-exchange">
+                <img class="casino-zone-plate" src="./assets/casino-loop-v5/zone-04-jewel-exchange.png" alt="" decoding="async">
+                <div class="casino-guest casino-guest-grano" role="presentation"></div>
+                <div class="casino-guest casino-guest-selina" role="presentation"></div>
+              </section>
+              <section class="casino-zone casino-zone-clone" data-casino-zone="arrival-clone">
+                <img class="casino-zone-plate" src="./assets/casino-loop-v5/zone-01-arrival.png" alt="" decoding="async">
+                <div class="casino-guest casino-guest-rico" role="presentation"></div>
+              </section>
+            </div>
+            <video class="casino-mimi" muted playsinline preload="auto" aria-hidden="true"
+              poster="./assets/character-animation-v8/unified-cast-v1/mimi.png">
+              <source src="./assets/character-animation-v7/clips/mimi-service-walk-loop-seedance25-v5-alpha.webm" type="video/webm">
+            </video>
+          <img class="casino-opponent" id="casinoOpponent" src="./assets/character-animation-v8/unified-cast-v1/polka.png" alt="リコ先輩" decoding="async" fetchpriority="high">
+            <div class="casino-table-playfield" aria-hidden="true">
+              <span class="casino-poker-hole-label">ミミの手札</span>
+              <div class="casino-poker-hole-cards">
+                <i class="casino-poker-card casino-table-card casino-table-card-a casino-hole-card" data-card-index="0"><span class="rank"></span><span class="suit"></span></i>
+                <i class="casino-poker-card casino-table-card casino-table-card-b casino-hole-card" data-card-index="1"><span class="rank"></span><span class="suit"></span></i>
+              </div>
+              <strong class="casino-poker-role"></strong>
+              <span class="casino-poker-board-label">場札</span>
+              <div class="casino-poker-board">
+                <i class="casino-poker-card casino-board-card" data-card-index="0"><span class="rank"></span><span class="suit"></span></i>
+                <i class="casino-poker-card casino-board-card" data-card-index="1"><span class="rank"></span><span class="suit"></span></i>
+                <i class="casino-poker-card casino-board-card" data-card-index="2"><span class="rank"></span><span class="suit"></span></i>
+                <i class="casino-poker-card casino-board-card" data-card-index="3"><span class="rank"></span><span class="suit"></span></i>
+                <i class="casino-poker-card casino-board-card" data-card-index="4"><span class="rank"></span><span class="suit"></span></i>
+              </div>
+              <div class="casino-poker-streets">
+                <span data-street-step="flop"><b>1</b> FLOP <small>3枚</small></span>
+                <span data-street-step="turn"><b>2</b> TURN <small>+1枚</small></span>
+                <span data-street-step="river"><b>3</b> RIVER <small>勝負</small></span>
+              </div>
+              <div class="casino-poker-result" role="status" aria-live="polite">
+                <span class="casino-poker-result-trigger"></span>
+                <i aria-hidden="true"></i>
+                <span class="casino-poker-result-hand"></span>
+                <i aria-hidden="true"></i>
+                <strong class="casino-poker-result-verdict"></strong>
+                <em class="casino-poker-result-delta"></em>
+              </div>
+              <span class="casino-table-chip casino-table-chip-a"></span>
+              <span class="casino-table-chip casino-table-chip-b"></span>
+              <span class="casino-table-chip casino-table-chip-c"></span>
+              <strong class="casino-poker-action"></strong>
+            </div>
+            <div class="casino-table-hud" id="casinoTableHud" aria-live="polite"></div>
+            <div class="casino-table-vfx" aria-hidden="true">
+              <div class="casino-role-signature">
+                <i class="casino-role-aura casino-role-aura-outer"></i>
+                <i class="casino-role-aura casino-role-aura-inner"></i>
+                <span class="casino-role-sigil">
+                  <img class="casino-role-symbol" src="./assets/generated/v3/symbols/dist/replay.png" alt="" decoding="async">
+                </span>
+                <b class="casino-role-trace casino-role-trace-a"></b>
+                <b class="casino-role-trace casino-role-trace-b"></b>
+                <b class="casino-role-trace casino-role-trace-c"></b>
+              </div>
+              <div class="casino-strong-cutin">
+                <i class="casino-strong-cutin-beam"></i>
+                <span class="casino-strong-cutin-actor casino-strong-cutin-mimi"></span>
+                <span class="casino-strong-cutin-actor casino-strong-cutin-rival"></span>
+                <i class="casino-strong-cutin-slash"></i>
+              </div>
+              <i class="casino-table-impact-ring"></i>
+              <i class="casino-table-impact-spark casino-table-impact-spark-a"></i>
+              <i class="casino-table-impact-spark casino-table-impact-spark-b"></i>
+              <div class="casino-table-damage"><span>STACK</span><strong>-1</strong></div>
+              <div class="casino-read-ready-banner">
+                <small>相手の癖を見切った</small>
+                <strong>見切り READY</strong>
+                <span>次の決着SPINで STACK -1</span>
+              </div>
+              <div class="casino-bet-coin-award">
+                <img src="./assets/character-animation-v8/unified-cast-v1/polka.png" alt="" decoding="async">
+                <span>BET</span><strong>COIN</strong>
+              </div>
+            </div>
+            <div class="casino-loop-glimmer" aria-hidden="true"></div>
+          </div>
+          <div class="stage-veil" aria-hidden="true"></div>
+          <div class="casino-reel-reaction" data-beat="idle" data-focus="false" role="status" aria-live="polite" aria-atomic="true">
+            <img class="casino-reaction-mimi" src="./assets/character-animation-v8/unified-cast-action-v1/mimi.png" alt="" aria-hidden="true" decoding="async">
+            <div class="casino-reaction-dialog"><small>ミミ</small><strong></strong></div>
+          </div>
+
+          <div class="presentation-host" id="presentationHost" data-layer-count="7" data-art-status="candidate" aria-hidden="true">
+            <div class="pr-layer pr-layer-backdrop" data-role="backdrop"></div>
+            <div class="pr-layer pr-layer-veil" data-role="veil"></div>
+            <div class="pr-layer pr-layer-emblem" data-role="emblem"></div>
+            <div class="pr-layer pr-layer-actorL" data-role="actorL"></div>
+            <div class="pr-layer pr-layer-actorR" data-role="actorR"></div>
+            <div class="pr-layer pr-layer-foreground" data-role="foreground"></div>
+            <div class="pr-layer pr-layer-particles" data-role="particles"></div>
+          </div>
+
+          <section class="chapter-command" id="chapterCommand" role="status" aria-live="polite" aria-atomic="true" hidden>
+            <div class="chapter-command-frame">
+              <span id="chapterCommandSpeaker"></span>
+              <strong id="chapterCommandLine"></strong>
+              <small id="chapterCommandAction"></small>
+            </div>
+          </section>
+
+          <header class="screen-hud">
+            <div><span id="episodeLabel"></span><strong id="stageName"></strong><small id="stageSub"></small></div>
+            <dl class="lcd-readout">
+              <div><dt>TIME</dt><dd id="timeLabel">DAY / 昼</dd></div>
+              <div><dt>MODE</dt><dd id="modeLabel">NORMAL</dd></div>
+              <div><dt>EXPECT</dt><dd id="expectationStars" data-level="1">★☆☆☆☆</dd></div>
+            </dl>
+          </header>
+          <div class="stage-caption"><span>OBJECTIVE</span><strong id="objectiveLabel">JACKPOT探索</strong></div>
+          <div class="scene-sequence" role="status"><span id="sequenceLabel">ACT 1 / EXPLORE</span><strong id="sequenceTitle">冒険の始まり</strong><small id="sequenceObjective">次の出来事に備える</small></div>
+
+          <div class="scene-enemy" id="sceneEnemy">
+            <img id="bossSprite" alt="">
+            <div><span id="enemyTitle">BOSS</span><div class="boss-hp" id="bossHp"><i id="bossHpFill"></i></div></div>
+          </div>
+          <div class="character-wrap"><img id="characterArt" src="./assets/character-animation-v8/unified-cast-v1/mimi.png" alt="ミミ" data-production-asset="assets/character-animation-v8/unified-cast-v1/mimi.png"></div>
+          <div class="party-strip" id="partyStrip" aria-label="演出キャスト"></div>
+
+          <div class="adventure-panel">
+            <div class="adventure-copy"><strong id="adventureTitle"></strong><span id="adventureText"></span></div>
+            <div class="adventure-road" id="adventureRoad"><i class="adventurer" id="adventurer" aria-label="ミミ"></i></div>
+            <div class="battle-counter" id="battleCounter"></div>
+          </div>
+          <div class="adventure-event" id="adventureEvent" aria-live="polite"></div>
+
+          <div class="chance-overlay" id="chanceOverlay"><span id="chanceRank">CHANCE</span><strong id="chanceText">予告</strong><p id="chanceStory"></p></div>
+          <div class="cutin" id="cutin"><img id="cutinImage" alt=""><strong id="cutinText">CHANCE</strong></div>
+          <div class="particles" id="particles" aria-hidden="true"></div>
+          <div class="stage-flash" id="stageFlash" aria-hidden="true"></div>
+
+          <div class="narrative-rail">
+            <section class="presentation-narrative" id="presentationNarrative" aria-live="polite" data-narrative-fields="speaker headline body next-action">
+              <span id="presentationSpeaker"></span>
+              <strong id="presentationHeadline"></strong>
+              <p id="presentationBody"></p>
+              <small id="presentationNextAction"></small>
+            </section>
+            <section class="character-dialog" id="characterDialog" aria-live="polite">
+              <span id="speaker">MIMI</span>
+              <p id="message">さあ、幸運を回しに行こう！</p>
+            </section>
+          </div>
+        </section>
+
+        <section class="machine" aria-label="3リール5ライン">
+          <header class="machine-marquee" data-slot-region="marquee">
+            <div><span class="machine-stage-label" id="stageLabel">NORMAL</span><strong>MIMI'S JACKPOT RESORT</strong></div>
+            <div class="jackpot"><span>JACKPOT</span><strong id="jackpotValue">10,000</strong></div>
+          </header>
+
+          <div class="machine-playfield">
+            <aside class="machine-metrics" data-slot-region="metrics" aria-label="BETと設定">
+              <div class="metric"><span>LINES</span><strong>5</strong></div>
+              <div class="metric"><span>BET</span><strong id="bet">30</strong></div>
+              <div class="bet-step"><button id="betDown" type="button" aria-label="BETを下げる">−</button><button id="betUp" type="button" aria-label="BETを上げる">＋</button></div>
+              <div class="mode-controls" aria-label="プレイ設定">
+                <button id="autoBtn" type="button" aria-pressed="false">AUTO</button>
+                <button id="turboBtn" type="button" aria-pressed="false">TURBO</button>
+                <button id="soundBtn" type="button" aria-pressed="true" aria-label="Sound on">SOUND</button>
+                <button id="motionBtn" type="button" aria-pressed="false" aria-label="Full motion">FX</button>
+              </div>
+            </aside>
+
+            <div class="reel-frame" id="reelFrame" data-slot-region="reels" aria-label="3リール">
+              <div class="payline-layer" id="paylineLayer" aria-hidden="true"></div>
+              <div class="reel-flare" id="reelFlare" aria-hidden="true"></div>
+              <div class="reels" id="reels"></div>
+            </div>
+
+            <aside class="machine-status" aria-label="遊技ステータス">
+              <div class="orb-gems" id="orbGems" aria-label="オーブ"></div>
+              <div class="orb-panel"><div class="orb-track" aria-hidden="true"><i id="orbFill"></i></div><span id="orbText">ORB 0/6</span></div>
+              <div class="treasure-stock" id="treasureStock" aria-label="ベットコイン"></div>
+              <div class="metric"><span>CREDIT</span><strong id="credit">1,200</strong></div>
+              <div class="metric"><span>WIN</span><strong id="win">0</strong></div>
+            </aside>
+          </div>
+
+          <div class="machine-controls" data-slot-region="controls">
+            <div class="stop-row">
+              <button class="stop-button" data-stop="0" type="button"><span>1</span>STOP<small class="stop-deal-label" aria-hidden="true"></small></button>
+              <button class="stop-button" data-stop="1" type="button"><span>2</span>STOP<small class="stop-deal-label" aria-hidden="true"></small></button>
+              <button class="stop-button" data-stop="2" type="button"><span>3</span>STOP<small class="stop-deal-label" aria-hidden="true"></small></button>
+            </div>
+            <button class="spin-button" id="spinBtn" type="button">SPIN</button>
+            <button class="push-button" id="pushBtn" type="button" hidden disabled aria-hidden="true"><strong>PUSH</strong></button>
+            <p class="feature-ribbon"><span>OBJECTIVE</span><strong id="featureName">JACKPOT探索</strong></p>
+          </div>
+          <div class="offscreen-refs" aria-hidden="true"><div id="log"></div></div>
+        </section>
+      </main>
+
+      <div class="help-overlay" id="helpOverlay" hidden>
+        <button class="modal-backdrop" id="helpBackdrop" type="button" aria-label="遊び方を閉じる"></button>
+        <section class="modal-panel help-dialog" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+          <header><div><span>GAME GUIDE</span><h2 id="helpTitle">遊び方</h2></div><button id="helpClose" type="button" aria-label="閉じる">×</button></header>
+          <nav class="help-tabs" role="tablist" aria-label="遊び方の項目">
+            <button class="is-active" data-help-tab="play" type="button" role="tab" aria-selected="true">基本操作</button>
+            <button data-help-tab="payout" type="button" role="tab" aria-selected="false">配当表</button>
+            <button data-help-tab="adventure" type="button" role="tab" aria-selected="false">物語演出</button>
+            <button data-help-tab="paylines" type="button" role="tab" aria-selected="false">配当ライン</button>
+          </nav>
+          <div class="help-pages">
+            <section class="help-page is-active" data-help-page="play"><h3>SPINとSTOP</h3><ol><li>対戦のメッセージはPUSHで進め、BETを決めてSPIN。</li><li>左・中・右を好きな順番でSTOP。場札がFLOP → TURN → RIVERと開きます。</li><li>判定中は決着を待ち、結果を見て次のSPINへ。</li></ol><p>キーボード：SpaceでSPIN／次のSTOP、1・2・3で各リールを停止。</p><p>このガイドを開くとAUTOはOFFになります。閉じた後、自分のペースで再開できます。</p></section>
+            <section class="help-page" data-help-page="payout"><h3>配当表</h3><p>左から3つ並ぶと成立します。数字はBET1あたりの倍率です。</p><div id="payoutList"></div></section>
+            <section class="help-page" data-help-page="adventure"><h3>ロイヤル勝負への流れ</h3><p>リコ先輩 → ポルカ → セリナ → グラーノ。BET COINを4枚集めると、ヴェルベットのロイヤル卓へ進みます。4回続けて負けると見切り READY。REPLAYを除く次のSPINで相手のSTACKを必ず1削ります。</p></section>
+            <section class="help-page" data-help-page="paylines"><h3>5ライン</h3><p>中央・上・下・V字・山型の5本。SHOPの装備は見た目だけを変え、当選率には影響しません。</p></section>
+          </div>
+        </section>
+      </div>
+
+      <div class="sr-only" id="resultAnnouncer" role="status" aria-live="polite" aria-atomic="true"></div>
+      <div class="credit-rescue" id="creditRescue" hidden>
+        <section class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="creditRescueTitle">
+          <span>RESORT SERVICE</span>
+          <h2 id="creditRescueTitle">プレイ用CREDITを補充しますか？</h2>
+          <p>コレクション用COINSは減りません。待機後に300 CREDITを受け取り、そのまま再開できます。COINSとCREDITは交換できません。</p>
+          <button id="creditRescueBtn" type="button">300 CREDITを受け取って再開</button>
+        </section>
+      </div>
+    </section>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">READY</div>
+
+  <script src="./economy-rules.js"></script>
+  <script src="./slot-core.js"></script>
+  <script src="./machines/dragon-race/presentation-contract.js"></script>
+  <script src="./chapter1-flow.js"></script>
+  <script src="./presentation-heat.js"></script>
+  <script src="./collection-economy.js"></script>
+  <script src="./machines/dragon-race/player/profile-store.js"></script>
+  <script src="./spin-session.js"></script>
+  <script src="./sfx.js"></script>
+  <script src="./runtime/dom-contract.js"></script>
+  <script src="./content/assets.js"></script>
+  <script src="./content/stages.js"></script>
+  <script src="./content/shop.js"></script>
+  <script src="./content/cast.js"></script>
+  <script src="./content/effects.js"></script>
+  <script src="./content/story.js"></script>
+  <script src="./content/game-content-v5.js"></script>
+  <script src="./content/presentation-effects.js"></script>
+  <script src="./content/presentation-choreography.js"></script>
+  <script src="./node_modules/xstate/dist/xstate.umd.min.js"></script>
+  <script src="./node_modules/gsap/dist/gsap.min.js"></script>
+  <script src="./casino-loop.js"></script>
+  <script src="./presentation-flow-engine.js"></script>
+  <script src="./presentation-controller.js"></script>
+  <script src="./presentation-renderer.js"></script>
+  <script src="./machines/dragon-race/player/presentation-game-bridge.js"></script>
+  <script src="./machines/catalog.js"></script>
+  <script src="./machines/lobby.js"></script>
+  <script src="./machines/dragon-race/content.js"></script>
+  <script src="./machines/dragon-race/flow.js"></script>
+  <script src="./machines/dragon-race/progression.js"></script>
+  <script src="./machines/dragon-race/experience.js"></script>
+  <script src="./machines/dragon-race/spectacle.js"></script>
+  <script src="./resort-rewards.js"></script>
+  <script src="./machines/dragon-race/runtime.js"></script>
+  <script src="./machines/dragon-race/player/game.js"></script>
+<script src="./machines/dragon-race/entry.js"></script>
+</body>
+</html>

@@ -1,0 +1,3283 @@
+{
+  "status": "PC PLAYTEST / PRODUCTION QUALITY UNAPPROVED",
+  "createdAt": "2026-10-01T23:16:54.374Z",
+  "entry": "index.html",
+  "bytes": 903788415,
+  "files": [
+    {
+      "file": "arena-flow.js",
+      "bytes": 12129,
+      "sha256": "53bef1220e2cfb1ffc1445891b6e213899ee9b613cc8e8610f723cfbf6308a88"
+    },
+    {
+      "file": "arena-runtime.js",
+      "bytes": 45271,
+      "sha256": "7ca4cf4919310698ec9e0aa67afa4b37e35e3acba25c7ffb129e4fd32242ed28"
+    },
+    {
+      "file": "assets/Jackpot.mp3",
+      "bytes": 3560888,
+      "sha256": "e7c4162974efccd1a0d90bcfaf1c943112cc91b4fca2272afc75c1b98426eb8c"
+    },
+    {
+      "file": "assets/Velvet Jackpot.mp3",
+      "bytes": 3571121,
+      "sha256": "df69b10346b822abd4ca4e7c1b10a6032866346600bc2c37b19ba997106af39f"
+    },
+    {
+      "file": "assets/arena/amara-blackstar-impact-v2.png",
+      "bytes": 3233302,
+      "sha256": "a4b586aeb3b8d60225f5bfb87e31c1ad56cb715d52fbd9966d5a258901ae0630"
+    },
+    {
+      "file": "assets/arena/amara-challenge-v1.png",
+      "bytes": 2487625,
+      "sha256": "2953e2cb398cca8eb6f9714d0b71d0e5c85671ec24d66c2520a4c56e1d178ca3"
+    },
+    {
+      "file": "assets/arena/amara-concedes-v2.png",
+      "bytes": 2173681,
+      "sha256": "1b7081180d89dfe5ed61f5a222e38dc57c4004480d65175bb50ee0ae2dfaba3d"
+    },
+    {
+      "file": "assets/arena/amara-counter-v1.png",
+      "bytes": 2709426,
+      "sha256": "c744d3f7f1459d80474aa25fbdc8a7b3e56e6ab2bca65df83c148c12088ee599"
+    },
+    {
+      "file": "assets/arena/amara-v1.png",
+      "bytes": 1553170,
+      "sha256": "a792b0695ac25e64a1d93d5bae0ba1a08c6469f6a9319f7f4807170d66fc04a8"
+    },
+    {
+      "file": "assets/arena/arena-sunlit-v3.png",
+      "bytes": 2662326,
+      "sha256": "b198acd2eb9f387144caebf60891cfc18876815266d549615e469457a6d0603f"
+    },
+    {
+      "file": "assets/arena/audio/boss-chamber-v1.ogg",
+      "bytes": 610965,
+      "sha256": "bfa60e30d8104a538b4c545cf409c6de466b4fa13c8fe06a86c129a980d83e7c"
+    },
+    {
+      "file": "assets/arena/audio/explore-chamber-v1.ogg",
+      "bytes": 777940,
+      "sha256": "94dff5dc90b914765d98a5fd6ac0e41221c0d240d26b402f0a73d41149cb65f9"
+    },
+    {
+      "file": "assets/arena/audio/tokimeki-chamber-v1.ogg",
+      "bytes": 921715,
+      "sha256": "0f810e96ce2f1fed128c3a79e916e22ccafeac421ac5ea830809de6706d5f2c0"
+    },
+    {
+      "file": "assets/arena/audio/trial-chamber-v1.ogg",
+      "bytes": 747903,
+      "sha256": "cd0c1bfd849a58d4ba8123e961bbbead15dfc0c7eb0610f3b30f29c68ee91841"
+    },
+    {
+      "file": "assets/arena/blackstar-gather-v2.png",
+      "bytes": 2723681,
+      "sha256": "109987c01072df4fea7a44e3bd35b107fa97ea4f0e758dcae133e398d2cae4f4"
+    },
+    {
+      "file": "assets/arena/blackstar-release-v1.png",
+      "bytes": 2918589,
+      "sha256": "82d55c6214cf737a612688c63ca1c10472408535ca500c1b326e293861443379"
+    },
+    {
+      "file": "assets/arena/cassim-battle-v1.png",
+      "bytes": 2422885,
+      "sha256": "b42d838ea74f81993046d4eb6224cb76d3da564e45f8d887b7407b7151453dd9"
+    },
+    {
+      "file": "assets/arena/cassim-bell-v1.png",
+      "bytes": 973237,
+      "sha256": "7123329017b349636ae5e3a1da0c65ef98b9f010a995de37e47013733a67ed69"
+    },
+    {
+      "file": "assets/arena/design-concept.png",
+      "bytes": 2877498,
+      "sha256": "0c4496413205bc2bd811c7e94422330c4b457402f4d55ab8aa56b120f3b1887f"
+    },
+    {
+      "file": "assets/arena/exploration-arcade-v1.png",
+      "bytes": 2944790,
+      "sha256": "164e11e0bd2c24265e7e811b1bd59cfd8c291dee0a8c1d7207b5c1ceb804f318"
+    },
+    {
+      "file": "assets/arena/gido-battle-v1.png",
+      "bytes": 2655609,
+      "sha256": "132804cbb328e5556d7202b4ba89f00b53739a2ed8a94544dcdfd98dd47ff3c6"
+    },
+    {
+      "file": "assets/arena/gidonozeaas-starburst-v1.webp",
+      "bytes": 361258,
+      "sha256": "0e1593a8e713d5fcd1bddc098f757433d1722d610c207d18beb72ceaad884c49"
+    },
+    {
+      "file": "assets/arena/gidonozeaas-v1.png",
+      "bytes": 1267733,
+      "sha256": "b0786c1c4e0d7511cb94a8e72931305748e7f50d17c5f1509a9e6ab46bcc761a"
+    },
+    {
+      "file": "assets/arena/marian-battle-v1.png",
+      "bytes": 2646566,
+      "sha256": "9e3cee2a629327e6dcfdf767b80ff1f7649c59377e0641a7733854d4bc3711cc"
+    },
+    {
+      "file": "assets/arena/marian-v1.png",
+      "bytes": 1631647,
+      "sha256": "8d73cd71ea96135e7319829272a506236cf8d23add21e78bf84ce7b07b3c05b7"
+    },
+    {
+      "file": "assets/arena/mimi-show-uniform-fullbody-v1.webp",
+      "bytes": 166576,
+      "sha256": "d97faaa694ca0ccb665aebe61f606974d969721ffb8886ec9aca6c146ac486cc"
+    },
+    {
+      "file": "assets/arena/mimi-victory-v1.png",
+      "bytes": 2447107,
+      "sha256": "e468f788b802f1f9fc0019c0cb938de6214a2651e10815eadc3045c47b656770"
+    },
+    {
+      "file": "assets/arena/minato-battle-v1.png",
+      "bytes": 2355644,
+      "sha256": "2b58749c803e3a6f52b45ec11243cfb5e2b072637d8757c490787f1e69023617"
+    },
+    {
+      "file": "assets/arena/minato-combat-ready-v1.png",
+      "bytes": 2061840,
+      "sha256": "bb600d4969054325cdd49b7bee7409f4b439d7d5c49a43534ea5e056ab33409d"
+    },
+    {
+      "file": "assets/arena/mumyo-challenge-v1.png",
+      "bytes": 2562173,
+      "sha256": "578b7fa989eaabe64c238f002fed61cc9c37fa1899b59ae1c0e07b0aae36397a"
+    },
+    {
+      "file": "assets/arena/mumyo-concedes-v1.png",
+      "bytes": 2559767,
+      "sha256": "e7ce2de8d00c3960ee7d1d2c31110589222b829933e5000c130abfd245785912"
+    },
+    {
+      "file": "assets/arena/mumyo-counter-v1.png",
+      "bytes": 2702876,
+      "sha256": "5909e70b2611b5f471069c78f7aa9b12b252326c359496b68e3d9d9ff3237209"
+    },
+    {
+      "file": "assets/arena/mumyo-v1.png",
+      "bytes": 1301755,
+      "sha256": "aa19a8faba1dcc7802d3e389482a8067ed49785a2276705bc1774ee9104ca355"
+    },
+    {
+      "file": "assets/arena/night-battle-v1.png",
+      "bytes": 2507548,
+      "sha256": "8093ac3cd86950f755bd9d28ed2cfc3a4508425796caf515a933152a0a39a833"
+    },
+    {
+      "file": "assets/arena/night-eater-v1.png",
+      "bytes": 2257058,
+      "sha256": "73e4143c714e796f14d1cb7d2f958ebf0438f3d299886680f865f6a1b0ad7af8"
+    },
+    {
+      "file": "assets/arena/peony-battle-v1.png",
+      "bytes": 2594744,
+      "sha256": "b3dc63ea9a91b04bccd78551844889b8363e6c48c7e2fbf2aa7d880231a91a35"
+    },
+    {
+      "file": "assets/arena/peony-v1.png",
+      "bytes": 1921627,
+      "sha256": "383a0c9ef292471a9aa3cd68eef815cc0cbf43aa0a97cd06cc7fe16da97bd77a"
+    },
+    {
+      "file": "assets/arena/rinne-battle-v1.png",
+      "bytes": 2654125,
+      "sha256": "8961cca8e315270478242eb4cc80e76603a46888a726a3fad7194d6422b25202"
+    },
+    {
+      "file": "assets/arena/rinne-v1.png",
+      "bytes": 1266763,
+      "sha256": "846fb5b573c9f2dc132621ae823d0802b7aa6672bfe06c9aab76e8e563755d0c"
+    },
+    {
+      "file": "assets/arena/room-battle-v1.png",
+      "bytes": 2268953,
+      "sha256": "6ea1a94925d0d79e911f279982dcc789b695b9519cbeddd374ad5efc99917998"
+    },
+    {
+      "file": "assets/arena/room-seventeen-combat-ready-v1.png",
+      "bytes": 1731718,
+      "sha256": "1e3f3190aa0aa37aa869bff264dec77fd7692d85dd657571b3609a8cd40032c0"
+    },
+    {
+      "file": "assets/arena/saza-battle-v1.png",
+      "bytes": 2742535,
+      "sha256": "0041e7f838c2e13f4d1f934a403e97f31f55cd63c33ce7a69fbc1cb3aca7f953"
+    },
+    {
+      "file": "assets/arena/sazanami-v1.png",
+      "bytes": 2572576,
+      "sha256": "0d2fd8007c132a4bd74e701851e83e35a1a9a30a04a0a957a7c15cd127ce2d5e"
+    },
+    {
+      "file": "assets/arena/shahar-challenge-v1.png",
+      "bytes": 2559297,
+      "sha256": "104442894b0a24177b774490f655688377c448845a2d5aba92bd77bd9843454d"
+    },
+    {
+      "file": "assets/arena/shahar-combat-ready-v1.png",
+      "bytes": 2788920,
+      "sha256": "8a7dbecf90ddc480fba0ef069c602b2a29ca06064dbc7b11e9f7dad7a830afc3"
+    },
+    {
+      "file": "assets/arena/shahar-concedes-v1.png",
+      "bytes": 2755469,
+      "sha256": "c2c81a0b3b5a31e7940a71168f3f121bb2d8c2cacaa922c1e257fbd93347d308"
+    },
+    {
+      "file": "assets/arena/shahar-counter-v1.png",
+      "bytes": 2553649,
+      "sha256": "aa3f41b4b4e6632e9fe0ac58020548c47de84a6e397ae5757f7d3d480fc0db8c"
+    },
+    {
+      "file": "assets/arena/teirei-barrier-v1.png",
+      "bytes": 3146983,
+      "sha256": "bb292f883a730b18baa8bce79d33ea652d7013dd7088fd266c0b95cb6473b887"
+    },
+    {
+      "file": "assets/arena/teirei-battle-v1.png",
+      "bytes": 2667331,
+      "sha256": "57fb85dc51b2010e53dbc45e8720643701916582777d0a93a7fff95e8744e523"
+    },
+    {
+      "file": "assets/arena/teirei-v1.png",
+      "bytes": 1486350,
+      "sha256": "2001435053155931d2367c6ff8745cc5da3f29ad946583f5ff070df399923b4d"
+    },
+    {
+      "file": "assets/arena/tokimeki-cassim-v1.png",
+      "bytes": 2216505,
+      "sha256": "9bc9302948b64f67162c8a250fdd3e476afe8dabca788886753401fc2aedf99e"
+    },
+    {
+      "file": "assets/arena/tokimeki-rinne-v1.png",
+      "bytes": 2514069,
+      "sha256": "411a1b56efc7b612ca3096003a6726e28c8a77c7f3e6dc34cd0d9c72aa117e35"
+    },
+    {
+      "file": "assets/arena/trial-crystal-motion-v1-browser.mp4",
+      "bytes": 2248224,
+      "sha256": "37de33ee028bde0aed00b00d1f7b6141e5e004059acffc2d8f224c54464147cc"
+    },
+    {
+      "file": "assets/arena/trial-crystal-motion-v1.mp4",
+      "bytes": 3336373,
+      "sha256": "caf735a4916136e41dd9c47514593b642ded45299e4fc3eb685283cb6e4d70a6"
+    },
+    {
+      "file": "assets/arena/trial-crystal-v1.png",
+      "bytes": 2961636,
+      "sha256": "4bb1d4d1cf1696478a8ab205c0dc3fb6f3d285400586155a4b7baf29bd8a436e"
+    },
+    {
+      "file": "assets/arena/trial-open-v1.png",
+      "bytes": 2968800,
+      "sha256": "b0e4307e05faac2fd989bfe9674bdaae479334f738551a4aff424854270772bc"
+    },
+    {
+      "file": "assets/arena/trial-recover-v1.png",
+      "bytes": 2816514,
+      "sha256": "191ef7d11e0acf872b7f094182e4cbf9457b3a6237d03a4a83824703c01d8f14"
+    },
+    {
+      "file": "assets/arena/ushiro-battle-v1.png",
+      "bytes": 2091693,
+      "sha256": "09f4cd38243430d84f531abcf466f4e954cca934d7082ab9a59fc20a7aa15423"
+    },
+    {
+      "file": "assets/arena/ushiro-v1.png",
+      "bytes": 896444,
+      "sha256": "b72f2c343b5896d3c7ce1ec98cc1ff3d4885086e8a489267aa33d1866ff11e11"
+    },
+    {
+      "file": "assets/arena/wolf-battle-v1.png",
+      "bytes": 2519706,
+      "sha256": "d6a8b886f128fec22ffcaa11ce08a2e953ff01718c1213d4b04ee90a5aa6d88c"
+    },
+    {
+      "file": "assets/arena/wolf-nine-v1.png",
+      "bytes": 1317263,
+      "sha256": "c97ec0808aa6d4384f0922d6bb80ca888a40127026023414bd67a49e69f73201"
+    },
+    {
+      "file": "assets/audio/kenney-casino/ATTRIBUTION.md",
+      "bytes": 2599,
+      "sha256": "f9832a5d2993fac728a8cb0ddb1836cd279a69b48e7bf4e33854f4f100c090bd"
+    },
+    {
+      "file": "assets/audio/kenney-casino/License.txt",
+      "bytes": 487,
+      "sha256": "3d9c53acb6e236d760da14030f54bc53e1d8c2599f78470c36b96fddcde09221"
+    },
+    {
+      "file": "assets/audio/kenney-casino/card-fan-1.ogg",
+      "bytes": 12489,
+      "sha256": "7a9758ccad8899baef1b9f60b4064e4baa724a548293832fdaea07e6e07e638d"
+    },
+    {
+      "file": "assets/audio/kenney-casino/card-fan-2.ogg",
+      "bytes": 18363,
+      "sha256": "5743373c9dde00c6eee949a2c8e65d75946522768999167e1f5632451630e848"
+    },
+    {
+      "file": "assets/audio/kenney-casino/card-place-1.ogg",
+      "bytes": 9624,
+      "sha256": "d8f26c33a665dcbdcc6f632f6050bc9dd548feb0d4942d4547615926d3926810"
+    },
+    {
+      "file": "assets/audio/kenney-casino/card-place-2.ogg",
+      "bytes": 8046,
+      "sha256": "903d5050718595e87864dd755643b476ab1a5533080dcc2dddc72570d33ba9f8"
+    },
+    {
+      "file": "assets/audio/kenney-casino/card-place-3.ogg",
+      "bytes": 11503,
+      "sha256": "1d988631a6e5201ed1bb0d728f2e43a3ec79401258426858793598044ac95841"
+    },
+    {
+      "file": "assets/audio/kenney-casino/card-place-4.ogg",
+      "bytes": 9618,
+      "sha256": "18e3ba713b7259605fd27cdc048085ed56cf86b32403f070b6cb125019f77183"
+    },
+    {
+      "file": "assets/audio/kenney-casino/card-shove-1.ogg",
+      "bytes": 10690,
+      "sha256": "1ea667aa6795d5f14239192116ebcbd8f3f47eb1c7faaf2ec56844b9067b8b06"
+    },
+    {
+      "file": "assets/audio/kenney-casino/card-shove-2.ogg",
+      "bytes": 10445,
+      "sha256": "8e95c1d3ae94b5b91bc663432ad7c3bf4e03a541c22ec10fa51c65fe0e29054b"
+    },
+    {
+      "file": "assets/audio/kenney-casino/card-shove-3.ogg",
+      "bytes": 9948,
+      "sha256": "399520d483a1466fcaa850b9c407b4edbd5c7f0cbdf17e84dea12e9636326d0d"
+    },
+    {
+      "file": "assets/audio/kenney-casino/card-shove-4.ogg",
+      "bytes": 10875,
+      "sha256": "0a1ad3a2f16bd2ed73349e6342426ca7a59a6e26b7e26e36d51d51c2c2349d6f"
+    },
+    {
+      "file": "assets/audio/kenney-casino/card-shuffle.ogg",
+      "bytes": 30002,
+      "sha256": "96c84883a30845ede723a4cf2e8369e9837e7dd4e0d4eb0212b0a7ed21b0f544"
+    },
+    {
+      "file": "assets/audio/kenney-casino/card-slide-1.ogg",
+      "bytes": 8833,
+      "sha256": "006cf9822d15d7063f8899e56041f41646df30adb6fbd8b974ee5d5420012690"
+    },
+    {
+      "file": "assets/audio/kenney-casino/card-slide-2.ogg",
+      "bytes": 9042,
+      "sha256": "e674a1679ec87b507047fe012d068ad2c412125f56186f0e732684705c2a6888"
+    },
+    {
+      "file": "assets/audio/kenney-casino/card-slide-3.ogg",
+      "bytes": 9164,
+      "sha256": "af2ab62656cb3df73316ce5771b8ee1111a840962b21607e3202151e7413c52c"
+    },
+    {
+      "file": "assets/audio/kenney-casino/card-slide-4.ogg",
+      "bytes": 7912,
+      "sha256": "b9c82bcdbe6b7d00a06e2546bd2683a9ab082ca5fd090a42882f33eddd925b7f"
+    },
+    {
+      "file": "assets/audio/kenney-casino/card-slide-5.ogg",
+      "bytes": 9180,
+      "sha256": "8638ab0c17f029aded0e27a4f9b9bb9f8c621b19a6e9975e855cb40ea63e2201"
+    },
+    {
+      "file": "assets/audio/kenney-casino/card-slide-6.ogg",
+      "bytes": 8780,
+      "sha256": "be85da181ac879c20cb667d0f9f156dbdc236d3751737ad27359a15e946430a0"
+    },
+    {
+      "file": "assets/audio/kenney-casino/card-slide-7.ogg",
+      "bytes": 9580,
+      "sha256": "bda2040194f43484d03ee3c65ed6fff57251882ea7227abce4214bfa30bf2705"
+    },
+    {
+      "file": "assets/audio/kenney-casino/card-slide-8.ogg",
+      "bytes": 9863,
+      "sha256": "95d9aa26f8c63af9934f27a8e3b7e9b583f177640f0bbd6982f12dba52b9ae6b"
+    },
+    {
+      "file": "assets/audio/kenney-casino/cards-pack-open-1.ogg",
+      "bytes": 12715,
+      "sha256": "1214059fdfbf1c396c0702244fc833739cc346d326a71e450b731f456e54d6fb"
+    },
+    {
+      "file": "assets/audio/kenney-casino/cards-pack-open-2.ogg",
+      "bytes": 10918,
+      "sha256": "49e02479815c69cd303e0d8f12952c0492d5b3e555838f3485cc25a09818e6fb"
+    },
+    {
+      "file": "assets/audio/kenney-casino/cards-pack-take-out-1.ogg",
+      "bytes": 8269,
+      "sha256": "6d38b979f64d20e4153173187ed67b04c6c004767c0a43eddb65c75fa925a1c4"
+    },
+    {
+      "file": "assets/audio/kenney-casino/cards-pack-take-out-2.ogg",
+      "bytes": 9424,
+      "sha256": "d991829eeaf7e5a6f8462594e5be0d91535309ffd6249278f34eec70470395a4"
+    },
+    {
+      "file": "assets/audio/kenney-casino/chip-lay-1.ogg",
+      "bytes": 5720,
+      "sha256": "4b2111252ccb64eed67f171e061053849cfbb29873536c03948646f244a3905c"
+    },
+    {
+      "file": "assets/audio/kenney-casino/chip-lay-2.ogg",
+      "bytes": 6123,
+      "sha256": "8ca8b2d450741c04ed7b4ba51ed3f73c2400c8b3dbe83b974be4fe4774a76712"
+    },
+    {
+      "file": "assets/audio/kenney-casino/chip-lay-3.ogg",
+      "bytes": 6327,
+      "sha256": "bf24ebb417b6279568800dffdb0205d3ec8854c7efe179e8964755a6341727aa"
+    },
+    {
+      "file": "assets/audio/kenney-casino/chips-collide-1.ogg",
+      "bytes": 6356,
+      "sha256": "f41b3d106360fc68ebc061a211d4265b4cb5fa1fbe86e4d57d3673510e2c3784"
+    },
+    {
+      "file": "assets/audio/kenney-casino/chips-collide-2.ogg",
+      "bytes": 5987,
+      "sha256": "2a10c5ff4b2fbaa55a317fc258ddce3fec85bd26db2d3c2ad298b3b33ce23bc6"
+    },
+    {
+      "file": "assets/audio/kenney-casino/chips-collide-3.ogg",
+      "bytes": 6301,
+      "sha256": "1c5e885f72b64c38fff7ef05579e49310e7acf026cf123ffb65fffb57fb06e1c"
+    },
+    {
+      "file": "assets/audio/kenney-casino/chips-collide-4.ogg",
+      "bytes": 6038,
+      "sha256": "1ffa34af64adc62fce583c5aa9a3c98287b1673ef191576a5571f1ffd39529dd"
+    },
+    {
+      "file": "assets/audio/kenney-casino/chips-handle-1.ogg",
+      "bytes": 9374,
+      "sha256": "a2c495237fb0dc0dc96ccc2c9840572edd226e6459398ecb631c6c9f9e5408f0"
+    },
+    {
+      "file": "assets/audio/kenney-casino/chips-handle-2.ogg",
+      "bytes": 8639,
+      "sha256": "099b6d7d3a71e7d22171a93d124e7366e326d32eb85d718ba29abded8a49c329"
+    },
+    {
+      "file": "assets/audio/kenney-casino/chips-handle-3.ogg",
+      "bytes": 6261,
+      "sha256": "7c5a86e27b2bef839ae096dd655506cf46a82494bd01cc28f51bed6ab26cc342"
+    },
+    {
+      "file": "assets/audio/kenney-casino/chips-handle-4.ogg",
+      "bytes": 7347,
+      "sha256": "0d171ea00224709cbe31ef95a111eabaf1382606a4836c5717043b339cbed8e9"
+    },
+    {
+      "file": "assets/audio/kenney-casino/chips-handle-5.ogg",
+      "bytes": 11273,
+      "sha256": "589753ea21b1955626e82975be8979f42140f5b0645a8c33c2d1f7e33fba68cb"
+    },
+    {
+      "file": "assets/audio/kenney-casino/chips-handle-6.ogg",
+      "bytes": 8909,
+      "sha256": "527d4d3de55cc261dc476329b71a750c296f3ad633ac50318d913976bb89857c"
+    },
+    {
+      "file": "assets/audio/kenney-casino/chips-stack-1.ogg",
+      "bytes": 6469,
+      "sha256": "12bf175b9afcea112175b241ad3336c6244ac5fdcdff8b5942ecc03f2225e0c4"
+    },
+    {
+      "file": "assets/audio/kenney-casino/chips-stack-2.ogg",
+      "bytes": 5642,
+      "sha256": "9f985e766c3557eef1764240b48e30b2f0ffa870a99f05de85cd6bf0ea758ef5"
+    },
+    {
+      "file": "assets/audio/kenney-casino/chips-stack-3.ogg",
+      "bytes": 7203,
+      "sha256": "48cc0f01e2b62be7677f2e8c02177906cab80e96fa8176fa05b3ced35bc2a9c2"
+    },
+    {
+      "file": "assets/audio/kenney-casino/chips-stack-4.ogg",
+      "bytes": 6095,
+      "sha256": "129a3af12f096ef9d8326b32c3c674d687f1a0b447157ccd02fb431ba134b580"
+    },
+    {
+      "file": "assets/audio/kenney-casino/chips-stack-5.ogg",
+      "bytes": 5749,
+      "sha256": "42dd800e3e24bbd07d3ebfc86c44b6500d376641e30270dc363d95a73e90b56e"
+    },
+    {
+      "file": "assets/audio/kenney-casino/chips-stack-6.ogg",
+      "bytes": 5821,
+      "sha256": "5ec35171aa65bf5edd977e293523a649227accf36e682bf1ac9a84286f04c682"
+    },
+    {
+      "file": "assets/audio/kenney-casino/dice-grab-1.ogg",
+      "bytes": 10278,
+      "sha256": "1952cf1987b2c1ebb035b30b5f0caf23604b6ce4c88b6a226fe6e6257ce730f3"
+    },
+    {
+      "file": "assets/audio/kenney-casino/dice-grab-2.ogg",
+      "bytes": 11437,
+      "sha256": "4eb4940d1e71aa3f6ac5f865b6b47748a492adf6a83d622c8efe6284dbebbd2c"
+    },
+    {
+      "file": "assets/audio/kenney-casino/dice-shake-1.ogg",
+      "bytes": 19388,
+      "sha256": "ba603441c857204dbe3ff3345902c7e1c3f523bf1bd314acf088609bc6c1e4e5"
+    },
+    {
+      "file": "assets/audio/kenney-casino/dice-shake-2.ogg",
+      "bytes": 19976,
+      "sha256": "47e8e2cb0adb95bcd7348b58db8dc2bbfe3c553e50a4e9ef007e67891ed51ca2"
+    },
+    {
+      "file": "assets/audio/kenney-casino/dice-shake-3.ogg",
+      "bytes": 19722,
+      "sha256": "aecd1dd0de6e42ebb510d1f9bfe91a580a8af238dd73bdfda368b90b894b5c09"
+    },
+    {
+      "file": "assets/audio/kenney-casino/dice-throw-1.ogg",
+      "bytes": 9523,
+      "sha256": "4e6581c73465cdd7ec32e86a709b4ea5c682e819c9bdb7989d1df1880ba67886"
+    },
+    {
+      "file": "assets/audio/kenney-casino/dice-throw-2.ogg",
+      "bytes": 7545,
+      "sha256": "e0b8c370503b2c5c2a72d311cccae30fe63a6afd48f2be32e771fcf1a98585d6"
+    },
+    {
+      "file": "assets/audio/kenney-casino/dice-throw-3.ogg",
+      "bytes": 9231,
+      "sha256": "09c13d35a9a30bfce31a5e9bca94adc5be189ddecd0b4500237d54c7fd05227c"
+    },
+    {
+      "file": "assets/audio/kenney-casino/die-throw-1.ogg",
+      "bytes": 8410,
+      "sha256": "b31d716165be60e442da3c1ca25a3968aad1e0851a7f0859f495aecc02fd9e13"
+    },
+    {
+      "file": "assets/audio/kenney-casino/die-throw-2.ogg",
+      "bytes": 9824,
+      "sha256": "a2702cfe14d24aab302483a1499daa88474a4af4acd794b58d97f4af16333b3d"
+    },
+    {
+      "file": "assets/audio/kenney-casino/die-throw-3.ogg",
+      "bytes": 10018,
+      "sha256": "52fc44c7bb89328a147738574c925508c34abf4c19a014575b37ffb8c6b02437"
+    },
+    {
+      "file": "assets/audio/kenney-casino/die-throw-4.ogg",
+      "bytes": 8159,
+      "sha256": "6253cabcb10c4152548cbc9d3ea87c1bf1bd484f0bd8d6b73c542e690509c0fd"
+    },
+    {
+      "file": "assets/backgrounds/lobby.png",
+      "bytes": 2560855,
+      "sha256": "4cb888c2426a9dfa88719fdd943704bdb2a3d2494f9d2ba4f2b09774f1bf19c6"
+    },
+    {
+      "file": "assets/backgrounds/v5-candidates/galleria_lapin_clean_v1.png",
+      "bytes": 1924184,
+      "sha256": "1047e1ba1d1a770f14a8a240eef6bf83acc9232b4bbeb4e80e105d900bc3304a"
+    },
+    {
+      "file": "assets/cabinet-v5-candidates/final/cabinet-control-deck.png",
+      "bytes": 290169,
+      "sha256": "b312ce8fca7a7f33ddf710c14964b24850e6ecef19d1afcd02c7633edb829eb6"
+    },
+    {
+      "file": "assets/cabinet-v5-candidates/final/cabinet-crystal-finials.png",
+      "bytes": 131259,
+      "sha256": "66fcedc538210f0ee674885842af58a71a10ba734228129ef303a7911989c6d3"
+    },
+    {
+      "file": "assets/cabinet-v5-candidates/final/cabinet-lcd-frame.png",
+      "bytes": 192212,
+      "sha256": "dda22e82bf0889c24aaea18860640fca9004f8af36e7c720d135bebdb5c73a0c"
+    },
+    {
+      "file": "assets/cabinet-v5-candidates/final/cabinet-outer-frame.png",
+      "bytes": 570241,
+      "sha256": "973ee5fc13ebe266398dbd613402a2becaa309e30276e5c070f3c5a350a90636"
+    },
+    {
+      "file": "assets/cabinet-v5-candidates/final/cabinet-reel-bezel.png",
+      "bytes": 216799,
+      "sha256": "037ef50f9e553db2449303f315da846d383a41df6ef05ceaff19956e91183c5c"
+    },
+    {
+      "file": "assets/cabinet-v5-candidates/final/cabinet-title-bridge.png",
+      "bytes": 50457,
+      "sha256": "6cf14a88a4b7a9c5c817e526f453a44f44eab837c0c945bcf078c304dfe44dc6"
+    },
+    {
+      "file": "assets/casino-loop-v5/slot-selection-cabinet-v1.png",
+      "bytes": 2357838,
+      "sha256": "8639746011b5a11c0bb18e8c490c5d60139374c4be56cf19180a350f01b8efbb"
+    },
+    {
+      "file": "assets/casino-loop-v5/slot-selection-floor-v1.png",
+      "bytes": 2784981,
+      "sha256": "abce9bf17de6051ebefacf327811a4622c78ef2217760a273c5d29bb0f6bc8a6"
+    },
+    {
+      "file": "assets/casino-loop-v5/slot-walk-left-v1.png",
+      "bytes": 2801683,
+      "sha256": "fe3348bbfe660fc0c462782327407b4376cbbdfef70bb97ed3e73a3048e41ba0"
+    },
+    {
+      "file": "assets/casino-loop-v5/slot-walk-right-v1.png",
+      "bytes": 2795484,
+      "sha256": "2f7367f943bb8dfd18182988e86085ebb40f135e84d2ad56cffa39556a6d533e"
+    },
+    {
+      "file": "assets/casino-loop-v5/zone-01-arrival.png",
+      "bytes": 2504345,
+      "sha256": "96a3651ccc73b52057c911efde9c44ca37babde525aa251c28aad1277e7f5aa3"
+    },
+    {
+      "file": "assets/casino-loop-v5/zone-02-main-floor.png",
+      "bytes": 2577962,
+      "sha256": "818ee1959e0ed32fcc58cd44fd3c88e5e24fce2e3a83ea6cbee2d08b4ccc1764"
+    },
+    {
+      "file": "assets/casino-loop-v5/zone-03-vip-salon.png",
+      "bytes": 2411266,
+      "sha256": "9e5640e0b990b3865757e22ceeea3b77bce1ece6539798cdd6d37af106772e9e"
+    },
+    {
+      "file": "assets/casino-loop-v5/zone-04-jewel-exchange.png",
+      "bytes": 2429219,
+      "sha256": "acbc46d213e2a3be0297ccaeaee574415f2e08f7ce5049f1bde8d1056bfc8852"
+    },
+    {
+      "file": "assets/chapter1-motifs/chapter1-royal-pot-v1.png",
+      "bytes": 2440660,
+      "sha256": "6a3d11706b8e98a1b78ba6cb27ef60b6a34792fb9261aa68734c0f738821e4cd"
+    },
+    {
+      "file": "assets/chapter1-motifs/chapter1-trial-vip-dais-v1.png",
+      "bytes": 2621205,
+      "sha256": "66524ab321650d5b666680f120c705d3e36ec58bc71a12968b0bc94dd734d2e1"
+    },
+    {
+      "file": "assets/chapter1-motifs/mimi-poker-card-back-source.png",
+      "bytes": 2190022,
+      "sha256": "e4aef91071c85ae92ddbe731ab1417e643dc3d5cd9e9151c92be15cfe007d08a"
+    },
+    {
+      "file": "assets/chapter1-motifs/panyu-ball.png",
+      "bytes": 46688,
+      "sha256": "e569bd5a997fc848366a77f5d8185efff140d0db88fc54f83ed1ad7117607988"
+    },
+    {
+      "file": "assets/character-animation-v7/clips/mimi-service-walk-loop-seedance25-v5-alpha.webm",
+      "bytes": 975822,
+      "sha256": "0ccc0b1de7cde4560408c10c19c27a2b959684ae1ed1d991fe6d8c9a66dfe65d"
+    },
+    {
+      "file": "assets/character-animation-v8/cutins-v4-original/grano-appraise-original-v1.png",
+      "bytes": 2922303,
+      "sha256": "63f16f63821074bcbf2e1f003612430e628446823e4bb6560e383d0febdb477c"
+    },
+    {
+      "file": "assets/character-animation-v8/cutins-v4-original/mimi-ace-original-v2.png",
+      "bytes": 2269654,
+      "sha256": "3de928293c9003c3ee7d8c420b87e70bdbe974971bc93ffeaf0058eca419b450"
+    },
+    {
+      "file": "assets/character-animation-v8/cutins-v4-original/polka-raise-original-v2.png",
+      "bytes": 2714217,
+      "sha256": "33fedbffe9557244dda585586648495cd0a2f378c03232a6034ce0b8f26e6279"
+    },
+    {
+      "file": "assets/character-animation-v8/cutins-v4-original/rico-read-original-v1.png",
+      "bytes": 2801108,
+      "sha256": "e9b6ccfacc7a390d5e2818a022a8efe47b6ad9f9b302c9023f3d0edf195f1405"
+    },
+    {
+      "file": "assets/character-animation-v8/cutins-v4-original/selina-warning-original-v1.png",
+      "bytes": 3039835,
+      "sha256": "82d5fb6833eb6f3dcf5dfc0d5b00b565ea9613e5dba1fdb101162ae7dbccafc1"
+    },
+    {
+      "file": "assets/character-animation-v8/cutins-v4-original/velvet-boss-original-v1.png",
+      "bytes": 3150602,
+      "sha256": "6e2d29aa6aba7f0586d9d8d5112dcba52f37f062b98dff6432e1093cb7e65b0d"
+    },
+    {
+      "file": "assets/character-animation-v8/unified-cast-action-v1/grano.png",
+      "bytes": 278548,
+      "sha256": "29706eaeacd327cd641522b48712ce957235690677b835eb02886e08eff9dce3"
+    },
+    {
+      "file": "assets/character-animation-v8/unified-cast-action-v1/mimi.png",
+      "bytes": 235206,
+      "sha256": "5659a45d0bb99b23423912bcd1a717a6a770f94263b0e124bb77569d7ee6a675"
+    },
+    {
+      "file": "assets/character-animation-v8/unified-cast-action-v1/polka.png",
+      "bytes": 281406,
+      "sha256": "ec9e7e9c38166a9194392ac453d78877fb8b00ccdd7e2613e688e4ab0b404d72"
+    },
+    {
+      "file": "assets/character-animation-v8/unified-cast-action-v1/rico.png",
+      "bytes": 326487,
+      "sha256": "727c13148b70125143146789ddcd04221547152c2dfdfa2187b47c91dbeee13b"
+    },
+    {
+      "file": "assets/character-animation-v8/unified-cast-action-v1/selina.png",
+      "bytes": 308742,
+      "sha256": "8bd3aaf5759aaa2c98e43cbcf97e7954c2ad6bb521aba916e1cdb46808ccb129"
+    },
+    {
+      "file": "assets/character-animation-v8/unified-cast-boss-v1/velvet-production.png",
+      "bytes": 682605,
+      "sha256": "c1981f20533293855be9c838a78d4b37cacc6a7a3bcec704821f7949cd299775"
+    },
+    {
+      "file": "assets/character-animation-v8/unified-cast-v1/grano.png",
+      "bytes": 277522,
+      "sha256": "969b3427a8a349729337389a03e8273c800c2f6fff83f54729ef2135bd58742e"
+    },
+    {
+      "file": "assets/character-animation-v8/unified-cast-v1/mimi.png",
+      "bytes": 237170,
+      "sha256": "2db93476fff36f7d2b86e9ffaf2eba926c5148a1553e6ce8ac218f422e7f2769"
+    },
+    {
+      "file": "assets/character-animation-v8/unified-cast-v1/polka.png",
+      "bytes": 269310,
+      "sha256": "b9da2186ab298398ea4a2b6eec96c3008f60788a838fe6ff05ff62432b463fd2"
+    },
+    {
+      "file": "assets/character-animation-v8/unified-cast-v1/rico.png",
+      "bytes": 338641,
+      "sha256": "7bf7527ac7e9842ab37c49e676a6c45babed5abefc26cf365bd0175bcfd41c3d"
+    },
+    {
+      "file": "assets/character-animation-v8/unified-cast-v1/selina.png",
+      "bytes": 312598,
+      "sha256": "39cc0019df21b14283cd678efa28aceebddfbfab43820be8139b833b9637e6d5"
+    },
+    {
+      "file": "assets/character-animation-v8/unified-cast-v1/velvet.png",
+      "bytes": 339613,
+      "sha256": "c00b0a1ad2844f7429c242985d7dacb09f7464c781f5aba9dc89bb1e22b1de98"
+    },
+    {
+      "file": "assets/character-emotion-animation-v1/grano-calculation-collapse/strip.png",
+      "bytes": 2913888,
+      "sha256": "62b1129aa139b08a592db115467ca8fc251a6fee44b8f8d68d5f17d861a2e576"
+    },
+    {
+      "file": "assets/character-emotion-animation-v1/grano-tantrum/strip.png",
+      "bytes": 2986781,
+      "sha256": "cc2dd6da726c139b67085095011cf6cfc04ba5d129ba51009ceba5f2533d790e"
+    },
+    {
+      "file": "assets/character-emotion-animation-v1/grano-value-read/strip.png",
+      "bytes": 2859590,
+      "sha256": "e47b0551902359fe7f1895eb9fc3f5e2d0fa8b7d9ca8a1fa49f154ddf011dc59"
+    },
+    {
+      "file": "assets/character-emotion-animation-v1/mimi-panic/strip.png",
+      "bytes": 2801569,
+      "sha256": "14de522f5582a22be1b0ad2a098a2b077f5f85eca03235bf4e7a16658ab1e1f7"
+    },
+    {
+      "file": "assets/character-emotion-animation-v1/mimi-tantrum/strip.png",
+      "bytes": 2976076,
+      "sha256": "0ca9ad468dbf2faecaaa5f4de1e3868eba32667a0866316c556a933910df6444"
+    },
+    {
+      "file": "assets/character-emotion-animation-v1/polka-bluff-exposed/strip.png",
+      "bytes": 3140234,
+      "sha256": "ad0fb7fcc039feddb8cf34b83cb0a845547a81de14722b43d5ca8047c0d1f689"
+    },
+    {
+      "file": "assets/character-emotion-animation-v1/polka-showboat/strip.png",
+      "bytes": 2952249,
+      "sha256": "22f2ec062fbaa3f62229b7d58b78b5539521a06c76f78850f384a2f5046f0ad2"
+    },
+    {
+      "file": "assets/character-emotion-animation-v1/polka-tantrum/strip.png",
+      "bytes": 2953639,
+      "sha256": "b1cc0d26a9d35a6114537b3c9a892917c740940ff7371aa3c9cfaa2b19673c67"
+    },
+    {
+      "file": "assets/character-emotion-animation-v1/rico-composure-crack/strip.png",
+      "bytes": 2653971,
+      "sha256": "30aebc3dafda1f023585cf776b9fb87578ab419773c1c2a14450d31c0d392da0"
+    },
+    {
+      "file": "assets/character-emotion-animation-v1/rico-senior-read/strip.png",
+      "bytes": 2643408,
+      "sha256": "0ba7e0873e7edbc979b490a2e9b1e1f1dfdfa471e4cee3b776d22eca2d644cfa"
+    },
+    {
+      "file": "assets/character-emotion-animation-v1/rico-tantrum/strip.png",
+      "bytes": 2596173,
+      "sha256": "77e68473bcc915e059ab497945613dd191f16ce125defb00f3c7c69b1fc1d5cf"
+    },
+    {
+      "file": "assets/character-emotion-animation-v1/selina-plead/strip.png",
+      "bytes": 2399766,
+      "sha256": "394d1d4f0f42cca50aaf52013775d4ece7bea3dc91e79de0ca0a4fc757ff5c22"
+    },
+    {
+      "file": "assets/character-emotion-animation-v1/selina-quiet-exposed/strip.png",
+      "bytes": 2741464,
+      "sha256": "4a361a0fa19a9a85060999cdc58a301ba74ba3f0fdc90b7cbdd647ef47c3679f"
+    },
+    {
+      "file": "assets/character-emotion-animation-v1/selina-tantrum/strip.png",
+      "bytes": 2903514,
+      "sha256": "c2dd4c325892d8f5038ee7e876856eddb8846ba2d307eabc340d7699fcaba043"
+    },
+    {
+      "file": "assets/character-emotion-animation-v1/velvet-queen-taunt/strip.png",
+      "bytes": 2668395,
+      "sha256": "842414d93725faca1775954f4e73100c540fe764da53afd9c503964580104896"
+    },
+    {
+      "file": "assets/character-emotion-animation-v1/velvet-tantrum/strip.png",
+      "bytes": 2882155,
+      "sha256": "ae972f46c4b98586fe1cbf225b132a2611a379efad36560c6fc9f407ad684df2"
+    },
+    {
+      "file": "assets/character-emotions-v2/caught/grano.png",
+      "bytes": 522091,
+      "sha256": "d6ee2fb57bd978c65055edd64e6f398adfea8ef388aa6d687101479747a5e37c"
+    },
+    {
+      "file": "assets/character-emotions-v2/caught/mimi.png",
+      "bytes": 504345,
+      "sha256": "c14a62e409fc45bce7f7d398778c3136e08ffdf8e2b0f85ddd96f20392be7496"
+    },
+    {
+      "file": "assets/character-emotions-v2/caught/polka.png",
+      "bytes": 549565,
+      "sha256": "8bd70fff1def67f02a38f674cfcf114b67cadf9adbc9f0f646aae210d1c28020"
+    },
+    {
+      "file": "assets/character-emotions-v2/caught/rico.png",
+      "bytes": 495825,
+      "sha256": "bdfc05fa0b6cc7f80dd82eddfc09f79df54fb8ca59814d8ad64da4fa4822bafc"
+    },
+    {
+      "file": "assets/character-emotions-v2/caught/selina.png",
+      "bytes": 519895,
+      "sha256": "daed4c5779ac0c7e122bc389681615bdd7e46c93e6f577a4b48bf0fe3686989c"
+    },
+    {
+      "file": "assets/character-emotions-v2/caught/velvet.png",
+      "bytes": 555126,
+      "sha256": "a9e6081f7877d83e664dfe612b21307aa5f67bc13f05bfeee4f3c0455795d957"
+    },
+    {
+      "file": "assets/character-emotions-v2/panic/grano.png",
+      "bytes": 482629,
+      "sha256": "a859ce89c869f1431565eba8716ffcfe5acc9dc6362effc091706f090a8fa261"
+    },
+    {
+      "file": "assets/character-emotions-v2/panic/mimi.png",
+      "bytes": 472385,
+      "sha256": "42cc4bf3418cf68c6e85ec5f6217bf300b9fd4a30c4536806baf04500730279b"
+    },
+    {
+      "file": "assets/character-emotions-v2/panic/polka.png",
+      "bytes": 482305,
+      "sha256": "38dde86b318b0ba422be7bda03b5c5b508c9c2d40501da4806a11308e4b710ed"
+    },
+    {
+      "file": "assets/character-emotions-v2/panic/rico.png",
+      "bytes": 472809,
+      "sha256": "da343fba3959f2246ecbe9103c2ac488cfc41357bff080f9b61bf6bd7eafcc60"
+    },
+    {
+      "file": "assets/character-emotions-v2/panic/selina.png",
+      "bytes": 468020,
+      "sha256": "f7a10ca60a9ac3c9c44d2a4b6d0cbf05fd4493445651f7b230fb4afa80f43797"
+    },
+    {
+      "file": "assets/character-emotions-v2/panic/velvet.png",
+      "bytes": 527990,
+      "sha256": "878ebfb3c57f3c280b661feda2162449104bc15ca83c2382ee42c086fe22c28b"
+    },
+    {
+      "file": "assets/character-emotions-v2/plead/grano.png",
+      "bytes": 531898,
+      "sha256": "40c82e64c99567f1eb3094637f94d29afb056ccf5860c7ef04cc0a7a03829e6c"
+    },
+    {
+      "file": "assets/character-emotions-v2/plead/mimi.png",
+      "bytes": 511343,
+      "sha256": "073265f884cf9ec05ce98cff17a69eb30c37400fe4f9f0671ac5f113666a79ab"
+    },
+    {
+      "file": "assets/character-emotions-v2/plead/polka.png",
+      "bytes": 541362,
+      "sha256": "3194c1947ca1f41ef510221ee9d1fb674f52f9179ec844ca02303ace2140c514"
+    },
+    {
+      "file": "assets/character-emotions-v2/plead/rico.png",
+      "bytes": 514718,
+      "sha256": "2bced3d46f0cf13110f662c8734d341272ec0e6da1e342b57f249b110b2aead1"
+    },
+    {
+      "file": "assets/character-emotions-v2/plead/selina.png",
+      "bytes": 526589,
+      "sha256": "8949734e396d76cd7529e7c3d40602931f1bda70090d26d39388d51facdb295b"
+    },
+    {
+      "file": "assets/character-emotions-v2/plead/velvet.png",
+      "bytes": 561080,
+      "sha256": "6f8d59cae7498ace3a66a5f9719f61a80d695243183ed83ea36a09e4d7f65ee5"
+    },
+    {
+      "file": "assets/character-emotions-v2/smug/grano.png",
+      "bytes": 525547,
+      "sha256": "f2e51d4b3184b82af18584fcacdc5a3987b78da0ee751654d326615e3cc0daec"
+    },
+    {
+      "file": "assets/character-emotions-v2/smug/mimi.png",
+      "bytes": 514415,
+      "sha256": "23dd4efbba2bd79a35f5956be6b55913530adf597b8e0bdaeaf86a46f89fb5c1"
+    },
+    {
+      "file": "assets/character-emotions-v2/smug/polka.png",
+      "bytes": 513926,
+      "sha256": "777d11228a93aa19dceb7388a2a5cef9ef2c7cdd8f00e69e80ad5ce398e807c3"
+    },
+    {
+      "file": "assets/character-emotions-v2/smug/rico.png",
+      "bytes": 504726,
+      "sha256": "0679337add70003306e5ada43dbb66f21b7d00cc021c8e1fbcfd9dc6b703b10a"
+    },
+    {
+      "file": "assets/character-emotions-v2/smug/selina.png",
+      "bytes": 500889,
+      "sha256": "f5a52978dd72e56fbb7a5c73d5c1d3db26100090681afb2a69c6f69c9716dca8"
+    },
+    {
+      "file": "assets/character-emotions-v2/smug/velvet.png",
+      "bytes": 551872,
+      "sha256": "3e1e7ea424975bdc970553ab79e5f89e0f3a1096b67ce2a3888a8d43d436bbea"
+    },
+    {
+      "file": "assets/character-emotions-v2/tantrum/grano.png",
+      "bytes": 558540,
+      "sha256": "9cb9c3881642a8797e3cb6a507225f82ae337feafeabadf768996f00a6d332b0"
+    },
+    {
+      "file": "assets/character-emotions-v2/tantrum/mimi.png",
+      "bytes": 536571,
+      "sha256": "a716ca2af3a2d67cd08eb1294e681d7b6494824b90c1cb476c3b83aae9876d2a"
+    },
+    {
+      "file": "assets/character-emotions-v2/tantrum/polka.png",
+      "bytes": 564644,
+      "sha256": "2573b648be0fabee6bf85bc453ae4a556eaec0d31330cd6b039f8fe4d6b03d4a"
+    },
+    {
+      "file": "assets/character-emotions-v2/tantrum/rico.png",
+      "bytes": 514678,
+      "sha256": "867c11dec9d1dfa31b4e901aaf3f9f12e9382be61eafe50cf273e5934ca0e223"
+    },
+    {
+      "file": "assets/character-emotions-v2/tantrum/selina.png",
+      "bytes": 521200,
+      "sha256": "42ec6f983d1cb009022979fdac5d2017cd8eb6a067d3bd2c704fedebdd5ee928"
+    },
+    {
+      "file": "assets/character-emotions-v2/tantrum/velvet.png",
+      "bytes": 578894,
+      "sha256": "8afc4d715c2d8b7d69c3dc96ecda71dd6afced15c9b134ff106d6adc6f6c45c2"
+    },
+    {
+      "file": "assets/characters/boss-states-v5-candidates/card_shark/final/attack.png",
+      "bytes": 471627,
+      "sha256": "0c8f2566b521eb88626cec7ae84fdc22fc8a01412f6b661648ab3cbefef6641f"
+    },
+    {
+      "file": "assets/characters/boss-states-v5-candidates/card_shark/final/cardFan.png",
+      "bytes": 643414,
+      "sha256": "faa8279acdb09744a326c56240f3e2fe8cfc01c0b8135b6c0f77556b7169a977"
+    },
+    {
+      "file": "assets/characters/boss-states-v5-candidates/card_shark/final/defeated.png",
+      "bytes": 418205,
+      "sha256": "19f58ab8e64ee5a602af806ad16389291e5c916b8351fc9b0629337dab6b014d"
+    },
+    {
+      "file": "assets/characters/boss-states-v5-candidates/card_shark/final/hit.png",
+      "bytes": 463737,
+      "sha256": "b74107185bd29356156973c72fae93cd2edc8a618911ab29a4705d1172ab7a0a"
+    },
+    {
+      "file": "assets/characters/boss-states-v5-candidates/card_shark/final/returnPass.png",
+      "bytes": 376470,
+      "sha256": "28a64b53252cedb509ed2153b07bdde1f2c5ef750b1a70f2d63689d143ec1ca2"
+    },
+    {
+      "file": "assets/characters/boss-states-v5-candidates/tears_storm/final/attack.png",
+      "bytes": 840481,
+      "sha256": "1a51f44f7b9a876116f5f5488b9d127746e073e45534a11d624487dde3f6085f"
+    },
+    {
+      "file": "assets/characters/boss-states-v5-candidates/tears_storm/final/child.png",
+      "bytes": 835393,
+      "sha256": "afde3dfae8f92533fbe60da1833806b127c3ad70b5dd32c2808ad7877fd0c201"
+    },
+    {
+      "file": "assets/characters/boss-states-v5-candidates/tears_storm/final/defeated.png",
+      "bytes": 879230,
+      "sha256": "25ca5c59251fe7bf366f7def4c7a73b92ca086ace2ade761030812cada7d50c1"
+    },
+    {
+      "file": "assets/characters/boss-states-v5-candidates/tears_storm/final/hit.png",
+      "bytes": 960134,
+      "sha256": "141770225378fa398ab91e1e95a9115b37cc6deb64d456aa1fbb3ce7a56d5d04"
+    },
+    {
+      "file": "assets/characters/boss-states-v5-candidates/tears_storm/final/recoveredChild.png",
+      "bytes": 636482,
+      "sha256": "43fb2df2628b023ce1db259f4a49a56ad6755c45ea9dc894a156e2a00384a135"
+    },
+    {
+      "file": "assets/characters/boss-states-v5-candidates/tears_storm/final/stormRing.png",
+      "bytes": 746566,
+      "sha256": "1c15504ae51fcaf765ab4e46e7a3789455c4a6be4906ddd8823cafe69faf1dc7"
+    },
+    {
+      "file": "assets/characters/boss_shahar_crystal_dragon.png",
+      "bytes": 2339034,
+      "sha256": "45945f12bd092ed4fe3dbb4aadecfad9a2ef9e5241eb16c9b80bf7c0adba89c0"
+    },
+    {
+      "file": "assets/characters/costumes/mimi_jackpot_empress.png",
+      "bytes": 2285220,
+      "sha256": "b1d17fb410b3acefada6b78b63b9a2e30b7dc1ce35a1ceb909bdf2c6bb224182"
+    },
+    {
+      "file": "assets/characters/costumes/mimi_moonlight_croupier.png",
+      "bytes": 690465,
+      "sha256": "30b968da280b17df1b5ce69fea4e2ef593bdb161a7387c29751181443431aaf1"
+    },
+    {
+      "file": "assets/characters/costumes/mimi_raid_commander.png",
+      "bytes": 1278886,
+      "sha256": "2cbdaeaecfcf7cbccfafe0da5e2c2b3713f1fe28cd4049e10b2daf72c4d1845b"
+    },
+    {
+      "file": "assets/characters/costumes/mimi_sky_racer.png",
+      "bytes": 1329787,
+      "sha256": "7731a4ec5c832397d82d73388aecba1bf8a347ad9d53f19de257afac97329b39"
+    },
+    {
+      "file": "assets/characters/costumes/mimi_treasure_explorer.png",
+      "bytes": 892519,
+      "sha256": "979cc3af1322b5a22da138619cad3ee72b6f4f126add26c0a76657260709de3b"
+    },
+    {
+      "file": "assets/characters/costumes/mimi_tropical_hostess.png",
+      "bytes": 1348631,
+      "sha256": "b78c085f644ed8c1ef9ca15727eded668af94b26bace1fed9c7bfbe0742d19e1"
+    },
+    {
+      "file": "assets/characters/costumes/mimi_twilight_gala.png",
+      "bytes": 1898628,
+      "sha256": "62e222a8e7620d38702c170d28a498cee7003db75d830d024b8f21542e0a9f36"
+    },
+    {
+      "file": "assets/characters/costumes/mimi_wonderland_navigator.png",
+      "bytes": 1052804,
+      "sha256": "ad781765aa71372248d8e63019137caae7a26877a4973317836ddd92c5bedd25"
+    },
+    {
+      "file": "assets/characters/mimi_dealer_formal.png",
+      "bytes": 1337199,
+      "sha256": "b4d465f046d64a3227407cb01a64cb06b059d8b64b770015b6262cb226206ca6"
+    },
+    {
+      "file": "assets/characters/mimi_default.png",
+      "bytes": 1353956,
+      "sha256": "99f9418dc2b1c8855b3dfbcab476c6f60c493a73efebff474c9151fc05f4c049"
+    },
+    {
+      "file": "assets/characters/mimi_future_director.png",
+      "bytes": 1401956,
+      "sha256": "78f48c628b40e18724347b9e7246987a788cb3f5fdfb66842ea7ebf4ca22c26b"
+    },
+    {
+      "file": "assets/characters/rico_bunny.png",
+      "bytes": 1284352,
+      "sha256": "48082a46dfd861bf2d932a07fd287636c9af4a6e5fa5972866a1731389c13547"
+    },
+    {
+      "file": "assets/characters/story-v5-candidates/mimi_dialogue/concerned.png",
+      "bytes": 667139,
+      "sha256": "60a3e6a4312aa90e750541441a9b4e82b1c5dd8126826e33b3f60c21ec3fba73"
+    },
+    {
+      "file": "assets/characters/story-v5-candidates/mimi_dialogue/determined.png",
+      "bytes": 636110,
+      "sha256": "976619217773dd627812d4038ea9578d4c0deac160b8de51afc4eb2b62ca7dec"
+    },
+    {
+      "file": "assets/characters/story-v5-candidates/mimi_dialogue/neutral.png",
+      "bytes": 601198,
+      "sha256": "42afead5ac5591e591ed855bd7bd06087e2d2bb8160400f845371c87755b705e"
+    },
+    {
+      "file": "assets/characters/story-v5-candidates/mimi_dialogue/relief.png",
+      "bytes": 641435,
+      "sha256": "75d6d733feed70034311abe507e1285bf056c56efd0e87e55aebac60e353f74e"
+    },
+    {
+      "file": "assets/characters/story-v5-candidates/mimi_story/poker_compareCards.png",
+      "bytes": 702633,
+      "sha256": "ae599db88ef98df9b0d1594410890befa13e4b4e1e70b37b2c03c6c45d10ed16"
+    },
+    {
+      "file": "assets/characters/story-v5-candidates/mimi_story/race_runTogether.png",
+      "bytes": 678467,
+      "sha256": "15fbabe167af11b0b38efff72aa2c30c6c10de027e1249518109a84610e8a058"
+    },
+    {
+      "file": "assets/characters/story-v5-candidates/mimi_story/treasure_keyReceive.png",
+      "bytes": 636705,
+      "sha256": "1b5c80af3e9f89a7e9b6bfc0c8271b2662e47a54173191d7fc751d01b7ef0e77"
+    },
+    {
+      "file": "assets/characters/treasure-poker-v5/velvet_concede.png",
+      "bytes": 1274558,
+      "sha256": "b7c8455488a423453ce0e771ea3283d014f430cccbe3db79a1e65233453cd33e"
+    },
+    {
+      "file": "assets/characters/treasure-poker-v5/velvet_dealer.png",
+      "bytes": 1261751,
+      "sha256": "a9a8d6fd423db1d8d8dbcfe772966752da6558a40a1f3995771d0719c9bfa713"
+    },
+    {
+      "file": "assets/characters/v5-candidates/mimi_host_gentle.png",
+      "bytes": 813848,
+      "sha256": "e05fc0a7b510924f33aeec8a6e5d0e0ddb4f87184f0ab863786f8da5503a576b"
+    },
+    {
+      "file": "assets/characters/velvet_default.png",
+      "bytes": 2030801,
+      "sha256": "528f0d8a11253fe17f7fbdb108384f439360a635b7ac6ed6fc3c069f702449d9"
+    },
+    {
+      "file": "assets/cutins/bonus.png",
+      "bytes": 3339143,
+      "sha256": "81fd66d8cbbd09ccfdad9e75ba9ee97b30ac66f62447d73110931166334ea843"
+    },
+    {
+      "file": "assets/cutins/burst.png",
+      "bytes": 3605456,
+      "sha256": "938537ba12b2fa123fd347457119b00fa35c794bc3b106bbe9032bd009bfbc9e"
+    },
+    {
+      "file": "assets/cutins/chance.png",
+      "bytes": 3330742,
+      "sha256": "99356b03eb372f3748da68281d4637aa3aeb514ae08f91b489a5d389e7d2c3c6"
+    },
+    {
+      "file": "assets/cutins/premium.png",
+      "bytes": 3685647,
+      "sha256": "9ed3a06139035141d9115c07101eee46d6b9171fd1bb75015b98401577e9392b"
+    },
+    {
+      "file": "assets/cutins/revive.png",
+      "bytes": 2760486,
+      "sha256": "2ebd5655b5e3bb68307764235e6ac58c5856265092b38b9f61548df28aa3ad7c"
+    },
+    {
+      "file": "assets/derived/characters/luana_shop.png",
+      "bytes": 1525980,
+      "sha256": "740f8c660a3dd8a1c03aed9a1fd5f3723849f0b1cc9ce0eedb722beaeff9c4d5"
+    },
+    {
+      "file": "assets/derived/characters/mimi_home.png",
+      "bytes": 1202353,
+      "sha256": "32e75bfa740b9d4554a241249976cfa81c267085a38a33362550b330cb3d49e6"
+    },
+    {
+      "file": "assets/effects/treasure-poker-v5/showdown_arena.png",
+      "bytes": 1736216,
+      "sha256": "9356bfd3758bf4b4e448bdf8c8cb67c0e3f96173760603a4f0d625efab97910b"
+    },
+    {
+      "file": "assets/effects/v5-candidates/bonus_treasure_v2.png",
+      "bytes": 2320055,
+      "sha256": "11eafdc75919f6b91e645e895d2e8f9fda8f9cfb22ec6007a94a6d132f946d76"
+    },
+    {
+      "file": "assets/effects/v5-candidates/boss.png",
+      "bytes": 783031,
+      "sha256": "383cc53b7d5f6ac3d8955f38e3f64b405b36914ce7b9a4dfeb47564a0ffdc8ef"
+    },
+    {
+      "file": "assets/effects/v5-candidates/chance_treasure_v2.png",
+      "bytes": 2143779,
+      "sha256": "1a68b7621685ee9ceaba836ed5e71f2889bf3b9142c21529963a53f06b3ddbaf"
+    },
+    {
+      "file": "assets/effects/v5-candidates/golden_gate.png",
+      "bytes": 848591,
+      "sha256": "41ace6537717d8294d924341bc698f5edbe1a0204e0c65e9df0f0e48ffbd77a3"
+    },
+    {
+      "file": "assets/effects/v5-candidates/hot.png",
+      "bytes": 865866,
+      "sha256": "f8dbd025bc8378d3cffeaff815eaba9b1bcd19f780c8442933e726146a624fb8"
+    },
+    {
+      "file": "assets/effects/v5-candidates/jackpot.png",
+      "bytes": 770167,
+      "sha256": "abca89de9e5d748dbb1cd8019cc9178bd26be4f9d32297c08ea80b5ca0111194"
+    },
+    {
+      "file": "assets/effects/v5-candidates/notice.png",
+      "bytes": 77007,
+      "sha256": "9d25d27afa960f1714d15792d35adfe9637c160146b2b4713bf4c3f135faacdc"
+    },
+    {
+      "file": "assets/effects/v5-candidates/revive.png",
+      "bytes": 762845,
+      "sha256": "17e1331fe26e3cdb7ffba550f6eadcf3fc9681ed88770f438068ce89efba3612"
+    },
+    {
+      "file": "assets/generated/adventure/lcd_walk_resort.png",
+      "bytes": 2499681,
+      "sha256": "ea3a576835785bb685f01257abeab477bb6a50d01352df9d4c6df9b6f09c481e"
+    },
+    {
+      "file": "assets/generated/adventure/mimi_chibi_walk_sheet.png",
+      "bytes": 1149830,
+      "sha256": "dd382ed39824ebd83d2a8b44061c43473bddf1d88f0488cb2ca1c9cafae83349"
+    },
+    {
+      "file": "assets/generated/v2/lcd_resort_walkway.png",
+      "bytes": 3001630,
+      "sha256": "45285b5ba88f71d31dba6f3870bc4b27ad634875c85c465eff71c3fd1a87dc8f"
+    },
+    {
+      "file": "assets/generated/v2/mimi_chibi_sprite_sheet_alpha.png",
+      "bytes": 1101229,
+      "sha256": "18cf31b6402ac0da2db0141ac542e03a32919bb1e3b79464e9b6db20b69c24b1"
+    },
+    {
+      "file": "assets/generated/v3/symbols/dist/bar.png",
+      "bytes": 187903,
+      "sha256": "3d910a73198ef83ce9387a0f3f8ca9c091dd4dbfcdd2daa426c674226aa677d7"
+    },
+    {
+      "file": "assets/generated/v3/symbols/dist/bell.png",
+      "bytes": 213761,
+      "sha256": "f6683a832cab3741d218840646bb20eaf795bd6602443e676bb2ce2be55e5332"
+    },
+    {
+      "file": "assets/generated/v3/symbols/dist/cherry.png",
+      "bytes": 261495,
+      "sha256": "5594ccce54a95cfde4c1980ba8de52169aa53c76b76cb7b8ef7a24f644765729"
+    },
+    {
+      "file": "assets/generated/v3/symbols/dist/grape.png",
+      "bytes": 178298,
+      "sha256": "5c19986fdfd275fb502a03c5f7541c9115f98aedfd0be10bf13671b09114215a"
+    },
+    {
+      "file": "assets/generated/v3/symbols/dist/replay.png",
+      "bytes": 241128,
+      "sha256": "918208bf53580c0fe6c608df021866ef221e5580b21478ee48c9c697b69df2de"
+    },
+    {
+      "file": "assets/generated/v3/symbols/dist/seven_blue.png",
+      "bytes": 230999,
+      "sha256": "a2a3dfaf50686e2c01ef7ba023d73ad70105eb06db9fc515ea3b6c2fe67b26e6"
+    },
+    {
+      "file": "assets/generated/v3/symbols/dist/seven_red.png",
+      "bytes": 243838,
+      "sha256": "ba600ab1a1c8a780af3b05ae5995486ea3d300314ff5b7db167363cac2a7f359"
+    },
+    {
+      "file": "assets/generated/v3/symbols/dist/watermelon.png",
+      "bytes": 281944,
+      "sha256": "f6613713fe10308f3ae99fbb11f556ae70246bcd0afed87a678d51899624955b"
+    },
+    {
+      "file": "assets/guild/audio/feast.mp3",
+      "bytes": 3520301,
+      "sha256": "18f98b934216eefc8d2e80249733922766cb1f6b18ce933faab062d0f65a9672"
+    },
+    {
+      "file": "assets/guild/audio/guild.mp3",
+      "bytes": 4228865,
+      "sha256": "c3fd04a3b24103936a9c0a6a5d2d476a3ab75147d6f6b87aaab9406a124ae6f7"
+    },
+    {
+      "file": "assets/guild/audio/market.mp3",
+      "bytes": 4829962,
+      "sha256": "b2826522bea632a94d16c205d7fead59d02e1c646c763716509f3473f55aaa6d"
+    },
+    {
+      "file": "assets/guild/audio/silvio.mp3",
+      "bytes": 4754387,
+      "sha256": "3bc1565c2493300479e56969e861f71ca297ab033591a34d338f57948a77021e"
+    },
+    {
+      "file": "assets/guild/beatrix-portrait.jpg",
+      "bytes": 52601,
+      "sha256": "1d4ddd457fecfee368b786a2989ec37935fb9d0247cd4e6fb5ac00c3911251af"
+    },
+    {
+      "file": "assets/guild/crowd.jpg",
+      "bytes": 427577,
+      "sha256": "9750a0e200c45cd235686f3268027843760453bfa64530bef35fee1644dba5cb"
+    },
+    {
+      "file": "assets/guild/design-concept-v1.png",
+      "bytes": 2672828,
+      "sha256": "24695e9ea10ecbcd73d4e2cc5c7182363a5f167e6686309e50e466f6bb91400c"
+    },
+    {
+      "file": "assets/guild/feast-1.jpg",
+      "bytes": 377304,
+      "sha256": "055e8015cf17bcc0947876b0af8a577a96295e735965c6dc9e798a81b9154787"
+    },
+    {
+      "file": "assets/guild/feast-2.jpg",
+      "bytes": 406803,
+      "sha256": "d86cf0e56506da912a5eacd2807fd920981f2297ef896780d47d4e90b822a7f0"
+    },
+    {
+      "file": "assets/guild/feast-3.jpg",
+      "bytes": 422585,
+      "sha256": "df2655d7db02d0a1818e932b440f7342a266f6f566977a8d1cd0e6205cb5078b"
+    },
+    {
+      "file": "assets/guild/feast-grano-v1.png",
+      "bytes": 2533722,
+      "sha256": "3ee4fda1ef8ec1cb6762f2899b8663d76cd4f1e6afa461f91bb83d3b42bef7af"
+    },
+    {
+      "file": "assets/guild/feast-grano-v2.png",
+      "bytes": 2601022,
+      "sha256": "16c3d48cef058a6c04269e8e43cffa097ab6149852f83db08c47ce749928ed1f"
+    },
+    {
+      "file": "assets/guild/feast-silvio-v1.png",
+      "bytes": 2577339,
+      "sha256": "d313339292c43e9691e3dadf1de21ab40a64ed82785e7e326cb92e371636ad83"
+    },
+    {
+      "file": "assets/guild/feast-silvio-v2.png",
+      "bytes": 2503146,
+      "sha256": "d485dcf3774e8b7ed7aa5c55ca125de1c5e720bf4b321a621e680db8473fd068"
+    },
+    {
+      "file": "assets/guild/feast-valdo-v1.png",
+      "bytes": 2411475,
+      "sha256": "d5777b418f96404ccfc52c56b800647e5c247aee4071dfa9b2e741151baf35f5"
+    },
+    {
+      "file": "assets/guild/feast-valdo-v2.png",
+      "bytes": 2163939,
+      "sha256": "bd29c72a1eb38dad2dffee6d9b62b8a5ee7021a2a017bce4ba8c3ce7c932977c"
+    },
+    {
+      "file": "assets/guild/feast-valdo-v3.png",
+      "bytes": 2131497,
+      "sha256": "4eb32248b482f795c9430ef4f7990cba1ce74ec04f41f85c1482794f2d4f3d19"
+    },
+    {
+      "file": "assets/guild/gardo-portrait.jpg",
+      "bytes": 156578,
+      "sha256": "500ab7f09d87a42e1466b224e09b78d68eb34ed545b906d7aa1e634948c74c5b"
+    },
+    {
+      "file": "assets/guild/grano-portrait.jpg",
+      "bytes": 141637,
+      "sha256": "92c0964cc06c10eca6dce463fe052a6a1aa88766c38766d8099d8e1c2199eaeb"
+    },
+    {
+      "file": "assets/guild/grano.jpg",
+      "bytes": 317311,
+      "sha256": "28cf4a1063101dccf655d3f89b726889730861b741b3f353abd34a8a17cb2764"
+    },
+    {
+      "file": "assets/guild/homecoming-v1.png",
+      "bytes": 2739324,
+      "sha256": "4d367fd46a76904f84b9459a1c78dd6101d4022d55c931a2669aad1472b4ae68"
+    },
+    {
+      "file": "assets/guild/homecoming-v2.png",
+      "bytes": 2618040,
+      "sha256": "455d7c9d292a823906ad20cbe9a2921fa75950102d7ee864d57e3b8f5b8182db"
+    },
+    {
+      "file": "assets/guild/marmela-portrait.jpg",
+      "bytes": 133619,
+      "sha256": "19a64149a6bfdaa19a161ed409d0b55102614d8e4bb3f2d794d3ef82db05ac7e"
+    },
+    {
+      "file": "assets/guild/mimi-opening-v1.png",
+      "bytes": 2550111,
+      "sha256": "221f6c7940e01e53b929a870879a7b87879add83fe4d33e60db703f0dab625db"
+    },
+    {
+      "file": "assets/guild/mimi-opening-v2.png",
+      "bytes": 2211627,
+      "sha256": "8cb888e7543d7665d314cdf6fafc797895be8dbec79bf37cac066cbdff4b179c"
+    },
+    {
+      "file": "assets/guild/mimi-serious.jpg",
+      "bytes": 95842,
+      "sha256": "586fa1a5314d76a6c78221c8e13953a024577680b2c142ba8f97f6ecb6aad08f"
+    },
+    {
+      "file": "assets/guild/mimi-smile.jpg",
+      "bytes": 90658,
+      "sha256": "1f47a43658c3f5451a156ae1b694b717923ee3ff50b33b261cf77b0e111136ee"
+    },
+    {
+      "file": "assets/guild/mimi-worried.jpg",
+      "bytes": 88728,
+      "sha256": "fbf22dab1088d118f92b6081eb84ec6e954425177e7ac6cfbf152eb0b24c0ebf"
+    },
+    {
+      "file": "assets/guild/nono-portrait.jpg",
+      "bytes": 129383,
+      "sha256": "371e7e8ad415f0415ea823251d212d1ca90cae986a3c43ebe970adca9871fadd"
+    },
+    {
+      "file": "assets/guild/ratts-portrait.jpg",
+      "bytes": 131154,
+      "sha256": "b457ec9f47e24a70432769d0337beed1c6da4509cfe4b9b3bca9a14283d52098"
+    },
+    {
+      "file": "assets/guild/silvio-portrait.jpg",
+      "bytes": 130435,
+      "sha256": "5893efe684569fddd706f2607de5973c3f9bbf9208ccbb35459f8ce107b54d6c"
+    },
+    {
+      "file": "assets/guild/silvio.jpg",
+      "bytes": 338890,
+      "sha256": "d00a59c61cf8cfdf5f1c34101bb22b4ad6a7ef9e4f85038dc0a1126303f8a8ac"
+    },
+    {
+      "file": "assets/guild/valdo-portrait.jpg",
+      "bytes": 116697,
+      "sha256": "ee897e1552b3228cc7c4c7541c4a548ee86f9e26dbe073afdb325b7153850592"
+    },
+    {
+      "file": "assets/guild/valdo.jpg",
+      "bytes": 306636,
+      "sha256": "a0c6c28020cac58760b1ab8c9c21ce70c5e54dfa87d91b5f06cdc19ffb4c093f"
+    },
+    {
+      "file": "assets/imageboard/05_stage_galleria-lapin-mall.png",
+      "bytes": 3353951,
+      "sha256": "be8495b34d6d980d1a13de50e63c01b376153febf1ff51db4d2719ef8850ab58"
+    },
+    {
+      "file": "assets/imageboard/39_stage_resort-map-gateway.png",
+      "bytes": 3314730,
+      "sha256": "34de1586cc79a14c643cdeebe636718355b31f3b60868c83ac22ed603084a962"
+    },
+    {
+      "file": "assets/imageboard/40_stage_harbor-sunset-map.png",
+      "bytes": 3252237,
+      "sha256": "f7344565ddb1dc07f13b21afc0ca78b94ed6b7d4bc71ace7f71bd57581ac4b4f"
+    },
+    {
+      "file": "assets/imageboard/41_stage_jungle-ruins-map.png",
+      "bytes": 3247602,
+      "sha256": "a822a1fc8a6dc09b27d39eec1e3cb6fbb5d7cdca2046a2da792d8142cdb68c75"
+    },
+    {
+      "file": "assets/imageboard/42_stage_resort-plaza-map.png",
+      "bytes": 3349733,
+      "sha256": "65d03161164bccec0ec5f4ac048b98ba62e1005d39d1fecc7ec13c3ff0794b86"
+    },
+    {
+      "file": "assets/imageboard/43_stage_pool-resort-map.png",
+      "bytes": 3403573,
+      "sha256": "6eb9cae447cdb98f6738fe3b4658c6d765654c7a06fa332378968a7db94de289"
+    },
+    {
+      "file": "assets/imageboard/44_stage_market-harbor-map.png",
+      "bytes": 3278405,
+      "sha256": "844c06d19ad06cf703aa48be8ddc1387dfef19c3f2dd894a199ab30ff347cf6e"
+    },
+    {
+      "file": "assets/imageboard/45_stage_coastal-ruins-map.png",
+      "bytes": 3169212,
+      "sha256": "52e1c279102f9057aeffa942cf8dcf47df024d425540fbd586407ceb85fe35b4"
+    },
+    {
+      "file": "assets/imageboard/misc-reference/01_concept_mimi-poker-battle.png",
+      "bytes": 3818446,
+      "sha256": "70e8a33c72fff237ca72b10fe540e755f50d59a8055efe4ca650c72647333488"
+    },
+    {
+      "file": "assets/imageboard/misc-reference/03_concept_mimi-board-adventure.png",
+      "bytes": 3863550,
+      "sha256": "1facd1eaaa49a0e8e8a2f3b6d2ffec0eafd5de76860c1d0b6602166a8d38e549"
+    },
+    {
+      "file": "assets/imageboard/misc-reference/04_concept_mimi-monster-race.png",
+      "bytes": 3894889,
+      "sha256": "928313dbfc953b05c20bb0f031d6011bb375e4438b9b64d45f043591a7ad0954"
+    },
+    {
+      "file": "assets/resort-art-v4/cove-day-v4.png",
+      "bytes": 2857223,
+      "sha256": "7e32b9a9e2bb8a140885908a73c63f5c548d604cd1e8ee487bf618e9a0444717"
+    },
+    {
+      "file": "assets/resort-art-v4/cove-day-v5.png",
+      "bytes": 3077972,
+      "sha256": "966fc7dd63d6637d01575ecfc0f495b3f140a3f6f6bca6362de6574979f7df14"
+    },
+    {
+      "file": "assets/resort-art-v4/cove-night-v4.png",
+      "bytes": 2751476,
+      "sha256": "4ec94e07750e4a30e7ba8437a42550d70e48b99441dd1fd1c5c738871f5aa63b"
+    },
+    {
+      "file": "assets/resort-art-v4/cove-night-v5.png",
+      "bytes": 2837178,
+      "sha256": "eee3ab6bea15620abe72c388ea7360bb51f32aab221696e1488cdef269c54f1b"
+    },
+    {
+      "file": "assets/resort-art-v4/garden-day-v4.png",
+      "bytes": 3236941,
+      "sha256": "6b1c18135d10c5e07025b7387bbe071ac9b2cf1782595796d30dba67aed95d57"
+    },
+    {
+      "file": "assets/resort-art-v4/garden-night-v4.png",
+      "bytes": 2917445,
+      "sha256": "6858256b9a9134626eb3128c5aeae5135b5e9ae0486716484856d6e0f942c5f5"
+    },
+    {
+      "file": "assets/resort-art-v4/harbor-day-v4.png",
+      "bytes": 3008491,
+      "sha256": "f388996e9bc57deaf6dcbca09f510cc8e2ef51ee97fd4d79e2bf18ed4a7aa529"
+    },
+    {
+      "file": "assets/resort-art-v4/harbor-night-v4.png",
+      "bytes": 2846434,
+      "sha256": "c667ddac08681a9892ac987d18f295d40ad6b9d86f8356a560cf3ea63da6752f"
+    },
+    {
+      "file": "assets/resort-art-v4/highland-day-v4.png",
+      "bytes": 3122546,
+      "sha256": "26d3a3c4c49148a05fd0a01b655b1b92c7727b74950377108a07ca624f344ce6"
+    },
+    {
+      "file": "assets/resort-art-v4/highland-day-v5.png",
+      "bytes": 3156612,
+      "sha256": "294fc8b475e1fcead0b9f5a620671537332fd75cb5b03f5704e7d88816a77a4f"
+    },
+    {
+      "file": "assets/resort-art-v4/highland-night-v4.png",
+      "bytes": 2664966,
+      "sha256": "a2946281288b5510cc725bb39af8d645eb41d815222c76cd09dce9ab241003b4"
+    },
+    {
+      "file": "assets/resort-art-v4/highland-night-v5.png",
+      "bytes": 2807464,
+      "sha256": "434f76f4227ce70d65b5bf78cf7882dad98aaeb944674b4a398343d04e15a072"
+    },
+    {
+      "file": "assets/resort-art-v4/hotel-day-v4.png",
+      "bytes": 2982595,
+      "sha256": "e895afd17aac0014ceebcb17c762c188086c78913e893407e6f72437e6b58cf1"
+    },
+    {
+      "file": "assets/resort-art-v4/hotel-night-v4.png",
+      "bytes": 2814790,
+      "sha256": "a4a9cf0683237d1079cbb5b28a6717fd2c081c95ef0ec09ee7902afabcbb6f5e"
+    },
+    {
+      "file": "assets/resort-art-v4/island-guide-v4.png",
+      "bytes": 1538714,
+      "sha256": "de403056d4257f82b91aec3b37a6288a627ec217601023585570e17156f47ecf"
+    },
+    {
+      "file": "assets/resort-art-v4/lookout-day-v4.png",
+      "bytes": 2837475,
+      "sha256": "e3082b76f3fa68241dffb5e4b05317f8bfa15fe7fd7441e5e135f1e6b906cbb8"
+    },
+    {
+      "file": "assets/resort-art-v4/lookout-night-v4.png",
+      "bytes": 2636305,
+      "sha256": "297712d622df415ed56f330ee25c2b683a6dd6230950f8c1d821579c40815bc0"
+    },
+    {
+      "file": "assets/resort-art-v4/lounge-day-v4.png",
+      "bytes": 2757831,
+      "sha256": "8f84cbf8cc39a5f291cf0fbdd9009731904acff49cff1c5fc9f0fe661b70773e"
+    },
+    {
+      "file": "assets/resort-art-v4/lounge-night-v4.png",
+      "bytes": 2587058,
+      "sha256": "fd15f8f614e60128b9b9cc2d21bb6ff3966aca5bb0c3eb4cf0b0baa4709f107a"
+    },
+    {
+      "file": "assets/resort-art-v4/pier-day-v4.png",
+      "bytes": 2736308,
+      "sha256": "581169bc2cd197b3bcea75745ab516f2fbdf9a4a425f7fd6b556434bb07f97cb"
+    },
+    {
+      "file": "assets/resort-art-v4/pier-night-v4.png",
+      "bytes": 2592258,
+      "sha256": "bdfa7b6ddedaa9f7de2825e038c9436e304f81dd18690064621cf787225d0e1d"
+    },
+    {
+      "file": "assets/resort-art-v4/pool-day-v4.png",
+      "bytes": 2917660,
+      "sha256": "ea0be0399e239971c6e59ad4933c1f090bac06dcab8bfee0550ff062eabeae5e"
+    },
+    {
+      "file": "assets/resort-art-v4/pool-night-v4.png",
+      "bytes": 2854508,
+      "sha256": "089bbf7f7162c6fed46de9d1a5ace55ff34006001c342c3158e8c0d1bae39434"
+    },
+    {
+      "file": "assets/resort-dining-v1/bakery-finished-v1.png",
+      "bytes": 2505034,
+      "sha256": "f39e0c285db04b4a7f2c564bced4446e582801d8a6f7a283ac3842dfc6182692"
+    },
+    {
+      "file": "assets/resort-dining-v1/bakery-served-v1.png",
+      "bytes": 2570074,
+      "sha256": "45eafb9513f37117cee367e89f861e57ef00384b20b99960d17c61efd4fbdcf7"
+    },
+    {
+      "file": "assets/resort-dining-v1/fishdiner-finished-v1.png",
+      "bytes": 2410995,
+      "sha256": "5930562f609bba01c303a4c04077ef9ef70eecc3cd1f343ea11e9687526f695c"
+    },
+    {
+      "file": "assets/resort-dining-v1/fishdiner-served-v1.png",
+      "bytes": 2487209,
+      "sha256": "0e4c7f6582db0d97f4d140fe6df575be080c127207dd234d817ec079c0154fa4"
+    },
+    {
+      "file": "assets/resort-dining-v1/homekitchen-finished-v1.png",
+      "bytes": 2414115,
+      "sha256": "637d132a0589a450f5aeeec8157bdbe6d3ce47f1959cc59d8f29c7192754fc98"
+    },
+    {
+      "file": "assets/resort-dining-v1/homekitchen-served-v1.png",
+      "bytes": 2504575,
+      "sha256": "5526abcd29325235e80dc910602cd88fcf43f58a532fee67ea77a97ddb6a2e24"
+    },
+    {
+      "file": "assets/resort-keepsakes-v1/table-print-v1.png",
+      "bytes": 2161393,
+      "sha256": "8194cdfa662fb9db7654708a187a17c67ce8add75864f2b661ec4e64d384634c"
+    },
+    {
+      "file": "assets/resort-panorama-v1/galleria-panorama-day-v1.png",
+      "bytes": 2980163,
+      "sha256": "c74a6df9e0a9ba3a4b593c061ee9f288ddb184e8c73303464a1df3f2bdf6c213"
+    },
+    {
+      "file": "assets/resort-panorama-v1/galleria-panorama-night-v1.png",
+      "bytes": 2748958,
+      "sha256": "84f3ceb2040042f609e2e2dda86d36611891397b142718f142358a78d220677d"
+    },
+    {
+      "file": "assets/resort-panorama-v1/highland-panorama-day-v1.png",
+      "bytes": 3235004,
+      "sha256": "8e7ef80a70d18a2370e3ffed13c90abc5dd0e50f767016fec67ef68cf0e0b6d6"
+    },
+    {
+      "file": "assets/resort-panorama-v1/highland-panorama-night-v1.png",
+      "bytes": 3014951,
+      "sha256": "c0b42b93d37f98e05a4e05f49cf3efc4908fc42bf92dad8706c377902d029060"
+    },
+    {
+      "file": "assets/resort-stay-v1/guest-room-v1.png",
+      "bytes": 2423177,
+      "sha256": "dea7968628a798151bfa09c9d0b38eeb4e1a41fd87d8bdffb337386561f51bfa"
+    },
+    {
+      "file": "assets/resort-stay-v2/arrival-plaza-night-v2.png",
+      "bytes": 2891265,
+      "sha256": "8733fff3774e4f06fb886ca062233e1695016021aa25b3c7fd59980be1e1b5f9"
+    },
+    {
+      "file": "assets/resort-stay-v2/arrival-plaza-v2.png",
+      "bytes": 3010599,
+      "sha256": "e911ebc44ff8f32f4361248011997828691c3cd547a8e2217278473ffed0f1a8"
+    },
+    {
+      "file": "assets/resort-stay-v2/elena-island-v1.png",
+      "bytes": 1937373,
+      "sha256": "99250254df02bc8cbab10be3cca3da04c5aabab0a4d626cbf5f17115d01de3c7"
+    },
+    {
+      "file": "assets/resort-stay-v2/elena-quiet-night-v1.png",
+      "bytes": 2473532,
+      "sha256": "d984a059d4410d04f60fa30a3c618b16a4bf4d8655e2f941866fb9c07c84dedf"
+    },
+    {
+      "file": "assets/resort-stay-v2/galleria-concept-v2.png",
+      "bytes": 2650586,
+      "sha256": "f28abec09dbd62902646411c877734cab9a56621a9af015b9e82a68777228743"
+    },
+    {
+      "file": "assets/resort-stay-v2/galleria-counter-night-v2.png",
+      "bytes": 2555915,
+      "sha256": "daba3e1b063cbbd84949a06317fd3d0294fa109ba1f186841c93b5afcc6381bf"
+    },
+    {
+      "file": "assets/resort-stay-v2/galleria-counter-v2.png",
+      "bytes": 2543053,
+      "sha256": "fbd01512f491b0c2b014e5e0ac68a8ce7074c48eed198b6c7f80cc890665aaa4"
+    },
+    {
+      "file": "assets/resort-stay-v2/galleria-night-v2.png",
+      "bytes": 2825350,
+      "sha256": "3f29c81f4b022bf0ed554d51e0ce2222b69c808539822607f45308547b60a4df"
+    },
+    {
+      "file": "assets/resort-stay-v2/guest-room-night-v2.png",
+      "bytes": 2242734,
+      "sha256": "a26c44855681d11d2fdbe37ba07206dadb52c2b8972b8aaa6f67fc8f01e8648c"
+    },
+    {
+      "file": "assets/resort-stay-v2/ilias-island-v1.png",
+      "bytes": 1787484,
+      "sha256": "3b6fd34f9eb96da4a322be3e5f7ba18a4f1c79486ea5898f423e29df5a4fb8f6"
+    },
+    {
+      "file": "assets/resort-stay-v2/ilias-quiet-night-v1.png",
+      "bytes": 2412973,
+      "sha256": "21fe3e97219cdbb2c800bb249e2629cfbf733c73af893092634778fd9df7b3b0"
+    },
+    {
+      "file": "assets/resort-stay-v2/island-guide-v2.png",
+      "bytes": 1450481,
+      "sha256": "4e163f34ee1840c9c126cfe78da0d244ee8c2ebe5f7e4f58bf169b0c4b952b05"
+    },
+    {
+      "file": "assets/resort-stay-v2/island-traveler-v2.png",
+      "bytes": 1466090,
+      "sha256": "385f4396c4841c7c0b34ed397c42cee15ac7f71c1ee94838c86b53e3cf66ba07"
+    },
+    {
+      "file": "assets/resort-stay-v2/luana-listen-v2.png",
+      "bytes": 895962,
+      "sha256": "9a9814a885acb2e2bca2611baa04b85334b1f845240f55b964d5a80309b3f96f"
+    },
+    {
+      "file": "assets/resort-stay-v2/luana-offer-v2.png",
+      "bytes": 913298,
+      "sha256": "eb0c1d0e4ca03961a7dd78ea1275fdb7ada2a089237a6ff2f47290cc234f875a"
+    },
+    {
+      "file": "assets/resort-stay-v2/luana-welcome-v2.png",
+      "bytes": 877848,
+      "sha256": "3c44cabe9467a203041ce25ec0d29f069d37482c288f379afb632252474b9bd5"
+    },
+    {
+      "file": "assets/resort-stay-v2/luana-window-night-v3.png",
+      "bytes": 2442041,
+      "sha256": "b4fa90a214bd7118c0cc9326b6eeba88631e6837e9c2a784f9794637f89759e7"
+    },
+    {
+      "file": "assets/resort-stay-v2/marea-island-v1.png",
+      "bytes": 1614085,
+      "sha256": "c4992cf78b8f204dc80a3691a2f71b3a3974c15bc4bf32fcd2c30ba7e4b820f9"
+    },
+    {
+      "file": "assets/resort-stay-v2/marea-quiet-night-v1.png",
+      "bytes": 2550113,
+      "sha256": "c612869ab69f5ef04350fa53dd84f3a8efcde8e9e6f2bb9037db687831329743"
+    },
+    {
+      "file": "assets/resort-stay-v2/mimi-trail-rabbit-atlas-v4.png",
+      "bytes": 1064535,
+      "sha256": "3d2fbfd160649b7054a545241f9f6ba17938d6e78bc9e926df9307fccb264371"
+    },
+    {
+      "file": "assets/resort-stay-v2/mimi-trail-rabbit-coast-v5.png",
+      "bytes": 1161449,
+      "sha256": "9f8f5f288897f7d9e66bd66f0d43d89f58cd25f0e7b59ea8c7eccd499e194f20"
+    },
+    {
+      "file": "assets/resort-stay-v2/mimi-trail-rabbit-curious-v5.png",
+      "bytes": 1048207,
+      "sha256": "e4bb1ccacea91b5cfeab514109bb87430a48834e37dc26f51f4094590855992f"
+    },
+    {
+      "file": "assets/resort-stay-v2/mimi-trail-rabbit-groom-v5.png",
+      "bytes": 1109045,
+      "sha256": "7dd4a86264c930a29564119f9da64293aeacaad36ecd69d30b572f9c466254d3"
+    },
+    {
+      "file": "assets/resort-stay-v2/mimi-trail-rabbit-play-v5.png",
+      "bytes": 920068,
+      "sha256": "d759121e74023407d74eba585edd0a93ab5feb8098f770e5caf0d43289fa6d17"
+    },
+    {
+      "file": "assets/resort-stay-v2/mimi-trail-rabbit-shoulder-key-v3.png",
+      "bytes": 633287,
+      "sha256": "27782d4e74f538eea6125ccf1b15df1a3ae6a44a2d1b2ebf64a7807121b96616"
+    },
+    {
+      "file": "assets/resort-stay-v2/mimi-trail-rabbit-sleep-v5.png",
+      "bytes": 1148147,
+      "sha256": "e8a108e77e690976dbede970a659528a4129aa0e02fa588844f3b6ad3cf2daf4"
+    },
+    {
+      "file": "assets/resort-stay-v2/mimi-trail-rabbit-social-v5.png",
+      "bytes": 1148679,
+      "sha256": "f95e2be3a097aad406b7e94449d25567df78c01f9ce493fe6ccae6d4480ea332"
+    },
+    {
+      "file": "assets/resort-stay-v2/noel-island-v1.png",
+      "bytes": 1500008,
+      "sha256": "b8e7974ef23042066537c581cdff357d16380333cf9ec9732d4111b269db9d5e"
+    },
+    {
+      "file": "assets/resort-stay-v2/noel-quiet-night-v1.png",
+      "bytes": 2299472,
+      "sha256": "9a3adfa442989ad609b66b10acd16840fd466e41e56fb500b0eb28317048a7e3"
+    },
+    {
+      "file": "assets/resort-stay-v2/reading-lamp-v2.png",
+      "bytes": 828647,
+      "sha256": "b461d404469c27cb65b07c26fa872e5027a1331c6ffc76da5483d5b7da0d8bcd"
+    },
+    {
+      "file": "assets/resort-stay-v2/sea-glass-v2.png",
+      "bytes": 1098256,
+      "sha256": "ee8b9ea12fc9d14ca3a5702f6edd6aee96b2f5fca38b92dc8efd9111c974f5e6"
+    },
+    {
+      "file": "assets/resort-stay-v2/sea-promenade-night-v2.png",
+      "bytes": 2680534,
+      "sha256": "12b1d692f994b54e23f87b51f72768ee93226540eafb5278ef44316273767908"
+    },
+    {
+      "file": "assets/resort-stay-v2/sea-promenade-v2.png",
+      "bytes": 2831445,
+      "sha256": "7391a2fddc4f5ce48efb52b559bc130f26b7bbcdbee7d6d1ae309446f2deec67"
+    },
+    {
+      "file": "assets/resort-town-v1/bakery-day-v1.png",
+      "bytes": 2945231,
+      "sha256": "4b174645129830803fba5495602942e7baaefcdd017b29e455d7f9508ec3f766"
+    },
+    {
+      "file": "assets/resort-town-v1/bakery-night-v1.png",
+      "bytes": 2494578,
+      "sha256": "35ed86f70f7a7891688527adf565305e225a3866292d40fecaea9322147d1fbc"
+    },
+    {
+      "file": "assets/resort-town-v1/fishdiner-day-v1.png",
+      "bytes": 2970829,
+      "sha256": "f8648738c658516d2cf4d6e4c74bcd7b683257e071f867cd661bad1f8aca821f"
+    },
+    {
+      "file": "assets/resort-town-v1/fishdiner-night-v1.png",
+      "bytes": 2810688,
+      "sha256": "96bc46683577d54e2c9f9938d1f6f7cda54f1e48da89a188a89a5dddacf8cdb5"
+    },
+    {
+      "file": "assets/resort-town-v1/homekitchen-day-v1.png",
+      "bytes": 2885260,
+      "sha256": "c7ff552732605f461198918049bb352ad77688e80cb952d5479f528e065878f9"
+    },
+    {
+      "file": "assets/resort-town-v1/homekitchen-night-v1.png",
+      "bytes": 2678859,
+      "sha256": "d179b4515da0db52076b0da0aceea270375dc53837fee05452828d0efadd4878"
+    },
+    {
+      "file": "assets/resort-town-v1/museum-boat-v2.png",
+      "bytes": 3062330,
+      "sha256": "fc4edf8691459a3b1f4fc8faf63605fa7a442f931b12a2f3ec45343e97921138"
+    },
+    {
+      "file": "assets/resort-town-v1/museum-day-v1.png",
+      "bytes": 2861813,
+      "sha256": "b3e03ba7944da59e680041fa5e844cf4b2d121da96d1edbee2bba4466796e5b1"
+    },
+    {
+      "file": "assets/resort-town-v1/museum-glass-v2.png",
+      "bytes": 1743950,
+      "sha256": "c08b59ab57e9294aa59a2eb4b58deef1e6416c372fbaa8a4d03c69e71ec09d32"
+    },
+    {
+      "file": "assets/resort-town-v1/museum-night-v1.png",
+      "bytes": 2452274,
+      "sha256": "26681346309fcba8d5f985271f6b384c8ce2743d351c05bfdc66e04623353ea3"
+    },
+    {
+      "file": "assets/resort-town-v1/museum-sea-room-v2.png",
+      "bytes": 2722747,
+      "sha256": "c460c57b45c2f06a7021448429f9428abdc095cbe3efab38d80adb1a429a1467"
+    },
+    {
+      "file": "assets/resort-town-v1/museum-table-room-v2.png",
+      "bytes": 2629117,
+      "sha256": "88fcb37d19b507bf3cd3180cd33718fc22183305664a6d7d294152003ba65d61"
+    },
+    {
+      "file": "assets/resort-town-v1/museum-table-v2.png",
+      "bytes": 3044149,
+      "sha256": "4199220909efb8d3e4a10a1f9c5c63260df5476982e6693567685d7c18524059"
+    },
+    {
+      "file": "assets/resort-town-v1/town-day-v1.png",
+      "bytes": 3193120,
+      "sha256": "262ea17469cf78c0dc7f821261d16c0aed3e4ce3dd2ce1cca79381b038e8ceba"
+    },
+    {
+      "file": "assets/resort-town-v1/town-day-v2.png",
+      "bytes": 3013961,
+      "sha256": "30638a9a8db92e3ac1a2e5fe5d42c9f5c048204cbd6f2c5d20f436e161ff3d7f"
+    },
+    {
+      "file": "assets/resort-town-v1/town-night-v1.png",
+      "bytes": 2899806,
+      "sha256": "662da3159275e16f9cba46701c7070da52d63bb87ffa4e06a03323e72de6a0a5"
+    },
+    {
+      "file": "assets/resort-town-v1/town-night-v2.png",
+      "bytes": 2772419,
+      "sha256": "c953e7e600206721ed17e18f30207c946f4165db6ae6f035a1b81d7a30382f2f"
+    },
+    {
+      "file": "assets/scenes-v5-candidates/01_treasure/scene_bonus.png",
+      "bytes": 2323413,
+      "sha256": "4080694c106163d71a276a260c277b06771711033ff1f804bd3091ff10859427"
+    },
+    {
+      "file": "assets/scenes-v5-candidates/01_treasure/scene_boss.png",
+      "bytes": 2231047,
+      "sha256": "13bb1c6253eca315bbd60ed278305a13aaed283bb8c6e3caefe5b23c4e5a384d"
+    },
+    {
+      "file": "assets/scenes-v5-candidates/01_treasure/scene_chain.png",
+      "bytes": 2223053,
+      "sha256": "106b67846f9eacee708930717edf7a57af3bc7854bd7be66e26aac72219c5e24"
+    },
+    {
+      "file": "assets/scenes-v5-candidates/01_treasure/scene_explore.png",
+      "bytes": 2324632,
+      "sha256": "a4e2173396114723f952ac2bb95eb54a3b070d739375ee532091dac0917c5af5"
+    },
+    {
+      "file": "assets/scenes-v5-candidates/01_treasure/scene_omen.png",
+      "bytes": 2310873,
+      "sha256": "b138b6b06422c1ca607e2c77a5ac183a98c69ce3c6e21e7a1b11035ee3c9eeb3"
+    },
+    {
+      "file": "assets/scenes-v5-candidates/02_poker/scene_bonus.png",
+      "bytes": 2235940,
+      "sha256": "b38cc2f8ccc7346ad4fa15a132f5eb661d6e40fb6fd34b77341fd5506a0e15d6"
+    },
+    {
+      "file": "assets/scenes-v5-candidates/02_poker/scene_boss.png",
+      "bytes": 1701732,
+      "sha256": "7501a59db5a964154bee076e81b706949c1e5cced11016782c9cbe685482214e"
+    },
+    {
+      "file": "assets/scenes-v5-candidates/02_poker/scene_chain.png",
+      "bytes": 2193713,
+      "sha256": "acee36462a4a4066a86e8df5b34e52e25f501dcb2a99ea8f8c8d50fe88aa8c9b"
+    },
+    {
+      "file": "assets/scenes-v5-candidates/02_poker/scene_explore.png",
+      "bytes": 1627747,
+      "sha256": "6f553a7f3dac4010527f514e97dc0335827016521bb55b3793fc4867fed55c66"
+    },
+    {
+      "file": "assets/scenes-v5-candidates/02_poker/scene_omen.png",
+      "bytes": 1918582,
+      "sha256": "afbf0f97c79dece86bc4313c2848dabc934bceadbbdbb8ee82b2258aaadee77b"
+    },
+    {
+      "file": "assets/scenes-v5-candidates/03_race/scene_bonus.png",
+      "bytes": 1955439,
+      "sha256": "2eb9437bb48e643b7e8d7ad18f2d6f4ff43adc6897ba944914a1783bebc67a2c"
+    },
+    {
+      "file": "assets/scenes-v5-candidates/03_race/scene_boss.png",
+      "bytes": 2098024,
+      "sha256": "ea3eef8ab3d2c390c077c08d79b41695d83148b082698f657c51f6e45aa1b0dc"
+    },
+    {
+      "file": "assets/scenes-v5-candidates/03_race/scene_chain.png",
+      "bytes": 2001819,
+      "sha256": "11c783ca05cf3c4adc782c3d4f96a34f41b5ac2268a6c4d69b54a573facfc90a"
+    },
+    {
+      "file": "assets/scenes-v5-candidates/03_race/scene_explore.png",
+      "bytes": 1912356,
+      "sha256": "4862cb5e3433d75ee826f37c2d126fb9e4c160bb79cc5cc3bc44aa7d2765766c"
+    },
+    {
+      "file": "assets/scenes-v5-candidates/03_race/scene_omen.png",
+      "bytes": 2137406,
+      "sha256": "0901582ae4e636d5a46101309d4aa86693dd5eb722c7b7369f7989809873c1e5"
+    },
+    {
+      "file": "assets/scenes-v5-candidates/04_wonderland/scene_bonus.png",
+      "bytes": 2354742,
+      "sha256": "4d0419e5b9cb911fd1074dba96c5f244347adac01fca9d4ed3d56b2c0c0e8b8c"
+    },
+    {
+      "file": "assets/scenes-v5-candidates/04_wonderland/scene_boss.png",
+      "bytes": 2411620,
+      "sha256": "9d6f4f8e6501873b779d47d825050b96575bd2e2ffb829d4829f3bfee182e1aa"
+    },
+    {
+      "file": "assets/scenes-v5-candidates/04_wonderland/scene_chain.png",
+      "bytes": 2341878,
+      "sha256": "a8b47e836cffa06a64671be760fa7c8bfec89f93ea517e0b7115a32d3e391e48"
+    },
+    {
+      "file": "assets/scenes-v5-candidates/04_wonderland/scene_explore.png",
+      "bytes": 2352100,
+      "sha256": "7efe8eafea3d48eff1225988a4ae0e73986a2544ef347e015994f3d57c949aea"
+    },
+    {
+      "file": "assets/scenes-v5-candidates/04_wonderland/scene_omen.png",
+      "bytes": 2076564,
+      "sha256": "4364e2aa079a6c69c4c1aa8823192ea65cf8e0625ecddf4d733de86d864a2af5"
+    },
+    {
+      "file": "assets/scenes-v5-candidates/05_raid/scene_bonus.png",
+      "bytes": 2047011,
+      "sha256": "a898085228cefd5c5047e620c5f706e66103915c0f08e48c6845c46032c51f5a"
+    },
+    {
+      "file": "assets/scenes-v5-candidates/05_raid/scene_boss.png",
+      "bytes": 1861242,
+      "sha256": "ec5c0874a72657cdb45f0a912d9889324c06c8de6df6ca088dc45c51aa334b3e"
+    },
+    {
+      "file": "assets/scenes-v5-candidates/05_raid/scene_chain.png",
+      "bytes": 2096684,
+      "sha256": "9a2a7d73947a40cfd360ce1062e757dca9ae5881939cc0b279093ed0cd6758c7"
+    },
+    {
+      "file": "assets/scenes-v5-candidates/05_raid/scene_explore.png",
+      "bytes": 1943337,
+      "sha256": "62e7f547efe944620b4bda28420adc564c6df4a0255c07a203e78c9156b2db8c"
+    },
+    {
+      "file": "assets/scenes-v5-candidates/05_raid/scene_omen.png",
+      "bytes": 1983462,
+      "sha256": "c38ce401167cced6006f027cd466f3bf3f1ede2d6282a8d3dd58e2a3b1895293"
+    },
+    {
+      "file": "assets/scenes/02_poker/scene_bonus.webp",
+      "bytes": 244014,
+      "sha256": "594e7ff6ad2e16203dbc679c6044acb2e021aa7b10d5f829b6d826f4147462e4"
+    },
+    {
+      "file": "assets/scenes/02_poker/scene_boss.webp",
+      "bytes": 175596,
+      "sha256": "0a82d58792815d831f21785bab2b87a482d8b36e6f2537913c85cd1ab920c2f2"
+    },
+    {
+      "file": "assets/scenes/02_poker/scene_chain.webp",
+      "bytes": 216994,
+      "sha256": "c615e608ad784fe223a16bef6a40de0ae8dfdfb275f66f25b8a5e712d4d7d9ce"
+    },
+    {
+      "file": "assets/scenes/02_poker/scene_explore.webp",
+      "bytes": 200122,
+      "sha256": "de2cb1c277973393724dae7d875efa4216c754c577308001ea79ed394fe0029e"
+    },
+    {
+      "file": "assets/scenes/02_poker/scene_omen.webp",
+      "bytes": 120460,
+      "sha256": "9784c864696081a2c534e1e308b99ed2be5948b9c631db6f9a0c21d164610680"
+    },
+    {
+      "file": "assets/scenes/03_race/scene_bonus.webp",
+      "bytes": 299080,
+      "sha256": "d105611ed1d76ff01b1c68c15dcbc9b8b4a7dfb74712b6bf399d63906760b3b7"
+    },
+    {
+      "file": "assets/scenes/03_race/scene_boss.webp",
+      "bytes": 382332,
+      "sha256": "b658e1006cbd5d87c43b4055b83c6cc795985522a8fd1a38d6f7ea95863b31f0"
+    },
+    {
+      "file": "assets/scenes/03_race/scene_chain.webp",
+      "bytes": 320590,
+      "sha256": "814f42472893283f2e35ef56fb12a9612fdc5a192f30864d5c0602d7ccede6fc"
+    },
+    {
+      "file": "assets/scenes/03_race/scene_explore.webp",
+      "bytes": 241184,
+      "sha256": "4bb7531f46b0b3a5b702146c5573d97ff532648c2dd791cfaa63eab3cf96cfb8"
+    },
+    {
+      "file": "assets/scenes/03_race/scene_omen.webp",
+      "bytes": 279236,
+      "sha256": "8b6595fab098cf19d51c52f1820c312f2a479aca2b1eded25b50fa35105b7212"
+    },
+    {
+      "file": "assets/scenes/04_wonderland/scene_bonus.webp",
+      "bytes": 389156,
+      "sha256": "448e4a226ff69eec69c12d3cd269f10962084a85fd0a8b7e2bdb3bd55cd52704"
+    },
+    {
+      "file": "assets/scenes/04_wonderland/scene_boss.webp",
+      "bytes": 325814,
+      "sha256": "86231120834938b510b9389134ad883bb1bfa809ef397f525f3c70fca989bd55"
+    },
+    {
+      "file": "assets/scenes/04_wonderland/scene_chain.webp",
+      "bytes": 478720,
+      "sha256": "e8abaf99a68640c4d1d081a9e2d98cd2bd370a5c048a4c6a1bee5db3fbdc84d5"
+    },
+    {
+      "file": "assets/scenes/04_wonderland/scene_explore.webp",
+      "bytes": 401318,
+      "sha256": "d3ddf1813c80fb9c8ab38bf779762fd0934a463a61e5b8bff9f2788cdcaab261"
+    },
+    {
+      "file": "assets/scenes/04_wonderland/scene_omen.webp",
+      "bytes": 420280,
+      "sha256": "9a3e7a584549271ae7a3db02e4bf0ec21c6185614b56b34f9eada18e72d328b0"
+    },
+    {
+      "file": "assets/scenes/05_raid/scene_bonus.webp",
+      "bytes": 240826,
+      "sha256": "75248009a96d6b0d02283ae7169416530f7caa397244c84c82cbb05ee93305b5"
+    },
+    {
+      "file": "assets/scenes/05_raid/scene_boss.webp",
+      "bytes": 263462,
+      "sha256": "7706b4064ed5642f2b65eec7bd32e84710a85666d44ba4d8ba983007fcc38a10"
+    },
+    {
+      "file": "assets/scenes/05_raid/scene_chain.webp",
+      "bytes": 279102,
+      "sha256": "8664cd3a3ae1bc7e2d386bc08ef67c6f6a62f8fc5ee8094ae738aed2ce5777b6"
+    },
+    {
+      "file": "assets/scenes/05_raid/scene_explore.webp",
+      "bytes": 220566,
+      "sha256": "a6c04ea2dbc64dfbea1a2500a05b3c69fb9a8a21f41c764bc66c9cb591f3ade1"
+    },
+    {
+      "file": "assets/scenes/05_raid/scene_omen.webp",
+      "bytes": 248288,
+      "sha256": "c546f0f930509530630f0c9d8d04e62e0606d18dd5527f8a5ae02d02293614dc"
+    },
+    {
+      "file": "assets/stadium/audio/nine-prologue.mp3",
+      "bytes": 5961981,
+      "sha256": "8cf0d94fc51a98230fc2c190830fcbd1f76865ae1c3375738b2bf1ba7d32604b"
+    },
+    {
+      "file": "assets/stadium/audio/surgery-principles.mp3",
+      "bytes": 4807494,
+      "sha256": "7abdaf9f5d6fb9cea9c7bc0322696127366e054a6ca88e942f0e73c7d1a8f609"
+    },
+    {
+      "file": "assets/stadium/audio/victory.mp3",
+      "bytes": 341862,
+      "sha256": "0759d1c6832fc856087384673dac561cd35ca3a643289a970a8c46e767cb2fd1"
+    },
+    {
+      "file": "assets/stadium/bg_stadium_default.png",
+      "bytes": 2178548,
+      "sha256": "21aceec0f025a620597beb49a9ee763c8589cffc7e16d70263f121c26c90b988"
+    },
+    {
+      "file": "assets/stadium/bg_stadium_imperial.png",
+      "bytes": 3466670,
+      "sha256": "4601905d3d953bb73cd26bb43f5878ca9e880ce9ea627cdaffd0ae1c714e6937"
+    },
+    {
+      "file": "assets/stadium/bg_stadium_kanayama.png",
+      "bytes": 3711575,
+      "sha256": "25dc151f1e9e51ec505f5e03037bdd26ccd5ca2153de3d927feea483917a0e06"
+    },
+    {
+      "file": "assets/stadium/bg_stadium_shirogane.png",
+      "bytes": 3492396,
+      "sha256": "1a23e4bb4e91e4850b7efd2763d8bcb7dbd065ad68554a3196010bf51bdea948"
+    },
+    {
+      "file": "assets/stadium/bg_stadium_yamanobe.png",
+      "bytes": 3396618,
+      "sha256": "4ceca409bd8128f5154875bb9a0ee7c23b177b796a99a727b3024a76ed5703e2"
+    },
+    {
+      "file": "assets/stadium/bg_surgery_room.png",
+      "bytes": 3072243,
+      "sha256": "92be376d7bbae2ce4b27a2435b3cc243f538030e8ec7b7690056248fa0a0e210"
+    },
+    {
+      "file": "assets/stadium/generated-v1/activation-stage.png",
+      "bytes": 2933149,
+      "sha256": "b3632e0e317d94e8f6c718dae54ba3612c4515fb5d14d71151fcc8bfe2f4d502"
+    },
+    {
+      "file": "assets/stadium/generated-v1/augment-power.png",
+      "bytes": 2588316,
+      "sha256": "4f3e75f7cc8fa3ba5f7275371443ddaebcaa9d6199f9f44226bef32779aa4ca9"
+    },
+    {
+      "file": "assets/stadium/generated-v1/augment-walk.png",
+      "bytes": 2708045,
+      "sha256": "d6e95bd8a9ad3ce78853b2d9bfdb43f2ff03130f4f041154b07ab331f39386a6"
+    },
+    {
+      "file": "assets/stadium/generated-v1/surgery-concept.png",
+      "bytes": 2455971,
+      "sha256": "1d1b7a26ac08fa2fcbe9807b5ad96738c47472e6ed6a692fe02040b454b0ae58"
+    },
+    {
+      "file": "assets/stadium/generated-v1/surgery-stage.png",
+      "bytes": 2435520,
+      "sha256": "b1f8325a3de53322479c3b8f24698e897b7319f7196702a3f85074e522afc969"
+    },
+    {
+      "file": "assets/stadium/generated-v1/victory-concept.png",
+      "bytes": 2032543,
+      "sha256": "10d9afbc95c492f57f8c6855675ee3d969b87fb258de64aefb35b9d7dde3556d"
+    },
+    {
+      "file": "assets/stadium/generated-v1/victory-stage.png",
+      "bytes": 2326368,
+      "sha256": "0de450d371e606e717cea36ba50282dd60768df98a78eda9ef542ca9f63c4d3b"
+    },
+    {
+      "file": "assets/stadium/mimi_doctor.png",
+      "bytes": 1103584,
+      "sha256": "1855e4b595538ad60d0daea00d82bce23f6d46e4387417e85dc75006846c7367"
+    },
+    {
+      "file": "assets/stadium/nav_surgery.png",
+      "bytes": 99412,
+      "sha256": "c3e0dfbbabaae12ed538376a370487a123e975d25853273a3c2fc8f818f24fd3"
+    },
+    {
+      "file": "assets/stadium/player_01.png",
+      "bytes": 1189677,
+      "sha256": "387534c865a091afb7d6aee72bf738e1067e925747156bbf12508ef95ed0be2a"
+    },
+    {
+      "file": "assets/stadium/player_01_batting_drive_v1.png",
+      "bytes": 1955809,
+      "sha256": "a8faf89e73933c77286f75f8a0929f791c479d1dbd5e83a4024bee6436203458"
+    },
+    {
+      "file": "assets/stadium/player_02.png",
+      "bytes": 837251,
+      "sha256": "7d3d1182716f183d00c9e3c3fdff39d0ef9343d2d561a395e3b5c508dae3246c"
+    },
+    {
+      "file": "assets/stadium/player_02_batting_drive_v3.png",
+      "bytes": 1917967,
+      "sha256": "f80fa066784e140a09127814e83ae9eb7d5276f48e4b99ef53e911c2ae4b41a8"
+    },
+    {
+      "file": "assets/stadium/player_03.png",
+      "bytes": 1056964,
+      "sha256": "722335d9a28299ce459e21754e8c5a31f80441eddfbffc5da4a2b2dd4294b79b"
+    },
+    {
+      "file": "assets/stadium/player_03_batting_finish_v3.png",
+      "bytes": 2077624,
+      "sha256": "58004ba03ee5838ad0a1e5a622bcfe530ae0d646b5d82d3051470ba508acf149"
+    },
+    {
+      "file": "assets/stadium/player_04.png",
+      "bytes": 1376679,
+      "sha256": "7f7cc2246b276f5b502d2f13ff493138214b46a2c6cde2cf044885d5cba28f30"
+    },
+    {
+      "file": "assets/stadium/player_04_batting_drive_v2.png",
+      "bytes": 2068215,
+      "sha256": "1f9197a348543fb65f0da1d8ca8c3e43066a8d81578c6cdd0b7a2fd749e1c4f2"
+    },
+    {
+      "file": "assets/stadium/player_05.png",
+      "bytes": 1223066,
+      "sha256": "83e650b16f01e2ccacab1c1f3f29a9a17bac4c2768bd5321a50c60415de3cdf1"
+    },
+    {
+      "file": "assets/stadium/player_05_batting_finish_v3.png",
+      "bytes": 1934435,
+      "sha256": "def0e805e0d2042c6b6a241f9a2a873a881b20d2908b9c36c565097e3fd79867"
+    },
+    {
+      "file": "assets/stadium/player_06.png",
+      "bytes": 1050818,
+      "sha256": "3e75b3eb1142849fa333e79f62bf6c062417b91747f0d96dc18220a47c87decb"
+    },
+    {
+      "file": "assets/stadium/player_06_batting_drive_v3.png",
+      "bytes": 2164726,
+      "sha256": "82300e12953a783f93e255396725476624739ff828e9efdc415da5892bb596ed"
+    },
+    {
+      "file": "assets/stadium/player_07.png",
+      "bytes": 928163,
+      "sha256": "80caf2acc0cade66818792abdb0d8ae667a169c08b198ded29a8fb67e915b5e2"
+    },
+    {
+      "file": "assets/stadium/player_07_batting_drive_v3.png",
+      "bytes": 1962766,
+      "sha256": "beea96a4964b946bbaac0343bf50f646cccd4c3e2be27bfb73a004f669f70b9b"
+    },
+    {
+      "file": "assets/stadium/player_08.png",
+      "bytes": 1274064,
+      "sha256": "c8cd4d9ce06cddd30f960fa61fd17e0b98261ecad20693c3e49c4513b44724fc"
+    },
+    {
+      "file": "assets/stadium/player_08_batting_finish_v3.png",
+      "bytes": 2064299,
+      "sha256": "afaa3c311cf7c78708df947a33caaa0e8c2296d6c8007377656fdfa4c36673ee"
+    },
+    {
+      "file": "assets/stadium/player_09.png",
+      "bytes": 839833,
+      "sha256": "5207b8767dda5e87c5116d6081193d2ad4bf2e36d61e703cd88f0cbdb47393a3"
+    },
+    {
+      "file": "assets/stadium/player_09_batting_finish_v3.png",
+      "bytes": 1888786,
+      "sha256": "c49d59993c0fbb6a5b38b7fedc62f569073ea12bd6ea9662673ad4f4be9a7e7e"
+    },
+    {
+      "file": "assets/stages/stage_canyon.png",
+      "bytes": 2925811,
+      "sha256": "e841dde58d6f3d6bf40311b88a96d86e7259a37b97cf77bad6bbf3c84572f1f7"
+    },
+    {
+      "file": "assets/stages/stage_jade.png",
+      "bytes": 2983238,
+      "sha256": "6c86ab0cb9dbd119b80e53004af50e5417eccc4f4cdf86217dba00ac055a0894"
+    },
+    {
+      "file": "assets/stages/stage_observatory.png",
+      "bytes": 3261563,
+      "sha256": "1f2120ab9a742523ac0b82b9744d97c4adb04c01d425eec374e48e64c3e30ffa"
+    },
+    {
+      "file": "assets/stages/stage_sanctum.png",
+      "bytes": 2690982,
+      "sha256": "f913d98c34ed800152db68734e251ec4b78ca5991f78c4f8bc68299041ff9f04"
+    },
+    {
+      "file": "assets/symbols/01_bell.png",
+      "bytes": 1425489,
+      "sha256": "5fe177bbc0448492be0d4fc5e111380bf8691ea04be788fa440f7a2fb4640510"
+    },
+    {
+      "file": "assets/symbols/06_heart_red.png",
+      "bytes": 82440,
+      "sha256": "ac98efdd4a8fb078ff9abb9de9431dc89511168153aa1457db3d06a95d813234"
+    },
+    {
+      "file": "assets/symbols/13_orb_max.png",
+      "bytes": 130365,
+      "sha256": "ea32c5a8ab2ade9f0e71f46735f8024f9faa0f6de1703f580e959c3e8e1ab3f9"
+    },
+    {
+      "file": "assets/symbols/14_chest_normal.png",
+      "bytes": 109226,
+      "sha256": "e9a83cb6d5575e89a54d10e106d5ad8aa875f44d8353576bb4276e9d57bc72ca"
+    },
+    {
+      "file": "assets/symbols/22_revive.png",
+      "bytes": 137946,
+      "sha256": "8a9688876648dcf36832b302319b04e601dd2c84a8f9bb5fc5e998707f8b6a0d"
+    },
+    {
+      "file": "assets/title-v5/mimi-jackpot-resort-landscape-v2.png",
+      "bytes": 2772278,
+      "sha256": "717bd900c5a9feec34d226e079608b433910c249d3b122e8e1f21b78789b15cb"
+    },
+    {
+      "file": "assets/title-v5/mimi-jackpot-resort-original-keyart-v1.png",
+      "bytes": 3631339,
+      "sha256": "3377e3aa30dfb0e43a8ae4b2694d35aac56fcdbbd54e75422740f666ca9a8722"
+    },
+    {
+      "file": "casino-loop.js",
+      "bytes": 9172,
+      "sha256": "0250bdb6b5c84608e11a23b8aedef7fd7b2d7fadec78a2c5b9cb827239582850"
+    },
+    {
+      "file": "chapter1-flow.js",
+      "bytes": 48111,
+      "sha256": "f004bcb28be6155c7362c95884d012350663b597e96f4fe80f14861d32725f8a"
+    },
+    {
+      "file": "collection-economy.js",
+      "bytes": 15652,
+      "sha256": "d5c2ded18e0cb6f4fafd6d8608acfef8882c628c886d1c700add9abf9fa933df"
+    },
+    {
+      "file": "content/assets.js",
+      "bytes": 8106,
+      "sha256": "081bca4813e52000ce369e25136b7bc873721dfb28c4adde7e1d6eda8153cb34"
+    },
+    {
+      "file": "content/cast.js",
+      "bytes": 3239,
+      "sha256": "a5b399331435e4a56f0db0f46cf03f27f71ab797f70257f70bc17ed9bac7309c"
+    },
+    {
+      "file": "content/effects.js",
+      "bytes": 2898,
+      "sha256": "49809b722a5bf2fc3e433cd135d2f1a38d9c7068765cb0283ca56444896600c0"
+    },
+    {
+      "file": "content/game-content-v5.js",
+      "bytes": 12977,
+      "sha256": "f6a79ed585ad9e668efd38f5c1c8d8545361fd55ad52db4ecd5ea38c48c649f7"
+    },
+    {
+      "file": "content/presentation-choreography.js",
+      "bytes": 18452,
+      "sha256": "53de3bc937591931b292659ce21726a403161fe5e43d7148cee625b5752dafaa"
+    },
+    {
+      "file": "content/presentation-effects.js",
+      "bytes": 32988,
+      "sha256": "d9d4523891b308f458a5ac1ec51f5fa16969e1ff479301a871acdf41e173eb25"
+    },
+    {
+      "file": "content/resort-new-cast.js",
+      "bytes": 26231,
+      "sha256": "1e40135ca23b35ff4d26ca3f7f31d08ec7802767d8f7d13491ad4e926398c502"
+    },
+    {
+      "file": "content/shop.js",
+      "bytes": 6203,
+      "sha256": "84d39d3f3b6ed8d1c8690a1d480c96f8ca10cbe1fff2aa67515afa84742d3a67"
+    },
+    {
+      "file": "content/stages.js",
+      "bytes": 12286,
+      "sha256": "0b4e9a26ce8c3569576d41f09418f8734f94778c5f224d80d871c415069b28b7"
+    },
+    {
+      "file": "content/story.js",
+      "bytes": 32869,
+      "sha256": "2aea546e41f4fba2ccdc5511d5a39b47295cf30187488599c7728340566bf92d"
+    },
+    {
+      "file": "dragon-source/bgm/homebgm/ホームカントリー.mp3",
+      "bytes": 6468558,
+      "sha256": "c075cfa2960709ca790d17d5567bea516730cfd966b1ac3ebd891caa82e079f3"
+    },
+    {
+      "file": "dragon-source/bgm/mallbgm/mall-day.mp3",
+      "bytes": 4534139,
+      "sha256": "bbc18df7c162932502b6781e11de2c90e173ae9f25447998e2abdf6adaf047c4"
+    },
+    {
+      "file": "dragon-source/bgm/racebgm/crown-of-thunder.mp3",
+      "bytes": 5308398,
+      "sha256": "d16fc11f859fbc4e798300ca20cb7342e7095517185dc9bd6cef50250306842d"
+    },
+    {
+      "file": "dragon-source/bgm/racebgm/dragon-in-the-forest.mp3",
+      "bytes": 5290662,
+      "sha256": "737fc60679a75fae921602a8b48d04cdf3d5bf6837a7ed2dac58f1bace1c44a8"
+    },
+    {
+      "file": "dragon-source/bgm/racebgm/fanfare-days.mp3",
+      "bytes": 1589094,
+      "sha256": "2d52e2d63c1303c79da9dae6b2d0dabcc189b5320736319a5447d4c2801abf64"
+    },
+    {
+      "file": "dragon-source/bgm/racebgm/fog-cutting-flag.mp3",
+      "bytes": 8166942,
+      "sha256": "bf51f0fdaa15da9ab3006959068c81ea1b75a9f38aa69a2d564397022d68817b"
+    },
+    {
+      "file": "dragon-source/bgm/racebgm/lets-do-this.mp3",
+      "bytes": 6110046,
+      "sha256": "e8b09ed1bda9a52943dcbcdc01f22753a22e068ee92878df9546ef840f945765"
+    },
+    {
+      "file": "dragon-source/bgm/racebgm/sky-hero.mp3",
+      "bytes": 5777214,
+      "sha256": "31a9a9c761ef495c86610caf8f5480e95d3c63a648ee03bbcd3b8056adafb2f3"
+    },
+    {
+      "file": "dragon-source/bgm/racebgm/unlosable-battle.mp3",
+      "bytes": 7385646,
+      "sha256": "18c8a2ba21e612af705de47ac72762dda2da2636987161d6471d4a18265844d1"
+    },
+    {
+      "file": "dragon-source/images/cast/mimi/mimi_buniqro_default.webp",
+      "bytes": 50796,
+      "sha256": "90eed87956a614ce75db5abe6de0e7aef173ca34be424fa684901410d79ec466"
+    },
+    {
+      "file": "dragon-source/images/cast/mimi/mimi_buniqro_happy.webp",
+      "bytes": 51704,
+      "sha256": "0e4f188327462dd7cc440fc63e9aaf3bb860186cd25fe6c603452e18305c2ea3"
+    },
+    {
+      "file": "dragon-source/images/cast/mimi/mimi_buniqro_smile.webp",
+      "bytes": 48226,
+      "sha256": "af8ad7fb66ed142c9de2541796323ad5e456fc452e9fe4de85094cc4a97c06be"
+    },
+    {
+      "file": "dragon-source/images/cast/mimi/mimi_dara_default.webp",
+      "bytes": 48822,
+      "sha256": "59fa11ccbee23e6ab16161dd7e60baa5b5ea1a4304e02422108408caf2e15334"
+    },
+    {
+      "file": "dragon-source/images/cast/mimi/mimi_dara_happy.webp",
+      "bytes": 57978,
+      "sha256": "a13066e7fccac54bdfebaf941c378dd62d9987c240161a68907507ddadad74cf"
+    },
+    {
+      "file": "dragon-source/images/cast/mimi/mimi_dara_smile.webp",
+      "bytes": 54586,
+      "sha256": "98d84af8b0aec230611d8bed621dba20b29475bd5abaea888ec2339b7df08301"
+    },
+    {
+      "file": "dragon-source/images/cast/mimi/mimi_darugi_default.webp",
+      "bytes": 49092,
+      "sha256": "aefdfdd9872969f7a8a04b08601bb3960159d2dfac1b3980fb9147dbc3939c33"
+    },
+    {
+      "file": "dragon-source/images/cast/mimi/mimi_darugi_happy.webp",
+      "bytes": 58742,
+      "sha256": "6e2ab65c5b63ee781465ed4cf06bbb53fc69190ea1d1612f6ffca84e075603d1"
+    },
+    {
+      "file": "dragon-source/images/cast/mimi/mimi_darugi_smile.webp",
+      "bytes": 55368,
+      "sha256": "1f245831db796eb9ff1d7bcf87f482a970f36c8c9d39f15ecfd6e56366063b80"
+    },
+    {
+      "file": "dragon-source/images/cast/mimi/mimi_doraqi_default.webp",
+      "bytes": 50484,
+      "sha256": "7ca656e2183603911910802b701b671242b98ba961046b0c8bdb1bfd0e2a7f24"
+    },
+    {
+      "file": "dragon-source/images/cast/mimi/mimi_doraqi_happy.webp",
+      "bytes": 58490,
+      "sha256": "99818a8369bf33435adebe9b79523323416ae131a771dfbee3aab0b6431b726a"
+    },
+    {
+      "file": "dragon-source/images/cast/mimi/mimi_doraqi_smile.webp",
+      "bytes": 55698,
+      "sha256": "f967e08fef0e56e7a2d7db9d4c80569b881eaca2102e4b5b69625a0970dca40a"
+    },
+    {
+      "file": "dragon-source/images/cast/mimi/mimi_dragonrobe_default.webp",
+      "bytes": 84494,
+      "sha256": "f3527113f2aea625f4afc8d3e215e55cb2f98b02065f186e3bb3f68c697c139b"
+    },
+    {
+      "file": "dragon-source/images/cast/mimi/mimi_dragonrobe_happy.webp",
+      "bytes": 122548,
+      "sha256": "d7f833d72448f79f52e03d79193a0faf7c674eff0758d0164010e4d9f90fb077"
+    },
+    {
+      "file": "dragon-source/images/cast/mimi/mimi_dragonrobe_smile.webp",
+      "bytes": 104436,
+      "sha256": "7618d2d9d1c89a9e803d78dc4e6e5cdf2db8102f6df0ac214352a939b33dec85"
+    },
+    {
+      "file": "dragon-source/images/cast/mimi/mimi_drajela_default.webp",
+      "bytes": 53692,
+      "sha256": "3b6dca1f148daa8f59db6b144791be627e35c3c51d988480c2d13999e590ca2f"
+    },
+    {
+      "file": "dragon-source/images/cast/mimi/mimi_drajela_happy.webp",
+      "bytes": 76440,
+      "sha256": "1072a7512e9cf8fe0a1a7b4240f6974501fe8be89c7b991472ce493260ad947f"
+    },
+    {
+      "file": "dragon-source/images/cast/mimi/mimi_drajela_smile.webp",
+      "bytes": 51484,
+      "sha256": "88be45f0250a4f2413a9dd7d16df21d5b9caf4891545f93f75e7187f314e7acf"
+    },
+    {
+      "file": "dragon-source/images/cast/mimi/mimi_draspo_default.webp",
+      "bytes": 90540,
+      "sha256": "2c3e4dc5d22b2bdb198ae8029336d601e76e9a74dd27b56ce40ac7bffc976f32"
+    },
+    {
+      "file": "dragon-source/images/cast/mimi/mimi_draspo_happy.webp",
+      "bytes": 81152,
+      "sha256": "ba2b933c1ae2d2c52ec71912ae6c53dca83fd44cc70248746aeead34a689dabf"
+    },
+    {
+      "file": "dragon-source/images/cast/mimi/mimi_draspo_smile.webp",
+      "bytes": 65946,
+      "sha256": "8e49a2fc58a216bee526bb2aa33cc9756a8a985e0122822ba7c99386e49b32a1"
+    },
+    {
+      "file": "dragon-source/images/cast/mimi/mimi_gymlow_default.webp",
+      "bytes": 59748,
+      "sha256": "698e59a854330cb5a2497076befff4b6bf49ec4bd97ca263de4215ae67f494f2"
+    },
+    {
+      "file": "dragon-source/images/cast/mimi/mimi_gymlow_happy.webp",
+      "bytes": 65258,
+      "sha256": "53542ba7841852f5b10736730ef1259cbfab55a244cb413c0682cae40d48c296"
+    },
+    {
+      "file": "dragon-source/images/cast/mimi/mimi_gymlow_smile.webp",
+      "bytes": 62672,
+      "sha256": "e4a6f57b24edc77638429591cf883340cb0a77ff77d197b462cf80ab1e4ef179"
+    },
+    {
+      "file": "dragon-source/images/cast/mimi/mimi_gymmiddle_default.webp",
+      "bytes": 57254,
+      "sha256": "bb4648f4cf5f3aa818b8022b154368ab1b73895fa41f65b33e8b09ee5d309cb6"
+    },
+    {
+      "file": "dragon-source/images/cast/mimi/mimi_gymmiddle_happy.webp",
+      "bytes": 68706,
+      "sha256": "0e575911a2e66085d0094f01a575751dc73242bcffe38cd69ea093b734e1defe"
+    },
+    {
+      "file": "dragon-source/images/cast/mimi/mimi_gymmiddle_smile.webp",
+      "bytes": 69350,
+      "sha256": "a310b007fe71c6040e9a8ae884a7bf085048fb7c771e2fe86a72040f26f50d6c"
+    },
+    {
+      "file": "dragon-source/images/cast/mimi/mimi_jungle_default.webp",
+      "bytes": 53144,
+      "sha256": "d2b2b4fc340fbfde4fc4f03c0d4d84bab9e6ede23c6847108e054ba2bb6ecae7"
+    },
+    {
+      "file": "dragon-source/images/cast/mimi/mimi_jungle_happy.webp",
+      "bytes": 67008,
+      "sha256": "b6fc8bb84285e777a49fd682a90b6c4f4099d02789bbe187ff4e8bf2faa60084"
+    },
+    {
+      "file": "dragon-source/images/cast/mimi/mimi_jungle_smile.webp",
+      "bytes": 56230,
+      "sha256": "a0c40fd2e9a48cda7715b3464249ec44c5aea47c89a5ac9fdad40047113c8463"
+    },
+    {
+      "file": "dragon-source/images/cast/mimi/mimi_leonmall_default.webp",
+      "bytes": 55338,
+      "sha256": "e0a10b7ac27bdea1f8b58083a8c7c08cae4e6b269c67c2bcb32d6d193e683e78"
+    },
+    {
+      "file": "dragon-source/images/cast/mimi/mimi_leonmall_happy.webp",
+      "bytes": 70062,
+      "sha256": "99da41e228a9238782f77837deba42511647b097c6b2490bc3aba5c097b2605c"
+    },
+    {
+      "file": "dragon-source/images/cast/mimi/mimi_leonmall_smile.webp",
+      "bytes": 60178,
+      "sha256": "2f1970a18959029f942b388aa87f4e4a10d5dd612842a91997ceaac2f2f2db3a"
+    },
+    {
+      "file": "dragon-source/images/cast/mimi/mimi_mannel_default.webp",
+      "bytes": 58636,
+      "sha256": "5f407caea7b600ad1bc0d19fadd968b5691ed17906f5d763e9f381beb2dbfc7b"
+    },
+    {
+      "file": "dragon-source/images/cast/mimi/mimi_mannel_happy.webp",
+      "bytes": 71972,
+      "sha256": "08c57ebcbd1d07cf102c13af923722bf9cf1e6ad5842bf24827b08b44c15e615"
+    },
+    {
+      "file": "dragon-source/images/cast/mimi/mimi_mannel_smile.webp",
+      "bytes": 64630,
+      "sha256": "b048e9c82c2a42676413ccec3423a03605020b0f3a2fc656ed439e23ef36c918"
+    },
+    {
+      "file": "dragon-source/images/cast/mimi/mimi_maumau_default.webp",
+      "bytes": 48882,
+      "sha256": "3ce687c44bfa397346cd8b188e10d8bb770813d6789929871190c7cae4e3f462"
+    },
+    {
+      "file": "dragon-source/images/cast/mimi/mimi_maumau_happy.webp",
+      "bytes": 66654,
+      "sha256": "693d1992b163c8f257148a545c538d6af0cd9f9a29f7b0c4fd78dfabb3dd17dd"
+    },
+    {
+      "file": "dragon-source/images/cast/mimi/mimi_maumau_smile.webp",
+      "bytes": 53358,
+      "sha256": "2f8fd0fc4ade41368e104ad10cb0e5187d8873ae127aded82cd2c6a8e1087a64"
+    },
+    {
+      "file": "dragon-source/images/cast/mimi/mimi_merine_default.webp",
+      "bytes": 46430,
+      "sha256": "af33092ea916f7afa073908f324ef0399ccf0f46ccf145793109f9e9f7f19f6d"
+    },
+    {
+      "file": "dragon-source/images/cast/mimi/mimi_merine_happy.webp",
+      "bytes": 56220,
+      "sha256": "355050eb1de5015757def77deb4d060bbdf1c7d636bc56baaae01d71ee67824a"
+    },
+    {
+      "file": "dragon-source/images/cast/mimi/mimi_merine_smile.webp",
+      "bytes": 54524,
+      "sha256": "68de43ce5e028e0b03258dc6b61d9bed9c65d3f4a5f78a30d30321d79255f432"
+    },
+    {
+      "file": "dragon-source/images/cast/stand/celestia.webp",
+      "bytes": 83170,
+      "sha256": "5f094a8b207f3bf6c1e2e0ae0cdff8eb5e03a94fe3feed915fb0f07dd5a937e5"
+    },
+    {
+      "file": "dragon-source/images/cast/stand/makura.webp",
+      "bytes": 66416,
+      "sha256": "9bc088041468571978ef6201fffab924b09e0b21a25ee41d7b81f3f2a95abe82"
+    },
+    {
+      "file": "dragon-source/images/cast/stand/mizu.webp",
+      "bytes": 54436,
+      "sha256": "83da2833b09158d96a867c5af0fa0c9953a6a8a89e5e3741eb3da6697fba1e49"
+    },
+    {
+      "file": "dragon-source/images/cast/stand/sake.webp",
+      "bytes": 103412,
+      "sha256": "b02dcdd64175a11c9309728a6c14797aafbea77c8df301484d667177027f8e2c"
+    },
+    {
+      "file": "dragon-source/images/cast/stand/sumika.webp",
+      "bytes": 81038,
+      "sha256": "d14bfc2acef30c7f0dd4e3fc96f23836f8e4efb06fcf57946634df82d50f2ad3"
+    },
+    {
+      "file": "dragon-source/images/racebg_v2/lapan_L1.webp",
+      "bytes": 194288,
+      "sha256": "2e569ec26273e4c9c230e6248b33aaa1b2821ca27742658c759452a5d789f151"
+    },
+    {
+      "file": "dragon-source/images/racebg_v2/lapan_L3.webp",
+      "bytes": 135096,
+      "sha256": "33fba9b9a404acb3bec3c0bd9098cf199ab75475a7890fc2cf1e33dffd4a76f7"
+    },
+    {
+      "file": "dragon-source/images/racebg_v2/ringrosso_L1.webp",
+      "bytes": 130344,
+      "sha256": "55373fbb292768dc7ca62ca36fdb7a881b17c24b40ee66b8f183650b57326ff1"
+    },
+    {
+      "file": "dragon-source/images/racebg_v2/ringrosso_L3.webp",
+      "bytes": 110212,
+      "sha256": "2730a9995a8203af13a28cfa5a52d4f6deed9e8f87f0f7316d25e9e910649a75"
+    },
+    {
+      "file": "dragon-source/images/racebg_v2/stadium_L1.webp",
+      "bytes": 103870,
+      "sha256": "b0067049de25e1ac1265492a4f08eb23cc90d72599680d94147d97fd63550085"
+    },
+    {
+      "file": "dragon-source/images/racebg_v2/stadium_L3.webp",
+      "bytes": 108144,
+      "sha256": "8aa74a3ab551ccb9de20c516229b52578d46eb34da14e332d573901142f4e9ec"
+    },
+    {
+      "file": "dragon-source/images/racebg_v2/vento_L1.webp",
+      "bytes": 100900,
+      "sha256": "b628ba45adc75b1b6e6cc5fbb61514b2d6fa134de884cb6727e44e0d7692e867"
+    },
+    {
+      "file": "dragon-source/images/racebg_v2/vento_L3.webp",
+      "bytes": 104652,
+      "sha256": "66cfb922b3c8385bf4652254409cf66c7eb20859e692bd68ea75c4ed736b9c91"
+    },
+    {
+      "file": "dragon-source/images/title_bg2.webp",
+      "bytes": 472584,
+      "sha256": "79184686b2e5d5e880599cd45a03aba2d89f8592df62db1c0fee3bbdc72bb842"
+    },
+    {
+      "file": "dragon-source/images/title_logo2.webp",
+      "bytes": 429046,
+      "sha256": "3dc9c8ad1bd7bc63948499249164bbaae94eec405cfb26efa05c5a384b2e75af"
+    },
+    {
+      "file": "economy-rules.js",
+      "bytes": 5424,
+      "sha256": "ee95d5c34d9d75059b6eeb373ab345788a7adf54a2fe8fec5aebd3d10991bf69"
+    },
+    {
+      "file": "game.js",
+      "bytes": 217416,
+      "sha256": "e1352d1f0f7acb5c3339b3bc891825d562454514252df556258fe5a767879c58"
+    },
+    {
+      "file": "guild-flow.js",
+      "bytes": 8867,
+      "sha256": "4bf3f99d11565fa836190c61cc02951643af06b67f86ded9fcef735b7ccef7f4"
+    },
+    {
+      "file": "guild-presentation.js",
+      "bytes": 4066,
+      "sha256": "07d5f2bd65024a0c73169728c74693dc861b1f7c5aeea6b7254ded6e3ef29efc"
+    },
+    {
+      "file": "guild-runtime.js",
+      "bytes": 26000,
+      "sha256": "c9fec448a66a12b4cfd9cf23156ecc295060483cee68cddaed1239aad6f54659"
+    },
+    {
+      "file": "guild-scenes.js",
+      "bytes": 17049,
+      "sha256": "a157bda383c3a67184d2eb22c75049d0ec1c63d6b7069f5cceb5206359eb7a9a"
+    },
+    {
+      "file": "index-arena.html",
+      "bytes": 8430,
+      "sha256": "f02b1c1fa4340fefa170046146467c45af0f50e3d74b19826b1d2a29eace2128"
+    },
+    {
+      "file": "index-guild.html",
+      "bytes": 7610,
+      "sha256": "cff75108405631a614fbdecef4cce61f92b7e83b56505a2108dfe42e89636916"
+    },
+    {
+      "file": "index-stadium.html",
+      "bytes": 8784,
+      "sha256": "4b63d7e12bdde30a081db58dfad32852df96e74349ec96eecb225e1c2969c10f"
+    },
+    {
+      "file": "index-v5.html",
+      "bytes": 39460,
+      "sha256": "8a8bd3d665537542ed9a52c1be610deb630ec481fb67e2e7d6a60140d52d466a"
+    },
+    {
+      "file": "machine-presentation-blueprint.js",
+      "bytes": 6584,
+      "sha256": "927e55f0379c5108ba601773139c5504eae778ff0a439573cbe8634a97bca8ba"
+    },
+    {
+      "file": "machines/catalog.js",
+      "bytes": 2641,
+      "sha256": "212ad19cd767e5412d07b40a8a833d7fced7185dacf365b93acb5b12910ff04f"
+    },
+    {
+      "file": "machines/dragon-race/assets/characters-v1/makura-race-v1.png",
+      "bytes": 2626912,
+      "sha256": "f3b3d6fcabec7a2840026b0ad767341485edecc959cc4a83cb505aeed71bfbbb"
+    },
+    {
+      "file": "machines/dragon-race/assets/characters-v1/mizu-race-v1.png",
+      "bytes": 2088670,
+      "sha256": "ed1bb2f92de8ebe36a1b6258a48ea421c1ee0bc92d4d6e6409b1a0b32701558e"
+    },
+    {
+      "file": "machines/dragon-race/assets/characters-v1/sake-race-v1.png",
+      "bytes": 2649415,
+      "sha256": "5723fdc6385bb573b87bef3b7d726204b6bad12f6edf88987307237d203d7f0f"
+    },
+    {
+      "file": "machines/dragon-race/assets/characters-v1/sumika-race-v1.png",
+      "bytes": 2348310,
+      "sha256": "227116c8bb44409bcc7395ec384c7e4b73a962d58b1ed04a2ffb4cf0a700ddb3"
+    },
+    {
+      "file": "machines/dragon-race/assets/flight-v2/gando.png",
+      "bytes": 1690978,
+      "sha256": "894e743bbf341211ee592d5806d2c552a988f3c6714dd3e4f96e8c4c84c22d54"
+    },
+    {
+      "file": "machines/dragon-race/assets/flight-v2/glaze.png",
+      "bytes": 1638455,
+      "sha256": "dcf09abe8551aa58df6c30b1bf7b9097027384398d145c112b9192cf164bd970"
+    },
+    {
+      "file": "machines/dragon-race/assets/flight-v2/goka.png",
+      "bytes": 1711419,
+      "sha256": "8ff08c6c61144ed88ebdbab99ca34193689c345946f5e3fba81230e68cf2e57d"
+    },
+    {
+      "file": "machines/dragon-race/assets/flight-v2/miruka.png",
+      "bytes": 1430244,
+      "sha256": "985e2565ad30ce15639b243a26ffe83474f350ce79cb604c6f619ae3259e83c3"
+    },
+    {
+      "file": "machines/dragon-race/assets/flight-v2/phenix.png",
+      "bytes": 1745234,
+      "sha256": "5e7ffce90d4b5eb701d1cfd04a2e1943d14e0fa84d37b55192629b19782e397f"
+    },
+    {
+      "file": "machines/dragon-race/assets/flight-v2/rosso.png",
+      "bytes": 1596663,
+      "sha256": "76a4670b83222127b36a1c5c2160f2df55fb3ec0652e24958c4f7a4d099c59d2"
+    },
+    {
+      "file": "machines/dragon-race/assets/flight-v2/rubel.png",
+      "bytes": 1493036,
+      "sha256": "bdc215cf661b12e96572e017652cdb04afe9c9fc0ab51ca8b4b817ddec96b3d6"
+    },
+    {
+      "file": "machines/dragon-race/assets/flight-v2/seram.png",
+      "bytes": 1690183,
+      "sha256": "1cc7412e1208bb2c4c00f040f5256e3ac7b5ef97e86301abe842b689be87322e"
+    },
+    {
+      "file": "machines/dragon-race/assets/spectacle-v1/avenue.png",
+      "bytes": 3302512,
+      "sha256": "794f532887c7aad120172dd66ecc6533e095470744a0742f04b47aa2681fe5e8"
+    },
+    {
+      "file": "machines/dragon-race/assets/spectacle-v1/clock.png",
+      "bytes": 2772894,
+      "sha256": "f81633a0e9de96dfb0161fd1a94367d8a79fac238af5feb2384aa5b182623c70"
+    },
+    {
+      "file": "machines/dragon-race/assets/spectacle-v1/concept-airy-v3.png",
+      "bytes": 1781503,
+      "sha256": "d89c81be2e8d66b72ecf47e4cbd12cf224062bf785a1be5c0017175cc4a2b061"
+    },
+    {
+      "file": "machines/dragon-race/assets/spectacle-v1/concept-bonus-v2.png",
+      "bytes": 2391445,
+      "sha256": "07993834e03bf38e46fac785b7458fbce72c98cdbba56da0f842650ae0e7b42e"
+    },
+    {
+      "file": "machines/dragon-race/assets/spectacle-v1/concept-climax.png",
+      "bytes": 2423712,
+      "sha256": "316097dc1d46d3a627da3ee21f0942485f86b76139c78f759c4ac80533dd149f"
+    },
+    {
+      "file": "machines/dragon-race/assets/spectacle-v1/concept-rush-v4.png",
+      "bytes": 1915574,
+      "sha256": "f9b254085428762e553f2ace1bbf98b6940cb3951474a886182ccf043ac3ff65"
+    },
+    {
+      "file": "machines/dragon-race/assets/spectacle-v1/concept-states-v2.png",
+      "bytes": 3604455,
+      "sha256": "9c96925b78a7c6b7695d05d33dd042651db1a9c94da75fa6dc29c84166c03e88"
+    },
+    {
+      "file": "machines/dragon-race/assets/spectacle-v1/concept-town.png",
+      "bytes": 1868024,
+      "sha256": "e1edfcee4d68b4cb319cec67f396e1aff1a05e0064f32fe3588d1546ad1c6325"
+    },
+    {
+      "file": "machines/dragon-race/assets/spectacle-v1/hud-atlas-matte-v2.png",
+      "bytes": 1004406,
+      "sha256": "4fda4ec41e5cb85d24ed438bec87538b97563cf423a4cf87c571bcb01c6161ab"
+    },
+    {
+      "file": "machines/dragon-race/assets/spectacle-v1/hud-atlas-v2.png",
+      "bytes": 1450552,
+      "sha256": "407cff2208056de525283ef61cd79df89d018813465cc4ad626b3edf3561fd6d"
+    },
+    {
+      "file": "machines/dragon-race/assets/spectacle-v1/jackpot-trinity.png",
+      "bytes": 2947857,
+      "sha256": "317c66de1324f7030a0bb69ca78c77e2d8b7e1f92fff897864a4a4c3b0af9686"
+    },
+    {
+      "file": "machines/dragon-race/assets/spectacle-v1/market.png",
+      "bytes": 2747483,
+      "sha256": "f58a91d1fb87f40b1413a484158b54e37e1882e1454df126ab87815e5b3771a3"
+    },
+    {
+      "file": "machines/dragon-race/assets/spectacle-v1/mimi-dragonrobe-expression-v3.png",
+      "bytes": 1993276,
+      "sha256": "3957b37a7e42e5758979541a4a842b2f6b3791470412c6c0027f58873b5d4a66"
+    },
+    {
+      "file": "machines/dragon-race/assets/spectacle-v1/mimi-dragonrobe-regal-v2.png",
+      "bytes": 2595865,
+      "sha256": "66e943b80b29c6bb08d4fa1509702916ed3ff9275d040603e29cea18fe9c5ed4"
+    },
+    {
+      "file": "machines/dragon-race/assets/spectacle-v1/mimi-dragonrobe-stance-v4-preview.png",
+      "bytes": 2162563,
+      "sha256": "61ba3abe6828a9eacaad0643bd789b832a3085ba7be0ccbf0af4e8e8abca6a37"
+    },
+    {
+      "file": "machines/dragon-race/assets/spectacle-v1/mimi-dragonrobe-stance-v4.png",
+      "bytes": 2446488,
+      "sha256": "17fe3b39121356337bb0e9f228add735d649482ac327926affa3173fae3b1058"
+    },
+    {
+      "file": "machines/dragon-race/assets/spectacle-v1/mimi-walk-v2.png",
+      "bytes": 1251079,
+      "sha256": "23429019d39451ccea96de3bb82812cdbccb1882f4dc8d55515a8c85c913b822"
+    },
+    {
+      "file": "machines/dragon-race/assets/spectacle-v1/mimi-walk.png",
+      "bytes": 1143300,
+      "sha256": "056d640d6f0b9407481f67b0ca6ded148634850c6287a288c5b017a468313a75"
+    },
+    {
+      "file": "machines/dragon-race/assets/spectacle-v1/rush-button-v4.png",
+      "bytes": 1110302,
+      "sha256": "4454351631b005b6a4b9a57d2bcba3a9663287560d9c463cadfa5eea3893e848"
+    },
+    {
+      "file": "machines/dragon-race/assets/spectacle-v1/shingan-arena.png",
+      "bytes": 2660298,
+      "sha256": "67d1d8f982015ecc195688b21e180eda0c5bcfe57bbefcbce87453655116edc6"
+    },
+    {
+      "file": "machines/dragon-race/assets/spectacle-v1/shingan-damage-v2.png",
+      "bytes": 2093924,
+      "sha256": "38633f3ee6c1d37aba0eddb6396b08c053e1c0f57a7a0464405203b5c9382720"
+    },
+    {
+      "file": "machines/dragon-race/assets/spectacle-v1/shingan-eye.png",
+      "bytes": 2333608,
+      "sha256": "ebb6ffb968e1800b5b4527ab8e7e7a823c9ad282ca6a2b9011153add6bb33e94"
+    },
+    {
+      "file": "machines/dragon-race/assets/spectacle-v1/shingan-meteor-v1.png",
+      "bytes": 2273486,
+      "sha256": "844e93a26c8efbf8c42759bd7cf05fff0de92abc1f5251b4e7cbe5960f7fcfc6"
+    },
+    {
+      "file": "machines/dragon-race/assets/spectacle-v1/wind.png",
+      "bytes": 3011311,
+      "sha256": "9fd2565e97694d0cc0b2dd1ed6a1df50634d95c72be18ac7a099d05fda57b3d0"
+    },
+    {
+      "file": "machines/dragon-race/content.js",
+      "bytes": 12139,
+      "sha256": "b742eb149e838e857f7f4a19fb59798ae2eb55be14b4183dee4f0493ada608f1"
+    },
+    {
+      "file": "machines/dragon-race/entry.js",
+      "bytes": 521,
+      "sha256": "e95da51265f047c39083a2575420775d49173c6fa6c1c4c00e93f62fa8fd201d"
+    },
+    {
+      "file": "machines/dragon-race/experience.js",
+      "bytes": 6311,
+      "sha256": "202a754cb655203a5a5c62be8ace94f07ed1cfe00a15601f6a064682fe8dc5c2"
+    },
+    {
+      "file": "machines/dragon-race/flow.js",
+      "bytes": 12115,
+      "sha256": "e510903cb2aa7ff5f0814ac7260871443c0c5ed98d666a5cb881685614223e0d"
+    },
+    {
+      "file": "machines/dragon-race/player/game.js",
+      "bytes": 210401,
+      "sha256": "368cc5c36128983d792be5f635a603b8bdd9438edafe46962251cbe9657f411a"
+    },
+    {
+      "file": "machines/dragon-race/player/index.html",
+      "bytes": 32962,
+      "sha256": "8565660aff6a78551e84ca8f3afc32632d4c532b1c64362cf575c2a3c9b06353"
+    },
+    {
+      "file": "machines/dragon-race/player/presentation-game-bridge.js",
+      "bytes": 117866,
+      "sha256": "243cb8cb523ec6ffc6b7446f8e526fe30a8f8c50cb6238e565e703908edee666"
+    },
+    {
+      "file": "machines/dragon-race/player/profile-store.js",
+      "bytes": 5921,
+      "sha256": "246808441a856e07faa66b2a13a3db2c10d19c2228d9fc02c78f9207cd2a7b7a"
+    },
+    {
+      "file": "machines/dragon-race/player/visual.css",
+      "bytes": 461481,
+      "sha256": "4b92f4eee84a5bd7cc2ae8158dc3b2169b81217a13c077732f76986b516055ca"
+    },
+    {
+      "file": "machines/dragon-race/presentation-contract.js",
+      "bytes": 6735,
+      "sha256": "6aa98bff03e1ac179d179d689156b4e79af86011ed8eb43ed85a491a4a93a747"
+    },
+    {
+      "file": "machines/dragon-race/progression.js",
+      "bytes": 8539,
+      "sha256": "8fb93d9b02aa163314f3c3b9bc30ece180492c8cbca936fe0e1402a42bb76e4d"
+    },
+    {
+      "file": "machines/dragon-race/runtime.js",
+      "bytes": 91402,
+      "sha256": "b44238950d4581d03b96cbb09a81c06b18ed5b41816500bf3cd1aeffd07615a2"
+    },
+    {
+      "file": "machines/dragon-race/spectacle.js",
+      "bytes": 30610,
+      "sha256": "b4d3d0ba327d17223a5ee882270539fef1ca58510e6c8d3f5a571e9cc3163994"
+    },
+    {
+      "file": "machines/lobby.js",
+      "bytes": 19578,
+      "sha256": "b21148ef15e70e35d8e37db9702ff88e89c774aa3a61118c08ccdd3d3b30bd2e"
+    },
+    {
+      "file": "node_modules/gsap/dist/gsap.min.js",
+      "bytes": 72927,
+      "sha256": "92bb9a96476f983d212a2bc4f54c889039c1696dd4461d40a736860938570fbb"
+    },
+    {
+      "file": "node_modules/xstate/LICENSE",
+      "bytes": 1083,
+      "sha256": "542d926d7bbb099785e322d1d5574c539d51942e52ec8adce2be4629ba81fc7f"
+    },
+    {
+      "file": "node_modules/xstate/dist/xstate.umd.min.js",
+      "bytes": 47268,
+      "sha256": "e7f04e1f780f5f67b0d4286b85e6d01e16473ab42b5a466cd56282556838fa28"
+    },
+    {
+      "file": "presentation-controller.js",
+      "bytes": 17027,
+      "sha256": "18a931218702b60e734035ca611b2eaa7d87d99d1670d3584f60fe4be3beafe2"
+    },
+    {
+      "file": "presentation-flow-engine.js",
+      "bytes": 9238,
+      "sha256": "ec8eef02c90d26d7a7d1aa2f3a6e41e961cd093cf08f91d6084e2863700a6137"
+    },
+    {
+      "file": "presentation-game-bridge.js",
+      "bytes": 119714,
+      "sha256": "a75d2b666e152c27b4ce04248d22eb54441c56dded32a73f4ccf8334ada4bfdf"
+    },
+    {
+      "file": "presentation-heat.js",
+      "bytes": 4941,
+      "sha256": "c222dd107545e7a51dedc1efdd6b372c53bddda496c65ae3532e2894ed66754b"
+    },
+    {
+      "file": "presentation-renderer.js",
+      "bytes": 44857,
+      "sha256": "cf04c005b0b8c5fcabc7aec5b4653128490e1e2b10e667adfd40e2709b0f343c"
+    },
+    {
+      "file": "profile-store.js",
+      "bytes": 13135,
+      "sha256": "0a7321c3ec24174cfb1500a0f18e2d0cc45cc634a8d1dfbc3873d300df9cdcd2"
+    },
+    {
+      "file": "resort-ambience.js",
+      "bytes": 6208,
+      "sha256": "b074d49b0cb7ffa7eaa1cf81bc67d63ec095f10b8ea5bde6c1922abf5f4f1b74"
+    },
+    {
+      "file": "resort-cruise-view.js",
+      "bytes": 6419,
+      "sha256": "f03e2c005c85d221146069284669975c45c60d3e70891e38e46640fdc3c2e173"
+    },
+    {
+      "file": "resort-environment.js",
+      "bytes": 10178,
+      "sha256": "500f6de42c0053a9923de9a07173801a9f5c6d7a2ee4b27ada0fc2e7b50f33d3"
+    },
+    {
+      "file": "resort-look.js",
+      "bytes": 7629,
+      "sha256": "e3738bf8758d6d366914a9dd9855776b6f799fc8b0f8f48f5a6b0556f2c3fecf"
+    },
+    {
+      "file": "resort-museum-view.js",
+      "bytes": 11134,
+      "sha256": "c99e167c58e3529cecfade4f719363ee5301f5a475d24cc72e6eaf74de7c14bc"
+    },
+    {
+      "file": "resort-rewards.js",
+      "bytes": 7247,
+      "sha256": "b2ab15e264b72fc50fa7daad416396adaee46c294fc7db8a1a49b46ed1d9b888"
+    },
+    {
+      "file": "resort-scenic-view.js",
+      "bytes": 4829,
+      "sha256": "3163b1e015ff5c130b0fd7ab9e81801cca0939fdf541d33f5faa2b90dfc2591b"
+    },
+    {
+      "file": "resort-stay.js",
+      "bytes": 42771,
+      "sha256": "abf99aead0d465c8041d105d097044cf110bb0a74449eb85897b13a98e23d9d8"
+    },
+    {
+      "file": "resort-trail-guide.js",
+      "bytes": 18494,
+      "sha256": "6068e5133b835b0c6f8af3cbf83e8e0777c36ae7c5149ac6f24628cad398a34f"
+    },
+    {
+      "file": "resort-world-view.js",
+      "bytes": 41988,
+      "sha256": "ead56acd3e09a8be52d924b60fcdb43fb6817930997b1028975a9fb81f1c0715"
+    },
+    {
+      "file": "resort-world.js",
+      "bytes": 82149,
+      "sha256": "4e9a90547c28750794aaa8920c460f9e9a10c327255cc03c6fd9975da0ed77a5"
+    },
+    {
+      "file": "runtime/dom-contract.js",
+      "bytes": 5834,
+      "sha256": "5577c113cab2bcd262741659e1bfa57bff86355ea1b8f0f555d523647a102286"
+    },
+    {
+      "file": "sfx.js",
+      "bytes": 45677,
+      "sha256": "b2e2df87e1e4eee4fb3e725f4c4051a71c658698bae1f0924d6ef64f56f711f1"
+    },
+    {
+      "file": "slot-core.js",
+      "bytes": 19852,
+      "sha256": "ba321d1ab3a427cf3007a1cda97b513af2fc806e6125c1de5ce2a1bcc1109fda"
+    },
+    {
+      "file": "spin-session.js",
+      "bytes": 2337,
+      "sha256": "3f2273afc2fc3a7c9a9818e57be8a90464514eeb6de8c66227e99eecf7287543"
+    },
+    {
+      "file": "stadium-flow.js",
+      "bytes": 5643,
+      "sha256": "527bf9324333860662f7bd67b9d355d06865959c15718350bf651fb420bd9eac"
+    },
+    {
+      "file": "stadium-runtime.js",
+      "bytes": 33398,
+      "sha256": "8097846b724bde94518a597084d6a02f226c5de2ef71782c36f2eb97d6a390b5"
+    },
+    {
+      "file": "visual.css",
+      "bytes": 472348,
+      "sha256": "6a93013452aad853fbbc5790032d0fc1c168903bd969702e1a0125409524eb59"
+    }
+  ]
+}
