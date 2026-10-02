@@ -39,28 +39,32 @@
     {name:'リンネ',image:A+'rinne-v1.png',entrance:'私たちの出番ね。',attack:'今を、切りひらく！'}
   ].map((actor,i)=>Object.freeze({...actor,...DIRECTIONS[i]})));
   const BOSSES = Object.freeze([
-    { name: "アマラ", title: "天秤の裁定者", hp: 12, image: A + "amara-v1.png", line: "あなたたちの力、量らせてもらうわ。" },
-    { name: "シャハル", title: "雲上の古竜", hp: 16, image: A + "shahar-combat-ready-v1.png", line: "小さき者よ。その一歩を見せてみよ。" },
-    { name: "無銘", title: "名を持たぬ剣", hp: 20, image: A + "mumyo-v1.png", line: "言葉は要らない。次の一手で語れ。" }
+    { name: "ピヨゼリー", title: "新人杯・盾を構える新人", hp: 8, bonus:0, image: A + "rookie-piyo-arena-v1.png", line: "ぴ、ぴよ！ 盾は下ろさない！", counter:'盾ごつん', concession:'ぴよ……！ もう震えてない。次の選手にも、声援を送る！' },
+    { name: "コボルト見習い", title: "新人杯・借り物の大兜", hp: 8, bonus:0, image: A + "rookie-kobold-arena-v1.png", line: "兜は借り物でも、この一振りは自分のものだ！", counter:'木剣スラッシュ', concession:'負けた。けど、兜のせいにはしない。次はもっと速く動く！' },
+    { name: "魔導コウモリ", title: "新人杯・教本を見ながら", hp: 10, bonus:0, image: A + "rookie-bat-arena-v1.png", line: "初級つむじ風……ええと、しおりはどこだっけ？", counter:'初級つむじ風', concession:'試合中に読んだページは、もう覚えたよ。裏ボスの席まで、応援する！' },
+    { name: "アマラ", title: "裏ボス・天秤の裁定者", hp: 12, bonus:10, image: A + "amara-v1.png", line: "あなたたちの力、量らせてもらうわ。" },
+    { name: "シャハル", title: "裏ボス・雲上の古竜", hp: 16, bonus:10, image: A + "shahar-combat-ready-v1.png", line: "小さき者よ。その一歩を見せてみよ。" },
+    { name: "無銘", title: "裏ボス・名を持たぬ剣", hp: 20, bonus:10, image: A + "mumyo-v1.png", line: "言葉は要らない。次の一手で語れ。" }
   ].map(Object.freeze));
-  function create() { return { version: 2, credit: 1200, round: 0, hp: 6, enemy: 12, dry: 0, resolve: 0, order: "", phase: "normal", pending: "explore", explore:0, trialLeft:0, trialScore:0, trialsFailed:0, bonus: 0, bonusWin: 0, games: 0, clears: 0, lastWin: 0, replay: false }; }
-  function baseValid(s) {
+  function create() { return { version: 3, routeStart:0, credit: 1200, round: 0, hp: 6, enemy: 8, dry: 0, resolve: 0, order: "", phase: "normal", pending: "explore", explore:0, trialLeft:0, trialScore:0,trialsFailed:0, bonus: 0, bonusWin: 0, games: 0, clears: 0, lastWin: 0, replay: false }; }
+  function baseValid(s,legacy=false) {
     return s && [s.credit,s.round,s.hp,s.enemy,s.dry,s.resolve,s.bonus,s.bonusWin,s.games,s.clears,s.lastWin].every(n => Number.isSafeInteger(n) && n >= 0)
-      && s.round < 3 && s.hp <= 6 && s.enemy <= BOSSES[s.round].hp && s.dry <= 4 && s.resolve <= 3 && s.bonus <= 10
+      && s.round < (legacy?3:BOSSES.length) && s.hp <= 6 && s.enemy <= BOSSES[s.round+(legacy?3:0)].hp && s.dry <= 4 && s.resolve <= 3 && s.bonus <= 10
       && typeof s.replay === "boolean" && ["","strike","guard"].includes(s.order);
   }
   function valid(s) {
     if (!baseValid(s)) return false;
     const phases={normal:['','explore','trial'],trial:['','trialWin','trialFail'],battle:['','intro','orders','defeat','reward'],bonus:['','next','champion'],complete:['']};
-    return s.version===2 && phases[s.phase]?.includes(s.pending) === true
+    return s.version===3 && [0,3].includes(s.routeStart) && s.round>=s.routeStart && phases[s.phase]?.includes(s.pending) === true
       && [s.explore,s.trialLeft,s.trialScore,s.trialsFailed].every(n=>Number.isSafeInteger(n)&&n>=0)
       && s.explore<=6 && s.trialLeft<=3 && s.trialScore<=4 && s.trialsFailed<=2;
   }
   function migrate(s) {
     if(valid(s)) return {...s};
-    if(s?.version!==1 || !baseValid(s) || !['battle','bonus','complete'].includes(s.phase)
-      || !['','intro','orders','defeat','reward','next','champion'].includes(s.pending)) return null;
-    const n={...s,version:2,explore:0,trialLeft:0,trialScore:0,trialsFailed:0};
+    if(![1,2].includes(s?.version) || !baseValid(s,true)) return null;
+    if(s.version===1 && (!['battle','bonus','complete'].includes(s.phase)
+      || !['','intro','orders','defeat','reward','next','champion'].includes(s.pending)))return null;
+    const n={...s,version:3,routeStart:3,round:s.round+3,...(s.version===1?{explore:0,trialLeft:0,trialScore:0,trialsFailed:0}:{})};
     return valid(n)?n:null;
   }
   function trialTarget(s) { return 3-s.trialsFailed; }
@@ -73,8 +77,11 @@
     else if (action === "intro" && n.pending === "intro") n.pending = "";
     else if (["strike","guard"].includes(action) && n.pending === "orders") { n.order = action; n.dry = 0; n.pending = ""; }
     else if (action === "defeat" && n.pending === "defeat") { n.hp = 6; n.enemy = BOSSES[n.round].hp; n.resolve = Math.min(3,n.resolve+1); n.pending = "intro"; n.order = ""; n.dry = 0; }
-    else if (action === "reward" && n.pending === "reward") { n.phase = "bonus"; n.pending = ""; n.bonus = 10; n.bonusWin = 0; }
-    else if (action === "next" && n.pending === "next") { n.round++; n.hp = 6; n.enemy = BOSSES[n.round].hp; n.resolve = 0; n.dry = 0; n.order = ""; n.phase = "normal"; n.pending = "explore"; n.explore=0; n.trialLeft=0; n.trialScore=0; n.trialsFailed=0; }
+    else if (action === "reward" && n.pending === "reward") {
+      if(!BOSSES[n.round].bonus)return advance({...n,phase:'bonus',pending:'next'},'next');
+      n.phase = "bonus"; n.pending = ""; n.bonus = BOSSES[n.round].bonus; n.bonusWin = 0;
+    }
+    else if (action === "next" && n.pending === "next") { n.round++; n.hp = 6; n.enemy = BOSSES[n.round].hp; n.resolve = 0; n.dry = 0; n.order = ""; n.phase = n.round<3?'battle':'normal'; n.pending = n.round<3?'intro':'explore'; n.explore=0; n.trialLeft=0; n.trialScore=0; n.trialsFailed=0; }
     else if (action === "champion" && n.pending === "champion") { n.phase = "complete"; n.pending = ""; n.clears++; }
     else if (action === "restart" && n.phase === "complete") return {...create(), credit: n.credit, games: n.games, clears: n.clears};
     else if (action === "refill" && !n.pending && ["normal","trial","battle"].includes(n.phase) && !n.replay && n.credit < 30) n.credit += 300;
@@ -94,7 +101,7 @@
       if(s.trialScore>=trialTarget(s))s.pending='trialWin';else if(!s.trialLeft)s.pending='trialFail';
       return {...result,kind:s.pending||'trial',headline:s.pending==='trialWin'?'扉が、ひらく。':s.pending==='trialFail'?'もう一度、力を合わせて。':'試練の一手',line:`試練 +${points} · ${s.trialScore}/${trialTarget(s)}ポイント · 残り${s.trialLeft}G。${out.replay?'次ゲーム無料。':''}`};
     }
-    if (s.phase === "bonus") { s.bonus--; s.bonusWin += out.payout; if (!s.bonus) s.pending = s.round === 2 ? "champion" : "next"; return {...result,kind:"bonus",headline:out.payout ? `WIN +${out.payout}` : "配当なし",line:`勝利の祝宴、残り${s.bonus}G。`}; }
+    if (s.phase === "bonus") { s.bonus--; s.bonusWin += out.payout; if (!s.bonus) s.pending = s.round === BOSSES.length-1 ? "champion" : "next"; return {...result,kind:"bonus",headline:out.payout ? `WIN +${out.payout}` : "配当なし",line:`勝利の祝宴、残り${s.bonus}G。`}; }
     if (out.replay) return {...result,kind:"replay",headline:"回避！ REPLAY",line:"攻撃をかわした！ 次のSPINは無料。指示と準備は持ち越し。"};
     let damage = out.payout > 0 ? ({cherry:2,bell:2,grape:3,watermelon:4,bar:6,seven_blue:8,seven_red:12}[out.symbol] || 2) + s.resolve : 0;
     result.actor = ["cherry","bell"].includes(out.symbol) ? 1 : out.symbol === "watermelon" ? 2 : 0;
@@ -105,7 +112,7 @@
       if (result.kind === "miss") result.kind = "hit";
       result.headline = result.kind === "guard" ? "隔壁！" : result.kind === "liberation" ? "黒星、解放！" : ALLIES[result.actor].move;
       result.line = `${ALLIES[result.actor].name}の一撃！ ${BOSSES[s.round].name}に${result.damage}ダメージ。`;
-      if (s.enemy === 0) { s.pending = "reward"; result.kind = "victory"; result.headline = "勝利！"; result.line = `${BOSSES[s.round].name}を突破！ 10Gの無料ボーナスへ。`; }
+      if (s.enemy === 0) { s.pending = "reward"; result.kind = "victory"; result.headline = "勝利！"; result.line = `${BOSSES[s.round].name}を突破！ ${BOSSES[s.round].bonus?'10Gの無料ボーナスへ。':'次の対決へ、仲間と進もう。'}`; }
     } else {
       s.hp--; s.dry = Math.min(4,s.dry+1);
       result.line = `相手の反撃。チームHP −1。${s.dry === 4 ? "ミミの指示で切り返そう！" : `ときめき ${s.dry}/4。`}`;

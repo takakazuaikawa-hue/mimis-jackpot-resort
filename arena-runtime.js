@@ -65,11 +65,15 @@
   const blackstarShots=['./assets/arena/blackstar-gather-v2.png',cinematicArt.liberation,'./assets/arena/amara-blackstar-impact-v2.png'];
   const trialOutcomeArt={trialWin:'./assets/arena/trial-open-v1.png',trialFail:'./assets/arena/trial-recover-v1.png'};
   const bossScenes=[
+    ...flow.BOSSES.slice(0,3).map(b=>({art:{challenge:b.image,counter:b.image,concedes:b.image},alt:{challenge:b.name+'が新人杯で構える',counter:b.name+'の'+b.counter,concedes:b.name+'が対決を終えて仲間に声援を送る'},concession:b.concession})),
     {art:{challenge:'./assets/arena/amara-challenge-v1.png',counter:'./assets/arena/amara-counter-v1.png',concedes:'./assets/arena/amara-concedes-v2.png'},alt:{challenge:'裁定の間で天秤を掲げ、挑戦を待つアマラ',counter:'黄金の天秤から反撃を放つアマラ',concedes:'天秤を下ろし、仲間の勝利を認めるアマラ'},concession:'……あなたたちの一手、確かに見届けたわ。さあ、胸を張って進みなさい。'},
     {art:{challenge:'./assets/arena/shahar-challenge-v1.png',counter:'./assets/arena/shahar-counter-v1.png',concedes:'./assets/arena/shahar-concedes-v1.png'},alt:{challenge:'雲上の闘技場で挑戦者を見定める古竜シャハル',counter:'結晶を乗せた息吹を放つシャハル',concedes:'息吹を収め、仲間へ敬意を示すシャハル'},concession:'小さき者たちよ。その一歩、確かに我へ届いた。誇りを持って、先へ進め。'},
     {art:{challenge:'./assets/arena/mumyo-challenge-v1.png',counter:'./assets/arena/mumyo-counter-v1.png',concedes:'./assets/arena/mumyo-concedes-v1.png'},alt:{challenge:'月下の広間で鏡に姿を映し、静かに待つ無銘の剣',counter:'鞘から抜かずに一閃を放つ無銘',concedes:'剣を休め、鏡の中から仲間の勝利を認める無銘'},concession:'……見事だ。その一手は、覚えておく。仲間と共に、勝利を受け取れ。'}
   ];
   const bossCounters=[
+    {move:'盾ごつん',lines:['ぴよっ！ まだ盾は構えてる！','泡ごと、もう一回！','新人だって、最後まで戦う！']},
+    {move:'木剣スラッシュ',lines:['基本の一振り、受けてみろ！','兜が重い？ それでも動く！','隊列確認！ ……今日は一人だった。']},
+    {move:'初級つむじ風',lines:['次のページ……あ、風が出た！','しおり結界、ここで使うんだ！','本の角だって、技になるよ！']},
     {move:'天秤の反撃',lines:['その一手の重さ、量らせてもらうわ。','天秤は、まだ傾いていないわ。','次は、どんな一手を見せてくれる？']},
     {move:'結晶の息吹',lines:['小さき者よ、風を見極めよ。','まだ踏みとどまるか。その意気はよい。','雲の先へ進むなら、顔を上げよ。']},
     {move:'抜かない斬撃',lines:['……足を止めるな。','……次の一手で、応えろ。','……まだ、剣はここにある。']}
@@ -80,7 +84,7 @@
     return `${line} HP −1。${status}`;
   }
   const tokimekiScenes={rinne:{name:'リンネ',image:'./assets/arena/tokimeki-rinne-v1.png',lines:['今だけは、君とゆっくり話したい。','その笑顔、もう少し近くで見てもいい？','言葉にしなくても、ここにいてくれたら嬉しい。','この時間は、大切な思い出になる。']},cassim:{name:'カシム・ベル',image:'./assets/arena/tokimeki-cassim-v1.png',lines:['こちらへ。君に見せたい景色がある。','……君となら、沈黙も悪くない。','この扉の先も、一緒に歩いてくれるか。','今夜のことは、忘れずに持っておこう。']}};
-  function tokimekiScene(){return tokimekiScenes[castChoice===5?'cassim':castChoice===11?'rinne':state.round===1?'cassim':'rinne'];}
+  function tokimekiScene(){return tokimekiScenes[castChoice===5?'cassim':castChoice===11?'rinne':state.round===4?'cassim':'rinne'];}
   function bonusFarewell(){return tokimekiScene().name==='リンネ'?'この時間は、忘れない。次の一歩も、見届けさせて。':'束の間でしたが、ご一緒できて光栄です。次の扉まで、お送りしましょう。';}
   function playRewardTransition(){
     animateScene($('Celebration'),[{transform:'scale(1.018)'},{transform:'scale(1)'}],1400);
@@ -125,8 +129,8 @@
     } else if(state.phase==='bonus'&&state.pending) {
       playRewardTransition();
     } else if(state.phase==='battle'&&bossScenes[state.round]&&result?.kind==='miss') {
-      const counterFrames=state.round===2?[{transform:'translateX(8px)'},{transform:'translateX(-3px)',offset:.2},{transform:'translateX(0)'}]:state.round===1?[{transform:'scale(1.03) translateX(10px)'},{transform:'scale(1) translateX(0)'}]:[{transform:'scale(1.018) translateX(5px)'},{transform:'scale(1) translateX(0)'}];
-      animateScene($('BossScene'),counterFrames,state.round===2?280:state.round===1?650:480);
+      const counterFrames=state.round===5?[{transform:'translateX(8px)'},{transform:'translateX(-3px)',offset:.2},{transform:'translateX(0)'}]:state.round===4?[{transform:'scale(1.03) translateX(10px)'},{transform:'scale(1) translateX(0)'}]:[{transform:'scale(1.018) translateX(5px)'},{transform:'scale(1) translateX(0)'}];
+      animateScene($('BossScene'),counterFrames,state.round===5?280:state.round===4?650:480);
       const urgent=state.hp<=2||state.pending==='orders';
       animateScene($('Life').parentElement,urgent?[{transform:'translateX(0)'},{transform:'translateX(-6px)',offset:.3},{transform:'translateX(0)'}]:[{opacity:.65},{opacity:1}],300);
     } else if(result?.damage) {
@@ -162,7 +166,7 @@
     if(state.phase==='complete') resultText='みんなでつかんだ、大勝利！ また一緒に挑もうね。';
     else if(state.phase==='normal') resultText=`ミナトと、扉の先へ。探索は${state.explore}/6まで進んでいるよ。`;
     else if(state.phase==='trial') resultText=`想いをつないで。${state.trialScore}/${flow.trialTarget(state)}ポイント、残り${state.trialLeft}G。`;
-    else if(state.pending==='reward') resultText='裏ボス突破！ 仲間とつかんだ10Gの祝宴だよ。';
+    else if(state.pending==='reward') resultText=flow.BOSSES[state.round].bonus?'裏ボス突破！ 仲間とつかんだ10Gの祝宴だよ。':flow.BOSSES[state.round].concession;
     else if(state.phase==='bonus') resultText=state.bonus?`勝利の祝宴、残り${state.bonus}G。`:'祝宴完走！ 仲間と、次の一歩へ。';
     else if(state.pending==='defeat') resultText='まだ、終わりじゃない。力を合わせて立て直そう。';
     else if(state.order) resultText=`${state.order==='strike'?'黒星':'隔壁'}は準備できているよ。次の非REPLAYで発動！`;
@@ -194,7 +198,7 @@
     else if(before.pending==='defeat') resultText=`不屈Lv.${state.resolve}。次の一撃を強くしよう！`;
     else resultText='仲間と一緒に、進もう。';
     if(sound)audio.cue(action==='champion'?'crownComplete':action==='reward'?'bonus':['strike','guard'].includes(action)?'commandReady':'commandAdvance');
-    resultHeadline='ミミ';if(action==='reward'){resultHeadline=tokimekiScene().name;resultText=tokimekiScene().lines[0];}
+    resultHeadline='ミミ';if(action==='reward'&&state.phase==='bonus'){resultHeadline=tokimekiScene().name;resultText=tokimekiScene().lines[0];}
     if(action==='trial'){resultHeadline='ミナト';resultText='結晶の光を集める。三つの停止で、想いをつないで。';}
     if(action==='explore')resultText='あの扉まで、ミナトと一緒に進もう。';
     save(); render();
@@ -211,17 +215,17 @@
   function renderCommand() {
     $('Command').hidden=true; if(spin||feature)return;
     const b=flow.BOSSES[state.round];
-    if(state.pending==='explore') showCommand(`第${state.round+1}章 / NORMAL`,'仲間と、試練の扉へ。','探索6ポイントで試練へ。配当なし・REPLAYは1、通常配当は2、BAR・7配当は3ポイント。',[['探索を始める','explore']]);
+    if(state.pending==='explore') showCommand(`第${state.round+1}戦 / NORMAL`,'仲間と、試練の扉へ。','探索6ポイントで試練へ。配当なし・REPLAYは1、通常配当は2、BAR・7配当は3ポイント。',[['探索を始める','explore']]);
     else if(state.pending==='trial') showCommand('TRIAL / 3G','扉に、想いを届けよう。',`3G以内に${flow.trialTarget(state)}ポイント。配当成立で2、REPLAYで1。通常BET・通常抽選です。`,[['試練に挑む','trial']]);
     else if(state.pending==='trialWin') showCommand('TRIAL CLEAR','その先に、裏ボスが待つ。',`${state.trialScore}ポイントで突破！ チームHPを保って対決へ。`,[['ボスのもとへ','trialWin']]);
     else if(state.pending==='trialFail') showCommand('TRIAL / 再探索','今の一歩を、次の力に。',`HPは減りません。探索0から再開し、次の試練は${Math.max(1,flow.trialTarget(state)-1)}ポイントで突破。`,[['仲間と再探索','trialFail']]);
-    else if(state.pending==='intro') showCommand(`第${state.round+1}戦 / 3`,b.name+'が あらわれた！',b.line,[['対決を始める','intro']]);
+    else if(state.pending==='intro') showCommand(`第${state.round+1}戦 / ${flow.BOSSES.length}`,b.name+'が あらわれた！',b.line,[['対決を始める','intro']]);
     else if(state.pending==='orders') showCommand('ミミの監督指示','この一手で、切り返そう。','指示は次の非REPLAYで発動。リール配当は変わりません。',[
       ['ギドノの黒星','strike','4ダメージ追加 · 不発でも反撃'],['丁零の隔壁','guard','HPを2回復 · 最低1ダメージ']]);
     else if(state.pending==='defeat') showCommand('再挑戦','まだ、終わらせない。',`双方のHPを回復。不屈Lv.${Math.min(3,state.resolve+1)}で、配当成立時の攻撃を強化。`,[['もう一度挑む','defeat']]);
-    else if(state.pending==='reward') showCommand('対決突破',b.name+'に勝利！','仲間と祝おう。10Gの無料ボーナス！',[['BONUSへ','reward']]);
+    else if(state.pending==='reward') showCommand('対決突破',b.name+'に勝利！',b.bonus?'仲間と祝おう。10Gの無料ボーナス！':b.concession,[[b.bonus?'BONUSへ':'次の対決へ','reward']]);
     else if(state.pending==='next') showCommand('NEXT CHAPTER',flow.BOSSES[state.round+1].name+'が待つ扉へ。','仲間との探索から、次の試練に進みます。',[['次の章へ','next']]);
-    else if(state.pending==='champion') showCommand('ALL BATTLES CLEAR','約束の、その先へ。','3体の裏ボスと最後の10Gを突破。仲間との勝利を記録しよう。',[['制覇を記録','champion']]);
+    else if(state.pending==='champion') showCommand('ALL BATTLES CLEAR','約束の、その先へ。',(state.routeStart===3?'保存していた裏ボス3戦の旅と、':'新人杯3戦と裏ボス3戦、')+'最後の10Gを突破。仲間との勝利を記録しよう。',[['制覇を記録','champion']]);
     else if(state.phase==='complete') showCommand('WITH YOUR COMPANIONS','また、この仲間と。',`CREDIT ${state.credit.toLocaleString('en-US')} と制覇記録を残して、第1章から再挑戦できます。`,[['もう一度挑む','restart']]);
     else if(state.credit<BET&&!state.replay&&state.phase!=='bonus') showCommand('リゾートサービス','続きを楽しもう。','300 CREDITを受け取って再開できます。',[['300 CREDITを受け取る','refill']]);
   }
@@ -249,7 +253,7 @@
     if(anticipating){const remaining=spin.stopped.filter(n=>n===null).length;$('Anticipation').textContent=state.order ? `${state.order==='strike'?'黒星':'隔壁'} スタンバイ · ${remaining===1?'最後のリールを止めて！':'仲間に、想いをつなげ。'}` : remaining===1?'最後の一停止。仲間を信じて！':'大きな力が、近づいている。';}
     $('HP').textContent=`${state.hp} / 6`; $('Life').value=state.hp; $('Life').textContent=`${state.hp}/6`; $('Life').setAttribute('aria-label',`チームHP ${state.hp} / 6`); $('Resolve').textContent=state.resolve ? `不屈Lv.${state.resolve} · 配当成立時 +${state.resolve}ダメージ` : '12人の仲間 · 上の「仲間」から選択';
     $('BossTitle').textContent=b.title; $('BossName').textContent=b.name; $('EnemyLife').max=b.hp; $('EnemyLife').value=state.enemy; $('EnemyLife').setAttribute('aria-label',`${b.name} HP ${state.enemy} / ${b.hp}`); $('EnemyHP').textContent=`HP ${state.enemy} / ${b.hp}`;
-    $('Round').textContent=`第${state.round+1}章 / ${state.phase==='normal'?'NORMAL':state.phase==='trial'?'TRIAL':state.phase==='battle'?'BOSS':'BONUS'}`; imageSource($('Boss'),b.image);$('Boss').alt=b.name;imageSource($('Ally'),ally.image);$('Ally').alt=ally.name;
+    $('Round').textContent=`第${state.round+1}戦 / ${state.phase==='normal'?'NORMAL':state.phase==='trial'?'TRIAL':state.phase==='battle'?(b.bonus?'BOSS':'新人杯'):'BONUS'}`; imageSource($('Boss'),b.image);$('Boss').alt=b.name;imageSource($('Ally'),ally.image);$('Ally').alt=ally.name;
     $('Credit').textContent=state.credit.toLocaleString('ja-JP');$('Bet').textContent=state.replay||state.phase==='bonus'?'FREE':BET;$('Win').textContent=state.lastWin;
     $('Prep').textContent=state.phase==='bonus'?`無料BONUS 残り${state.bonus}G`:state.order ? (state.order==='strike'?'黒星 スタンバイ':'隔壁 スタンバイ'):`ときめき ${state.dry} / 4`;
     const chargeTarget=state.phase==='normal'?6:state.phase==='trial'?flow.trialTarget(state):4;
@@ -259,7 +263,7 @@
     const chargeValue=state.phase==='normal'?state.explore:state.phase==='trial'?state.trialScore:state.order?4:state.dry;
     $('Charge').setAttribute('aria-valuenow',String(Math.min(chargeTarget,chargeValue)));$('Charge').hidden=['bonus','complete'].includes(state.phase);
     [...$('Charge').children].forEach((n,i)=>n.classList.toggle('is-lit',i<chargeValue));
-    $('Games').textContent=state.games+' G';$('Progress').textContent=state.phase==='complete'?'全3戦突破 · 仲間とつかんだ勝利':'成立役で仲間が攻撃。各対決の勝利で無料10G。';
+    $('Games').textContent=state.games+' G';$('Progress').textContent=state.phase==='complete'?(state.routeStart===3?'保存した旅 · 裏ボス3戦突破':'新人杯3戦＋裏ボス3戦 突破'):'新人杯から裏ボスへ。裏ボス勝利で無料10G。';
     const journey=['normal','trial'].includes(state.phase);
     $('Journey').hidden=!journey;
     $('JourneyArt').hidden=!journey;
@@ -273,7 +277,7 @@
       $('JourneyMeter').max=target;$('JourneyMeter').value=points;
       $('JourneyRule').textContent=trial?`残り${state.trialLeft}G · 配当成立 +2 / REPLAY +1`:'6ポイントで試練 · 通常配当 +2 / BAR・7 +3 / その他 +1';
       $('Prep').textContent=state.pending==='trialWin'?'試練 突破':state.pending==='trialFail'?'再探索へ':trial?`試練 残り${state.trialLeft}G`:`探索 ${points}/6`;
-      $('Progress').textContent=trial?'3G以内の規定ポイントでボスへ。失敗後は必要ポイント減少（最低1）。':'探索 → 3Gの試練 → 裏ボス対決 → 無料10Gのときめきモード';
+      $('Progress').textContent=trial?'3G以内の規定ポイントで対決へ。失敗後は必要ポイント減少（最低1）。':state.round<3?'新人杯 · 仲間との探索 → 試練 → '+b.name+'との対決':'裏ボス編 · 探索 → 試練 → 対決 → 無料10G';
     }
     $('Line').textContent=resultText; $('Speaker').textContent=resultHeadline;
     if(directedBoss&&state.pending==='reward'&&!feature){$('Speaker').textContent=b.name;$('Line').textContent=directedBoss.concession;}
@@ -300,19 +304,19 @@
     const reward=!feature&&(state.phase==='bonus'||state.phase==='complete'||state.pending==='reward'&&!directedBoss); $('Reward').hidden=!reward;
     $('Celebration').hidden=!reward;$('Cabinet').dataset.celebrating=String(reward);
     imageSource($('Celebration'),state.phase==='bonus'?tokimekiScene().image:'./assets/arena/mimi-victory-v1.png');$('Celebration').alt=state.phase==='bonus'?tokimekiScene().name+'とのときめきのひととき':'勝利を祝うミミ';
-    if(reward){$('RewardLabel').textContent=`第${state.round+1}戦 · ${b.name} 突破`;$('RewardTitle').textContent=state.phase==='complete'?'ARENA CHAMPIONS':'VICTORY BONUS';$('RewardText').textContent=state.phase==='complete'?'ミミと仲間、裏ボス闘技場を制覇。':'仲間とつかんだ、勝利の祝宴。';$('BonusValue').textContent=state.pending==='reward'?'10 G':state.phase==='complete'?'全3戦 突破':`残り ${state.bonus} G`;$('BonusWin').textContent=`このボーナスの配当 +${state.pending==='reward'?0:state.bonusWin} CREDIT`;[...$('BonusLamps').children].forEach((n,i)=>n.classList.toggle('is-lit',state.pending!=='reward'&&i<10-state.bonus));}
+    if(reward){$('RewardLabel').textContent=`第${state.round+1}戦 · ${b.name} 突破`;$('RewardTitle').textContent=state.phase==='complete'?'ARENA CHAMPIONS':'VICTORY BONUS';$('RewardText').textContent=state.phase==='complete'?'ミミと仲間、裏ボス闘技場を制覇。':'仲間とつかんだ、勝利の祝宴。';$('BonusValue').textContent=state.pending==='reward'?'10 G':state.phase==='complete'?'全6戦 突破':`残り ${state.bonus} G`;$('BonusWin').textContent=`このボーナスの配当 +${state.pending==='reward'?0:state.bonusWin} CREDIT`;[...$('BonusLamps').children].forEach((n,i)=>n.classList.toggle('is-lit',state.pending!=='reward'&&i<10-state.bonus));}
     if(state.phase==='bonus'){
       const ended=!!state.pending;
       $('RewardTitle').textContent=ended?'ときめきの余韻':'ときめきモード';
       $('RewardText').textContent=tokimekiScene().name+'と過ごす、束の間のひととき。';
       $('RewardLabel').textContent=ended?'VICTORY REWARD / RESULT':'勝利報酬 / 無料10G';
-      if(ended){$('BonusValue').textContent='10G 完走';$('BonusWin').textContent='10Gの配当合計 +'+state.bonusWin+' CREDIT';$('Prep').textContent='無料10G 終了';$('Round').textContent='第'+(state.round+1)+'章 / CLEAR';$('Speaker').textContent=tokimekiScene().name;$('Line').textContent=bonusFarewell();}
+      if(ended){$('BonusValue').textContent='10G 完走';$('BonusWin').textContent='10Gの配当合計 +'+state.bonusWin+' CREDIT';$('Prep').textContent='無料10G 終了';$('Round').textContent='第'+(state.round+1)+'戦 / CLEAR';$('Speaker').textContent=tokimekiScene().name;$('Line').textContent=bonusFarewell();}
     }
     if(state.phase==='complete'){
-      $('RewardLabel').textContent='アマラ・シャハル・無銘 — 全3戦突破';
+      $('RewardLabel').textContent=state.routeStart===3?'保存した旅 · アマラ・シャハル・無銘 — 裏ボス3戦突破':'新人杯3戦 ＋ アマラ・シャハル・無銘 — 全6戦突破';
       $('RewardTitle').textContent='裏ボス闘技場 制覇';$('RewardText').textContent='ミミと仲間がつないだ、最後の一手。';
       $('BonusValue').textContent='通算 '+state.clears+' 回';$('BonusWin').textContent='最終章10Gの配当合計 +'+state.bonusWin+' CREDIT';
-      $('Round').textContent='ALL CHAPTERS / CLEAR';$('Prep').textContent='制覇記録 '+state.clears+'回';
+      $('Round').textContent='ALL BATTLES / CLEAR';$('Prep').textContent='制覇記録 '+state.clears+'回';
       $('Speaker').textContent='ミミ';$('Line').textContent='みんなで、ここまで来られたね。この一勝も、君との大切な思い出だよ。';
     }
     [0,1,2].forEach(c=>{paintReel(c);const moving=!!spin&&spin.stopped[c]===null,queued=!!spin?.pendingStops.includes(c);$('Reels').children[c].classList.toggle('is-spinning',moving);stops[c].disabled=!window.MimiCabinetArt.ready||!moving||queued||modalOpen();stops[c].textContent=queued?`STOP ${c+1} 予約`:spin&&spin.stopped[c]!==null?`STOP ${c+1} ✓`:`STOP ${c+1}`;});
@@ -366,7 +370,7 @@
     const transactionId=spin.session.id;
     const grid=spin.stopped.map((n,c)=>core.windowAt(c,n)),out=core.evaluateGrid(grid,{bet:BET});
     const symbols=out.litLines.map(l=>grid[l.cells[0][0]][l.cells[0][1]].id).filter(id=>id!=='replay');const symbol=symbols.sort((a,b)=>core.SYMBOL_BY_ID.get(b).pay-core.SYMBOL_BY_ID.get(a).pay)[0]||'none';
-    const performer=currentPerformer(),blackstar=state.phase==='battle'&&state.order==='strike'&&!out.replayHit&&state.round===0;
+    const performer=currentPerformer(),blackstar=state.phase==='battle'&&state.order==='strike'&&!out.replayHit&&state.round===3;
     result=flow.settle(state,{payout:out.payout,replay:out.replayHit,symbol});result.performer=['liberation','guard'].includes(result.kind)?flow.CAST[result.actor]:performer;
     if(state.phase==='battle'&&result.kind==='miss'&&result.state.hp>0)result.headline=bossCounters[state.round].move;
     if(result.kind==='hit'){result.headline=performer.technique;result.line=`${performer.attack} ${flow.BOSSES[state.round].name}に${result.damage}ダメージ。`;}

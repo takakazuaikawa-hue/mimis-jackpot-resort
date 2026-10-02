@@ -1,18 +1,18 @@
 {
   "status": "PC PLAYTEST / PRODUCTION QUALITY UNAPPROVED",
-  "createdAt": "2026-10-02T12:22:24.525Z",
+  "createdAt": "2026-10-02T13:39:24.358Z",
   "entry": "index.html",
-  "bytes": 916092841,
+  "bytes": 930249671,
   "files": [
     {
       "file": "arena-flow.js",
-      "bytes": 12129,
-      "sha256": "53bef1220e2cfb1ffc1445891b6e213899ee9b613cc8e8610f723cfbf6308a88"
+      "bytes": 13652,
+      "sha256": "6405b7115b608ce663b8f4df43c45ddbe496bc8d0e567b10d4040cb1ad4f003d"
     },
     {
       "file": "arena-runtime.js",
-      "bytes": 49282,
-      "sha256": "ee3940f0cedbc42bffac479ed717313e0c008d64d4b79c1515894ab159c30ee3"
+      "bytes": 50550,
+      "sha256": "461062d0aa924dde2671c402e586e41f1d3c77615acd5fb61b7a9df6406bd572"
     },
     {
       "file": "assets/Jackpot.mp3",
@@ -203,6 +203,21 @@
       "file": "assets/arena/rinne-v1.png",
       "bytes": 1266763,
       "sha256": "846fb5b573c9f2dc132621ae823d0802b7aa6672bfe06c9aab76e8e563755d0c"
+    },
+    {
+      "file": "assets/arena/rookie-bat-arena-v1.png",
+      "bytes": 2745242,
+      "sha256": "806ed8f2227a1e78f1443efe2e5d307b98c8bb068905846127b439672a9b4c92"
+    },
+    {
+      "file": "assets/arena/rookie-kobold-arena-v1.png",
+      "bytes": 2710475,
+      "sha256": "19171d1f5076acc1478ad7c10cc48a911aba972b96c75056d2fe272bed13e8ef"
+    },
+    {
+      "file": "assets/arena/rookie-piyo-arena-v1.png",
+      "bytes": 2633667,
+      "sha256": "a7a3e2b05b2517a1607301374ae49a48d440becb06b05102739b221b864b2463"
     },
     {
       "file": "assets/arena/room-battle-v1.png",
@@ -1450,6 +1465,11 @@
       "sha256": "28cf4a1063101dccf655d3f89b726889730861b741b3f353abd34a8a17cb2764"
     },
     {
+      "file": "assets/guild/hero-plaza-arrival-v1.png",
+      "bytes": 3070334,
+      "sha256": "119ad8b7cfe0b75b30f61c3da7e2d1760441c674a13249e39d3a8e67c9e86a8b"
+    },
+    {
       "file": "assets/guild/homecoming-v1.png",
       "bytes": 2739324,
       "sha256": "4d367fd46a76904f84b9459a1c78dd6101d4022d55c931a2669aad1472b4ae68"
@@ -1463,6 +1483,11 @@
       "file": "assets/guild/marmela-portrait.jpg",
       "bytes": 133619,
       "sha256": "19a64149a6bfdaa19a161ed409d0b55102614d8e4bb3f2d794d3ef82db05ac7e"
+    },
+    {
+      "file": "assets/guild/merchant-market-arrival-v1.png",
+      "bytes": 2984262,
+      "sha256": "0d02716d78e093fbe84f022cc7dc1d33c699b88ab199c4585528a16b4c03d294"
     },
     {
       "file": "assets/guild/mimi-opening-v1.png",
@@ -2881,8 +2906,8 @@
     },
     {
       "file": "game.js",
-      "bytes": 221560,
-      "sha256": "5d8b7147e9dd442ecb06bf0cab359913ca252c029b69aeeb54899804af055fa4"
+      "bytes": 223657,
+      "sha256": "2a456261632fed03d7978600a13413d6b44ba5a62d4c955b4fbf31ab6220ef7a"
     },
     {
       "file": "guild-flow.js",
@@ -2896,13 +2921,13 @@
     },
     {
       "file": "guild-runtime.js",
-      "bytes": 27698,
-      "sha256": "79f9818e4d804d9f44f1140f6f83cd6be0272d69af4b881f7066523165a55799"
+      "bytes": 27671,
+      "sha256": "a5e2ce7173d227a2b97fa6e6d7a487b4e1de268ad6718c094fde96caf856d595"
     },
     {
       "file": "guild-scenes.js",
-      "bytes": 18339,
-      "sha256": "6ce1a749103464166bb7eb87af6e06ed52403c23cfd4f33fd4cfff4e14de2673"
+      "bytes": 20646,
+      "sha256": "f528bc0ce7b1fbaa165021a0bb1b2a4a9a3ba119308864f4ca3f7331d6c45cc8"
     },
     {
       "file": "index-arena.html",
@@ -3156,8 +3181,8 @@
     },
     {
       "file": "machines/dragon-race/player/visual.css",
-      "bytes": 566408,
-      "sha256": "15909e72dba12a5b087391ff08f484cb7059619e597435ab451442922a88501a"
+      "bytes": 566769,
+      "sha256": "741f781042d21f8f6cc89c426d832b1dc6d8622be7158b473a1c4e273e038b9f"
     },
     {
       "file": "machines/dragon-race/presentation-contract.js",
@@ -3171,8 +3196,8 @@
     },
     {
       "file": "machines/dragon-race/runtime.js",
-      "bytes": 92601,
-      "sha256": "d35033547ecb0f1c5e6adb48b425853c55223188fb4302736686fa93d3ef2f21"
+      "bytes": 94972,
+      "sha256": "28b2edf9c024090c472ff70bc2caea9f5cd4315f92cc0a3170d23c77253c790c"
     },
     {
       "file": "machines/dragon-race/spectacle.js",
@@ -3311,13 +3336,13 @@
     },
     {
       "file": "stadium-runtime.js",
-      "bytes": 34366,
-      "sha256": "26f741e4189ee42b0d2c22b7781dedc4beb653f9a5099855d3bb55cd42dd5a14"
+      "bytes": 36955,
+      "sha256": "b149184220ef62f9e1853dcb49383a287f7a6bd11ef29fbb8a8f2cad54c4d875"
     },
     {
       "file": "visual.css",
-      "bytes": 510170,
-      "sha256": "63aae7c3f3622890d9b3a7c9f3d5fa4e8068a6819ee64b64035e112fd88543af"
+      "bytes": 510531,
+      "sha256": "501a34b0b0e72cf857be7c9d8bdb95d5d55c2eb506bd3b32f27965976c03bda5"
     }
   ]
 }

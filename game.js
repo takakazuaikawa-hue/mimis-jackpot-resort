@@ -607,6 +607,26 @@
     ]),
   });
 
+  // Character reactions consume the settled hand only; they never draw a flag
+  // or ask the player to leave the cabinet controls.
+  const CHAPTER1_RIVAL_REMARKS = Object.freeze({
+    rico: ['急がなくていい。まずは私の目を見て。','札をそろえる間まで見ていたのね。','次の一手は、もう読まれているかしら。'],
+    polka: ['そのチップ、まだ動かさないの？ 私は行くよ！','強気な顔も、勝負のうちでしょ？','そこまで見られたら、笑ってごまかせないね。'],
+    selina: ['盤面は同じ。でも、見ている場所は違う。','守りに入る瞬間を、見つけたのね。','罠を読む相手との勝負は、退屈しない。'],
+    grano: ['一枚ずつ数えましょう。急ぐ取引は高くつきます。','勘定の間まで、お見通しですかな。','見切った上で席に残る。いい判断ですな。'],
+  });
+  function showChapter1RivalRemark(opponent, turn, readAssist) {
+    const lines = CHAPTER1_RIVAL_REMARKS[opponent.id];
+    if (!lines || turn.fullScene) return;
+    const beat = Math.min(2, Math.max(0, (readAssist.streak || 1) - 1));
+    const quote = turn.result === 'replay'
+      ? ({rico:'同じ席で、もう一手。',polka:'もう一回？ いいよ、付き合う！',selina:'決着を急がず、盤面を覚えて。',grano:'次のお代は不要ですな。'}[opponent.id]) : lines[beat];
+    const status = state.chapter1ReadReady ? 'READ READY · 次の非REPLAYで見切る'
+      : turn.result === 'miss' ? `観察 ${readAssist.streak}/${chapter1Flow.READ_ASSIST.missThreshold} · ${CHAPTER1_READ_TELL_COPY[opponent.id][Math.max(0,beat)]}`
+      : turn.result === 'replay' ? 'REPLAY · 次回BET 0' : `相手STACK −${turn.damage}`;
+    message(`「${quote}」 ${status}`, opponent.name);
+  }
+
   function pulseChapter1ReadProgress(readAssist, turn, opponent) {
     if (!readAssist || turn?.result !== "miss" || readAssist.ready || readAssist.streak <= 0) return;
     const streak = Math.max(1, Math.min(chapter1Flow.READ_ASSIST.missThreshold - 1, Number(readAssist.streak) || 1));
@@ -2231,7 +2251,7 @@
     };
     els.characterArt.src = preferredCharacterImage;
     els.characterArt.alt = activeCast.name;
-    els.speaker.textContent = activeCast.name === "Mimi" ? "MIMI" : activeCast.name.toUpperCase();
+    els.speaker.textContent = els.characterDialog.dataset.messageSpeaker || (activeCast.name === "Mimi" ? "MIMI" : activeCast.name.toUpperCase());
     renderBattleStatus();
   }
 
@@ -3683,6 +3703,7 @@
       pulseChapter1TableProgress(turn);
       pulseChapter1ReadProgress(readAssist, turn, opponent);
       pulseChapter1ReadAssist(readAssist);
+      showChapter1RivalRemark(opponent, turn, readAssist);
       return;
     }
     const symbol = core.SYMBOL_BY_ID.get(state.flag);
@@ -4468,7 +4489,9 @@
     els.stageFlash.classList.add("show");
   }
 
-  function message(text) {
+  function message(text, speakerName = "") {
+    els.characterDialog.dataset.messageSpeaker = speakerName;
+    if (speakerName) els.speaker.textContent = speakerName;
     els.message.textContent = text;
     clearTimeout(messageTimer);
     els.characterDialog.classList.remove("show");

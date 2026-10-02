@@ -127,6 +127,31 @@
   }
   function reaction(before,r,t){
     const s=r.state;
+    if (['normal','trial'].includes(before.phase) && !s.pending) {
+      const incidents = [
+        [
+          ['ラッツ','ratts-portrait.jpg','今度の券には「参加」と書きました。優勝は、勝負の後に！'],
+          ['ガルド','gardo-portrait-hand-v2.png','椅子を一つ追加だ。主催者の席も、忘れてはならんぞ。'],
+          ['ミミ','mimi-smile.jpg','呼び込みだけで帰らないでくださいね。お茶は、座って飲みましょう。'],
+          ['ラッツ','ratts-portrait.jpg','あの券を持ってきた人も来た！ 今夜は、最後まで見てもらいます。'],
+        ],
+        [
+          ['ノノ','nono-portrait.jpg','広場の向こうまで声を届けてくる！ 椅子は、一つ空けておいてね。'],
+          ['シルヴィオ','silvio-portrait.jpg','英雄は、まだ屋根の上だ！ ……梯子を押さえてくれるか？'],
+          ['ミミ','mimi-smile.jpg','皆さん、英雄にも拍手を。今夜は、地面の席から見届けましょう。'],
+          ['ノノ','nono-portrait.jpg','遠くの通りからも来てくれたよ。今度は僕も座って見られる！'],
+        ],
+        [
+          ['マルメラ','marmela-portrait.jpg','荷はここへ。値が出るのを待つ間に、実物を見てもらいましょう。'],
+          ['ベアトリクス','beatrix-portrait.jpg','証書だけでなく、中身と持ち主も。皆さんの前で確かめます。'],
+          ['ミミ','mimi-worried-identity-v2.png','品の数を先に……はい。試食のお皿は、まだ置いておきます。'],
+          ['マルメラ','marmela-portrait.jpg','客席から、買い手も来ました。興行が終わるまで、この荷はここに。'],
+        ],
+      ][s.round];
+      const beat = before.phase === 'trial' ? Math.min(3, 3-before.trialLeft) : Math.min(3, Math.floor(before.crowd*2/3));
+      const [speaker,portrait,text]=incidents[beat];
+      return {tone:'town',title:before.phase==='trial'?'演目の合間、客席から。':'この町で、席が増えていく。',speaker,art:A+portrait,text};
+    }
     if(before.phase==='boss'&&!s.pending&&!['tea','rumor'].includes(r.kind)){
       if(s.replay)return {tone:'hold',title:'この一手は、引き分け。',text:'次はBET無料。粘りも、用意した助けも、そのままです。',speaker:'ミミ'};
       if(r.points)return {tone:'hit',title:['証文に、一歩届いた。','英雄の一手を、上回った！','その値踏みを、越えて。'][s.round],text:[
@@ -146,5 +171,6 @@
     }
     return null;
   }
-  return Object.freeze({action,settled,reaction,story});
+  function townArt(round){return [A+'mimi-opening-v2.png',A+'hero-plaza-arrival-v1.png',A+'merchant-market-arrival-v1.png'][round];}
+  return Object.freeze({action,settled,reaction,story,townArt});
 });

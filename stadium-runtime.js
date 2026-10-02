@@ -7,7 +7,20 @@
   const $ = id => document.getElementById(`stadium${id}`);
   const stops = [...document.querySelectorAll("[data-stadium-stop]")];
   let state = flow.create(), spin = null, saved = null, sound = false, frame = 0, last = 0;
-  let resultActor = null, resultText = "いちばん上まで、改造していこう。", resultHeadline = "";
+  let resultActor = null, resultVoiceActor = null, resultText = "いちばん上まで、改造していこう。", resultHeadline = "";
+  // Fixed nine: the voice follows the batter who actually faced this pitch.
+  // These reactions do not heal injuries or alter augmentation / reel results.
+  const batterVoices = {
+    8: ['防具はこのままでいい。みんなの球を受けた体で、打つ。','次の打者に、ここからつなぐ。','一球ずつだ。俺が先に慌てるわけにはいかない。'],
+    9: ['左腕、もう一球だけ。千球目まで、覚えていたい。','震えても、振り抜けた。この一球は記録に残して。','まだ終わらない。肘は、今のまま支えておいて。'],
+    6: ['膝の包帯？ 見てる暇があるなら、球を見ろよ。','ほらな。飛び込むのも、打つのも、まだ俺の仕事だ。','次は拾う。守備でも、この打席でも。'],
+    5: ['声をかけてくれてありがとう。今度は俺の番だ。','ちょっと振りすぎたかな。走者は、ちゃんと見てるよ。','慌てない、慌てない。次の一球も一緒に見よう。'],
+    3: ['バイザー越しでも、球の来る場所は分かる！','見えた！ 今の一球、みんなにも見えたよな！','見失ったなら、次の構えから合わせる！'],
+    2: ['手首はそのまま。構えだけ、少し直す。','……届いた。次の人へ。','騒がなくていい。次の球を待つ。'],
+    1: ['走る姿まで、見ていて。打席からが僕の舞台だ。','走路の先まで、きれいに決めよう。','まだ顔は上げているよ。次の一球を見たいから。'],
+    7: ['無理をした顔は、客席に見せたくないんだ。','今の一手なら、笑ってベンチへ戻れるね。','少しだけ間を。次は、いつもの顔で行くよ。'],
+    4: ['腰のベルト、よし。ここで引いたら四番じゃない！','見たか！ 最後まで、この腰で振り切ったぞ！','立ち直す時間はくれ。次の一振りまで逃げない。'],
+  };
   let auto = false, turbo = false, nextQueued = false, controlTimer = 0, controlEpoch = 0;
   let settledAt = 0, commandToken = "", commandSince = 0;
   const ART = "./assets/stadium/generated-v1/";
@@ -106,15 +119,15 @@
         ["確実な出塁", () => augment("walk"), "walk"], ["一発の改造", () => augment("power"), "power"]
       ]);
     else if (state.pending === "reward") showCommand("試合突破", `${state.runs}点！ 勝利！`, "ナインと走ろう。10Gの無料ウイニングラン！",
-      [["BONUSへ", () => { state.pending = ""; state.phase = "bonus"; state.bonus = 10; state.bonusWin = 0; state.bonusRecorded = 0; state.lastWin = 0; resultActor = null; resultHeadline = ""; resultText = "勝利の一周、いこう！"; }]]);
+      [["BONUSへ", () => { state.pending = ""; state.phase = "bonus"; state.bonus = 10; state.bonusWin = 0; state.bonusRecorded = 0; state.lastWin = 0; resultActor = null; resultVoiceActor = null; resultHeadline = ""; resultText = "勝利の一周、いこう！"; }]]);
     else if (state.pending === "next") showCommand("ウイニングラン完走", "次の球場へ。", `${flow.TEAMS[state.team + 1].name}が待っている。`, [["次の試合へ", () => {
-      state.team++; resetMatch(); state.pending = "intro"; resultActor = null; resultHeadline = "";
+      state.team++; resetMatch(); state.pending = "intro"; resultActor = null; resultVoiceActor = null; resultHeadline = "";
     }]]);
     else if (state.pending === "champion") showCommand("全4球団突破", "私たちの野球を、証明した。", `固定ナインと${state.totalRuns}得点。ミミの改造野球、頂点へ！`, [["優勝を記録", () => {
       state.pending = ""; state.phase = "complete"; state.championships++;
     }]]);
     else if (state.phase === "complete") showCommand("CHAMPIONS", "ミミとナインの勝利！", `通算優勝 ${state.championships}回。CREDIT ${state.credit.toLocaleString("ja-JP")}`, [["もう一度、頂点へ", () => {
-      state.team = 0; resetMatch(); state.totalRuns = 0; state.pending = "intro"; resultActor = null; resultHeadline = "";
+      state.team = 0; resetMatch(); state.totalRuns = 0; state.pending = "intro"; resultActor = null; resultVoiceActor = null; resultHeadline = "";
     }]]);
     else if (state.credit < BET && !state.replay && state.phase !== "bonus") showCommand("リゾートサービス", "次の打席へ。", "300 CREDITを受け取って、この試合を続けられます。", [["300 CREDITを受け取る", () => { state.credit += 300; }]]);
   }
@@ -125,7 +138,7 @@
   }
   function augment(kind) {
     state.augment = kind; state.pending = ""; state.dry = 0;
-    resultHeadline = ""; resultActor = null;
+    resultHeadline = ""; resultActor = null; resultVoiceActor = null;
     resultText = kind === "walk" ? "次の一球で出塁させるよ！" : "次のヒットを、ホームランに変えよう！";
     presentFeature("install", kind, null, null);
     if (sound) audio.cue("revive");
@@ -266,7 +279,7 @@
     $("Cinema").dataset.assisted = String(resultDetail.payout === 0);
   }
   function render() {
-    const team = flow.TEAMS[state.team], player = resultActor || flow.PLAYERS[state.batter];
+    const team = flow.TEAMS[state.team], player = resultVoiceActor || resultActor || flow.PLAYERS[state.batter];
     $("Cabinet").dataset.phase = state.phase;
     $("Cabinet").dataset.spinning = String(Boolean(spin));
     $("Cabinet").dataset.surgery = String(state.pending === "surgery");
@@ -274,7 +287,7 @@
     $("Cabinet").dataset.augment = state.augment;
     imageSource($("Field"), team.image);
     imageSource($("Batter"), player.image); $("Batter").alt = player.name;
-    $("Name").textContent = player.name; $("Position").textContent = `${resultDetail && !resultActor && !resultDetail.replay ? "次の打者 · " : ""}背番号${player.number} · ${player.position}`;
+    $("Name").textContent = player.name; $("Position").textContent = `${resultVoiceActor ? "この打席 · " : resultDetail && !resultActor && !resultDetail.replay ? "次の打者 · " : ""}背番号${player.number} · ${player.position}`;
     $("Opponent").textContent = team.name; $("Style").textContent = team.style;
     $("Round").textContent = state.phase === "bonus" ? `WINNING RUN · 残り ${state.bonus} G` : `第${state.team + 1}戦 / 4`;
     $("Runs").textContent = state.runs; $("Target").textContent = team.target; $("Outs").textContent = `${state.outs} OUT`;
@@ -342,8 +355,9 @@
     nextQueued = false;
     spin = { isFree: free, flag, stopped: [null, null, null], started: performance.now(), braking: [false, false, false], pendingStops: [], lastStopAt: 0 };
     attachSession(spin);
-    resultActor = null; resultHeadline = ""; resultDetail = null;
-    resultText = ["bar", "seven_blue", "seven_red"].includes(flag) ? "大きいの、狙えるよ！" : ["grape", "watermelon"].includes(flag) ? "いい球！ 打ち抜こう！" : "一球、集中。";
+    resultActor = null; resultVoiceActor = null; resultHeadline = ""; resultDetail = null;
+    resultVoiceActor = null;
+    resultText = state.phase === 'normal' ? flow.PLAYERS[state.batter].name+'「'+batterVoices[flow.PLAYERS[state.batter].number][0]+'」' : '勝利の一周も、みんなで走ろう！';
     $("Cabinet").dataset.heat = ["bar", "seven_blue", "seven_red"].includes(flag) ? "strong" : "normal";
     document.querySelectorAll(".stadium-symbol.is-win").forEach(n => n.classList.remove("is-win"));
     if (sound) audio.spinStart(); save(); render();
@@ -380,7 +394,7 @@
     const result = core.evaluateGrid(grid, { bet: BET });
     const paidSymbols = result.litLines.map(line => grid[line.cells[0][0]][line.cells[0][1]].id).filter(id => id !== "replay");
     const symbol = paidSymbols.sort((a, b) => core.SYMBOL_BY_ID.get(b).pay - core.SYMBOL_BY_ID.get(a).pay)[0] || "none";
-    const armed = state.augment, previousDry = state.dry, previousRuns = state.runs, previousOuts = state.outs;
+    const armed = state.augment, previousDry = state.dry, previousRuns = state.runs, previousOuts = state.outs, previousPhase = state.phase;
     const settled = flow.settle(state, { payout: result.payout, replay: result.replayHit, symbol });
     islandWriter?.record({ paid: spin.isFree === false, payout: result.payout });
     state = settled.state; spin = null; settledAt = performance.now();
@@ -389,6 +403,11 @@
     resultDetail = state.phase === "normal" ? { runs: state.runs - previousRuns, payout: result.payout, symbol, replay: result.replayHit } : null;
     if (state.phase === "normal" && state.augment && !settled.hit && !result.replayHit) {
       resultText = (previousOuts === 2 ? "3アウトで走者をリセット。" : "この打席は不発。") + " 改造は継続、次のヒットがホームラン！";
+    }
+    resultVoiceActor = previousPhase === 'normal' ? settled.actor : null;
+    if (resultVoiceActor) {
+      resultText += ' '+resultVoiceActor.name+'「'+batterVoices[resultVoiceActor.number][settled.hit?1:2]+'」';
+      if (!state.pending && !result.replayHit) resultText += ' 次打者：'+flow.PLAYERS[state.batter].name;
     }
     if (armed && !state.augment && settled.hit) {
       presentFeature("activate", armed, settled.actor, result.payout);

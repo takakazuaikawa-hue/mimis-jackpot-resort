@@ -65,8 +65,8 @@
     if(reach&&!spin.reachCued){spin.reachCued=true;if(sound&&!paused())audio.cue(['bar','seven_blue','seven_red'].includes(reach.symbol)?'hot':'tenpai');}
     $('Calm').checked=calm;$('Cabinet').dataset.motion=motionReduced()?'reduced':'full';$('Reels').setAttribute('aria-busy',String(!!spin));$('Cabinet').dataset.phase=p;$('Cabinet').dataset.pending=state.pending;$('Cabinet').dataset.spinning=String(!!spin);$('Cabinet').dataset.feature=feature?String(feature.step):'';
     $('Town').textContent=p==='complete'?'帰還　ギルド':`第${state.round+1}幕　${t.name}`;
-    let art=p==='boss'?t.art:p==='complete'?A+'homecoming-v2.png':p==='bonus'?t.feast:p==='trial'?A+'crowd.jpg':A+'mimi-opening-v2.png';
-    src($('Scene'),art);$('Scene').alt=p==='boss'?t.boss+'との勝負':p==='bonus'||p==='complete'?'仲間と囲む祝宴':p==='trial'?'ギルドの興行に集まる観客':'興行へ招くミミ';
+    let art=p==='boss'?t.art:p==='complete'?A+'homecoming-v2.png':p==='bonus'?t.feast:scenes.townArt(state.round);
+    src($('Scene'),art);$('Scene').alt=p==='boss'?t.boss+'との勝負':p==='bonus'||p==='complete'?'仲間と囲む祝宴':t.name+'で開く旅の興行';
     $('Phase').textContent=p==='normal'?'今夜の興行 · 客寄せ':p==='trial'?`開幕 · 残り${state.trialLeft}G`:p==='boss'?t.title:p==='bonus'?'仲間と囲む · 無料の祝宴':'旅の終わり · ギルドへ帰還';
     $('Title').textContent=p==='normal'?'今夜の興行を始めよう。':p==='trial'?'その拍手を、街じゅうへ。':p==='boss'?t.boss+'との大勝負':p==='bonus'?'仲間と、もう一杯。':'嘘つきたちに、乾杯。';
     let value=p==='normal'?state.crowd:p==='trial'?state.applause:p==='boss'?t.target-state.remaining:p==='bonus'?state.bonus:3,max=p==='normal'?6:p==='trial'?flow.goal(state):p==='boss'?t.target:p==='bonus'?10:3;
@@ -79,7 +79,7 @@
     if(token!==commandKey){commandKey=token;commandAt=performance.now();$('Choices').replaceChildren();if(cmd)cmd.choices.forEach(([label,action])=>{const b=document.createElement('button');b.type='button';b.textContent=label;b.addEventListener('click',()=>{if(b.isConnected)advance(action);});$('Choices').append(b);});}
     if(cmd)$('CommandText').textContent=cmd.text;
     $('Reaction').hidden=!reaction||reaction.tone==='feast'||!!feature||!!spin;
-    if(reaction){$('Reaction').dataset.tone=reaction.tone;src($('ReactionPortrait'),t.portrait);$('ReactionPortrait').hidden=reaction.speaker==='ミミ';$('ReactionPortrait').alt=t.boss;$('ReactionSpeaker').textContent=reaction.speaker;$('ReactionTitle').textContent=reaction.title;$('ReactionText').textContent=reaction.text;}
+    if(reaction){$('Reaction').dataset.tone=reaction.tone;src($('ReactionPortrait'),reaction.art||t.portrait);$('ReactionPortrait').hidden=!reaction.art&&reaction.speaker==='ミミ';$('ReactionPortrait').alt=reaction.speaker;$('ReactionSpeaker').textContent=reaction.speaker;$('ReactionTitle').textContent=reaction.title;$('ReactionText').textContent=reaction.text;}
     $('Result').hidden=!result||!!feature||!!spin;
     if(result&&resultView){$('ResultLabel').textContent=resultView.effect;$('ResultTitle').textContent=resultView.title;$('ResultWin').textContent=resultView.payout?`WIN ＋${resultView.payout}`:state.replay?'次回BET 0':'WIN 0';$('ResultDetail').textContent=resultView.next;}
     $('StorySkip').hidden=!feature?.storyId;$('StoryReplay').disabled=!!spin||!!feature;$('StoryReplay').textContent=`第${state.round+1}幕の出会いを読み返す`;$('Auto').disabled=!!feature?.storyId;$('Feature').hidden=!feature;$('Feature').dataset.step=feature?String(feature.step):'';

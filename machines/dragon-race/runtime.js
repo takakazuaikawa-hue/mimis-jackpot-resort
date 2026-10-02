@@ -35,6 +35,38 @@
     sumika: ["ミミ様、本日の走りを記録いたします。", "前半で残した力が、ここで効きます。", "この一戦も、次の読みへつながります。"],
     makura: ["推しの名前、叫んでいこう！", "ここ！　ここが今日の見せ場だよ！", "今の走り、アーカイブに残すぞ！"],
   };
+  const roadConversations = {
+    sake: [
+      ['ミミ','屋台の匂いで寄り道？ サケさん、竜はもう競走場へ向かっていますよ。'],
+      ['サケ','腹も呼吸も、空っぽじゃ走れねえ。まずは落ち着いて見ろ。'],
+      ['ミミ','さっきの息づかい、もう一度見ます。脚だけを追わないんですね。'],
+    ],
+    mizu: [
+      ['ミミ','通りでは人気の竜の話ばかり。でも、実際の走りも見たいです。'],
+      ['ミズ','看板の大きさで判断しないの。自分の目で見た一歩を持っていきましょう。'],
+      ['ミミ','見落とした所も手帳に。外れた観察を、捨てなくていいんですね。'],
+    ],
+    sumika: [
+      ['スミカ','ミミ様、休憩の時刻です。競走の記録と、お食事の記録は別冊にしました。'],
+      ['ミミ','食事まで記録に？ ……今日の分は、あと一行だけ空けておいてください。'],
+      ['スミカ','承知しました。走りの方も、最後まで記録を続けます。'],
+    ],
+    makura: [
+      ['マクラ','通りの声も録っておこう。競走場へ近づく音がするだろ？'],
+      ['ミミ','推しの名前を呼ぶ練習ですね。今のは、ちゃんと声が届きましたか？'],
+      ['マクラ','届いた！ おれの記録にも残った。次は走りの見せ場を追うぞ！'],
+    ],
+  };
+  function roadTalk(member, tour) {
+    if (displayPhase !== 'normal' || command !== null || !['intro','quiet','result','race'].includes(mode)) return null;
+    if (mode === 'race' && (!tour.town || (tx?.landed.length || 0) > 1)) return null;
+    if (mode === 'result' && !tour.town) return null;
+    if (tour.omen) return ['ミミ','あれ……歓声が近づいてきました。競走場へ戻りましょう！'];
+    const step = (round?.prior.spins ?? progress.spins) + progress.journey;
+    const beats = roadConversations[member.id];
+    if (!beats) return null;
+    return step % 4 === 3 ? [content.CAST[member.id].name, phrases[member.id][Math.floor(step / 4) % phrases[member.id].length]] : beats[step % 4];
+  }
   function el(selector) { return root.querySelector(selector); }
   function text(selector, value) { const node = el(selector); if (node.textContent !== String(value)) node.textContent = value; }
   function attr(node, key, value) { if (node.dataset[key] !== String(value)) node.dataset[key] = value; }
@@ -686,8 +718,11 @@
       if (mode === "race") text(".dragon-line", ["", "神眼を突き破れ！", "砕けるか…！", ""][count]);
       if (mode === "photo") text(".dragon-call", "突き破れ！");
     }
+    const conversation = roadTalk(member, tour);
+    attr(root,'travelTalk',Boolean(conversation));
+    if (conversation) speaker(conversation[0] === 'ミミ' ? 'mimi' : member.id, conversation[1]);
     attr(root,"hasCall", Boolean(el(".dragon-line").textContent));
-    text(".dragon-next", command === 0 ? "PUSH" : locked ? mode === "result" ? "右のボタンで次へ" : "判定中" : api.state.spinning ? "STOP" : "SPIN");
+    text(".dragon-next", command === 0 ? "PUSH" : locked ? mode === "result" ? "PUSHで次へ" : "判定中" : api.state.spinning ? "STOP" : "SPIN");
     text(".dragon-save-error", saveConflict ? "別のタブで記録が更新されました。このタブは停止中です。再読み込みして続きを遊んでください。" : saveError ? "記録を保存できません。空き容量を確認してください。" : "");
     spectacle.update({ tour, mode, count, transaction: tx?.transactionId || 0, boss: displayPhase === "boss" && !isEncore(),
       phase: displayPhase, reduced: reducedMotion(), modal: modalOpen(), outfit, expression,

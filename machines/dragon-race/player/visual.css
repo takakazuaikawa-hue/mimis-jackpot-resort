@@ -2080,6 +2080,10 @@
   line-height: 1.05;
   pointer-events: none;
 }
+.dragon-stage[data-travel-talk="true"] .dragon-story { gap: 9px; max-width: 66%; align-items: flex-start; }
+.dragon-stage[data-travel-talk="true"] .dragon-speaker { display: block; flex: 0 0 auto; color: #f5dca4; font-size: 13px; line-height: 1.65; }
+.dragon-stage[data-travel-talk="true"] .dragon-line { font-size: 16px; font-weight: 500; line-height: 1.4; }
+
 .casino-table-hud strong { color: var(--chapter1-rival-ink, #fff7dd); font-size: 14px; }
 .casino-table-hud span { color: var(--chapter1-rival-accent, #ffd36a); font-size: 12px; font-style: normal; text-align: right; }
 .casino-table-hud i { grid-column: 1 / -1; color: #d8c89e; font-size: 10px; font-style: normal; letter-spacing: .08em; }
