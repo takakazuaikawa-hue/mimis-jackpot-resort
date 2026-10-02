@@ -1,8 +1,8 @@
 {
   "status": "PC PLAYTEST / PRODUCTION QUALITY UNAPPROVED",
-  "createdAt": "2026-10-02T16:19:46.295Z",
+  "createdAt": "2026-10-02T22:53:22.783Z",
   "entry": "index.html",
-  "bytes": 938982579,
+  "bytes": 937464492,
   "files": [
     {
       "file": "arena-flow.js",
@@ -620,9 +620,9 @@
       "sha256": "1047e1ba1d1a770f14a8a240eef6bf83acc9232b4bbeb4e80e105d900bc3304a"
     },
     {
-      "file": "assets/cabinet-v5-candidates/final/arena-physical-chassis-v1.png",
-      "bytes": 2394165,
-      "sha256": "0ee16448e4228b1a95e6d9ea21f1fb7bb4ecfe1bdb34cb9fb37895bd45107234"
+      "file": "assets/cabinet-v5-candidates/final/arena-physical-chassis-v2.png",
+      "bytes": 1774242,
+      "sha256": "fd9685dcab409d55ee06894d7d590f6f348c9a816f3bc327208cf5fb4cc64d6c"
     },
     {
       "file": "assets/cabinet-v5-candidates/final/cabinet-control-deck.png",
@@ -655,19 +655,19 @@
       "sha256": "6cf14a88a4b7a9c5c817e526f453a44f44eab837c0c945bcf078c304dfe44dc6"
     },
     {
-      "file": "assets/cabinet-v5-candidates/final/dragon-physical-chassis-v1.png",
-      "bytes": 2271101,
-      "sha256": "a43932073865a73f35b344c17da953fc7cddd48d45642ed7569a6800595af37c"
+      "file": "assets/cabinet-v5-candidates/final/dragon-physical-chassis-v2.png",
+      "bytes": 2074886,
+      "sha256": "5637a7b8fe706cdc9c673e2889318131b670dc0cadc6cf2918a80a7f3a2aa8c0"
     },
     {
-      "file": "assets/cabinet-v5-candidates/final/guild-physical-chassis-v1.png",
-      "bytes": 2120414,
-      "sha256": "f20808b0834abf4ae6b594942e94cbd52b97ca41a744d8be7c4d963efe25ee62"
+      "file": "assets/cabinet-v5-candidates/final/guild-physical-chassis-v2.png",
+      "bytes": 1769141,
+      "sha256": "98412b01b6878a656d5968d443bafa1ada8b73df71bdafd0ca42f23f91eff10b"
     },
     {
-      "file": "assets/cabinet-v5-candidates/final/stadium-physical-chassis-v1.png",
-      "bytes": 1895028,
-      "sha256": "e182efc16f2b064d669f9cca5b21411dc58093beac2ad977f821120f0385ad97"
+      "file": "assets/cabinet-v5-candidates/final/stadium-physical-chassis-v2.png",
+      "bytes": 1541860,
+      "sha256": "146146718eb46ed770b1a520dcb2a0d30781d1f0ad39c57954c20458685d47fa"
     },
     {
       "file": "assets/cabinet-v6/mimi-jackpot-wide-housing-v2.png",
@@ -3201,8 +3201,8 @@
     },
     {
       "file": "machines/dragon-race/player/visual.css",
-      "bytes": 589037,
-      "sha256": "b4154c77976407a01cbfaa99acd6c13dd4587aa59be7cda59d202703276013fe"
+      "bytes": 590283,
+      "sha256": "9183d78688bd0f549d03b097956d4d952fcf66cd3bc18e0738426629b25e32b1"
     },
     {
       "file": "machines/dragon-race/presentation-contract.js",
@@ -3361,8 +3361,8 @@
     },
     {
       "file": "visual.css",
-      "bytes": 532771,
-      "sha256": "c889d8030ccf93bbccab9cde108d874d30c8a413b9317f73c3f585d8d52583a0"
+      "bytes": 534017,
+      "sha256": "5662648d67f51e11e06a80c0e3dd3118d5c7b448bb7d47bb5488dac6d24d64ac"
     }
   ]
 }
