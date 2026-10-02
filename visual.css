@@ -8378,6 +8378,7 @@ body[data-cabinet-layout="desktop-v5"] .casino-table-hud { bottom: 4.5%; width: 
     font-size:10px; line-height:19px; color:#f4e2bf; text-shadow:0 1px 3px #000;
   }
   :is(.stadium-cabinet .stadium-footer,.arena-cabinet .arena-footer) { color:var(--hardware-ink); text-shadow:0 1px #ffffff80; }
+  .stadium-cabinet .stadium-footer .stadium-next-batter { color:inherit; }
   .arena-cabinet[data-phase='complete'] :is(.arena-reward,.arena-command) { left:auto; right:26px; width:430px; }
   .arena-cabinet[data-phase='bonus'] .arena-command,.arena-cabinet[data-pending='reward'] .arena-command { left:auto; right:26px; width:350px; }
   .stadium-reel-block .reel-award-lines,.arena-reel-block .reel-award-lines { height:151px; }
