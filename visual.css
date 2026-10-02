@@ -1369,9 +1369,11 @@
 .casino-reel-reaction[data-beat="miss"] .casino-reaction-dialog { border-color: #95b0b8; }
 /* Existing observation dialogue and READ reveal retain sole ownership of the
    result beat; the new reel reaction must not put another box behind them. */
-.game-shell[data-chapter1-read-ready="false"]:is([data-chapter1-read-streak="1"], [data-chapter1-read-streak="2"], [data-chapter1-read-streak="3"]):has(.character-dialog.show) .casino-reel-reaction[data-beat="miss"] .casino-reaction-dialog,
-.game-shell:not([data-chapter1-spin-active="true"]) .casino-reel-reaction[data-beat="read"] .casino-reaction-dialog { visibility: hidden; }
+.game-shell[data-chapter1-read-ready="false"]:is([data-chapter1-read-streak="1"], [data-chapter1-read-streak="2"], [data-chapter1-read-streak="3"]):has(.character-dialog.show) .casino-reel-reaction[data-beat="miss"]:not([data-rival-reply="true"]) .casino-reaction-dialog,
+.game-shell:not([data-chapter1-spin-active="true"]) .casino-reel-reaction[data-beat="read"]:not([data-rival-reply="true"]) .casino-reaction-dialog { visibility: hidden; }
 .game-shell.reduced-motion .casino-reaction-mimi { transition: none; }
+.game-shell:not(.presentation-active) .casino-reel-reaction[data-rival-reply="true"] .casino-reaction-dialog { visibility: visible; }
+.game-shell:not(.presentation-active):has(.casino-reel-reaction[data-rival-reply="true"]) .character-dialog { visibility: hidden; }
 @media (prefers-reduced-motion: reduce) { .casino-reaction-mimi { transition: none; } }
 .casino-opponent {
   right: 4.8%;

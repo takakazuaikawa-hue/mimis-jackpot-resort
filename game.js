@@ -624,6 +624,12 @@
     const status = state.chapter1ReadReady ? 'READ READY · 次の非REPLAYで見切る'
       : turn.result === 'miss' ? `観察 ${readAssist.streak}/${chapter1Flow.READ_ASSIST.missThreshold} · ${CHAPTER1_READ_TELL_COPY[opponent.id][Math.max(0,beat)]}`
       : turn.result === 'replay' ? 'REPLAY · 次回BET 0' : `相手STACK −${turn.damage}`;
+    const reaction = els.shell.querySelector('.casino-reel-reaction');
+    if (reaction) {
+      reaction.dataset.rivalReply = 'true';
+      reaction.dataset.reply = quote;
+      reaction.dataset.replySpeaker = opponent.name;
+    }
     message(`「${quote}」 ${status}`, opponent.name);
   }
 
@@ -930,6 +936,10 @@
     if (!reaction) return;
     reaction.dataset.beat = "idle";
     reaction.dataset.focus = "false";
+    delete reaction.dataset.rivalReply;
+    delete reaction.dataset.reply;
+    delete reaction.dataset.replySpeaker;
+    reaction.querySelector('small').textContent = 'ミミ';
     reaction.querySelector("strong").textContent = "";
     delete els.shell.dataset.chapter1ReactionFocus;
   }
@@ -993,6 +1003,11 @@
       focus = approaching;
       line = approaching ? "……あの光、さっきより強い！" : "あれ……VIP卓から、合図？";
     }
+    if (result && reaction.dataset.rivalReply === 'true') {
+      line = '「'+reaction.dataset.reply+'」';
+      focus = false;
+    }
+    reaction.querySelector('small').textContent = result && reaction.dataset.rivalReply === 'true' ? reaction.dataset.replySpeaker : 'ミミ';
     reaction.dataset.beat = beat;
     reaction.dataset.focus = String(focus);
     els.shell.dataset.chapter1ReactionFocus = String(focus);

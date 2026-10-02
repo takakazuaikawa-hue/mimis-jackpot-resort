@@ -1,8 +1,8 @@
 {
   "status": "PC PLAYTEST / PRODUCTION QUALITY UNAPPROVED",
-  "createdAt": "2026-10-02T13:39:24.358Z",
+  "createdAt": "2026-10-02T13:52:29.791Z",
   "entry": "index.html",
-  "bytes": 930249671,
+  "bytes": 930251015,
   "files": [
     {
       "file": "arena-flow.js",
@@ -2906,8 +2906,8 @@
     },
     {
       "file": "game.js",
-      "bytes": 223657,
-      "sha256": "2a456261632fed03d7978600a13413d6b44ba5a62d4c955b4fbf31ab6220ef7a"
+      "bytes": 224345,
+      "sha256": "82f1d2d4de68b654788536a699e4812e0eb6afd3544b02fff5d1d5f893fbaa24"
     },
     {
       "file": "guild-flow.js",
@@ -3181,8 +3181,8 @@
     },
     {
       "file": "machines/dragon-race/player/visual.css",
-      "bytes": 566769,
-      "sha256": "741f781042d21f8f6cc89c426d832b1dc6d8622be7158b473a1c4e273e038b9f"
+      "bytes": 567097,
+      "sha256": "0ed191b065ef316db2c0257b2da629fc71c35f995619f3514d5349f75ccf2b5b"
     },
     {
       "file": "machines/dragon-race/presentation-contract.js",
@@ -3341,8 +3341,8 @@
     },
     {
       "file": "visual.css",
-      "bytes": 510531,
-      "sha256": "501a34b0b0e72cf857be7c9d8bdb95d5d55c2eb506bd3b32f27965976c03bda5"
+      "bytes": 510859,
+      "sha256": "330274d743ee36a9305c6b3b182a5862a755c7e9305725383a4cecc185c6c31a"
     }
   ]
 }
