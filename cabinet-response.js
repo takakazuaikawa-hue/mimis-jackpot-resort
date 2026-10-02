@@ -6,6 +6,34 @@
   const shell = document.querySelector(dragon ? "#gameShell" : "#stadiumCabinet, #arenaCabinet, #guildCabinet");
   if (!shell) return;
   const machine = dragon ? "dragon-race" : shell.id.replace("Cabinet", "");
+  if (!dragon) {
+    let ready = false, failed = false, ticket = 0, images = [];
+    function load() {
+      if (!failed && ticket) return;
+      const owner = ++ticket; ready = false; failed = false;
+      shell.dataset.cabinetArt = "loading";
+      images = [...new Set(window.SlotCore.SYMBOLS.map(symbol => symbol.img))].map(file => {
+        const image = new Image(); image.src = "./assets/generated/v3/symbols/dist/" + file; return image;
+      });
+      let timeout;
+      Promise.race([Promise.all(images.map(image => image.decode())), new Promise((_, reject) => {
+        timeout = setTimeout(() => reject(new Error("Reel texture timeout")), 30000);
+      })]).then(() => {
+        clearTimeout(timeout);
+        if (owner !== ticket) return; ready = true; shell.dataset.cabinetArt = "ready";
+        shell.querySelectorAll(`.${machine}-reels img`).forEach(image => {
+          if (image.complete && !image.naturalWidth && image.getAttribute("src")) image.src = image.getAttribute("src");
+        });
+        window.dispatchEvent(new Event("mimi:cabinet-art"));
+      }).catch(() => {
+        clearTimeout(timeout);
+        if (owner !== ticket) return; failed = true; shell.dataset.cabinetArt = "failed";
+        window.dispatchEvent(new Event("mimi:cabinet-art"));
+      });
+    }
+    window.MimiCabinetArt = Object.freeze({ get ready() { return ready; }, get failed() { return failed; }, retry: load });
+    load();
+  }
   function mount() {
   const theater = shell.querySelector(dragon ? ".dragon-stage" : `.${machine}-theater, .${machine}-stage`);
   const reels = shell.querySelector(dragon ? ".reel-frame" : `.${machine}-reel-block`);

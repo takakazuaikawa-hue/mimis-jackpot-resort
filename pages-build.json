@@ -1,8 +1,8 @@
 {
   "status": "PC PLAYTEST / PRODUCTION QUALITY UNAPPROVED",
-  "createdAt": "2026-10-02T08:53:53.946Z",
+  "createdAt": "2026-10-02T09:20:24.581Z",
   "entry": "index.html",
-  "bytes": 905391855,
+  "bytes": 905394933,
   "files": [
     {
       "file": "arena-flow.js",
@@ -11,8 +11,8 @@
     },
     {
       "file": "arena-runtime.js",
-      "bytes": 46491,
-      "sha256": "f4c7db9dacabdbb0e2052d27a8f39f602cf056b684308bcf8c458e9f195463e7"
+      "bytes": 46939,
+      "sha256": "102139d19a2abae8179c866c7b0360bccef33e85359b293e60a046832a20a602"
     },
     {
       "file": "assets/Jackpot.mp3",
@@ -2451,8 +2451,8 @@
     },
     {
       "file": "cabinet-response.js",
-      "bytes": 6172,
-      "sha256": "a5db5f1a284ae6a5feb2a51b20b5b232853a94d4165a444735552f4b5cac2ed7"
+      "bytes": 7604,
+      "sha256": "3189dc78cbf2c8546242ab4f32b1415b72bddb67fc8bdb95201e3272d0c619ad"
     },
     {
       "file": "casino-loop.js",
@@ -2871,8 +2871,8 @@
     },
     {
       "file": "guild-runtime.js",
-      "bytes": 27172,
-      "sha256": "b170a970404715bb9a3e4e41d39ace6cf1c7fdcc765f8acdf4191400bea17b5e"
+      "bytes": 27615,
+      "sha256": "7c3b70a28234c4692229f3029b2907be8b25fe6c688a1dc8cc3e681eb7c11778"
     },
     {
       "file": "guild-scenes.js",
@@ -3131,8 +3131,8 @@
     },
     {
       "file": "machines/dragon-race/player/visual.css",
-      "bytes": 565331,
-      "sha256": "be9af3632c5e6ba7175adf38b33766df9d2a0326d184071353864abfc1b44835"
+      "bytes": 565468,
+      "sha256": "9303d32dc17b8a35cdd429d1f8dc87ad6f89d3bdf949691afd013fd53ede18c3"
     },
     {
       "file": "machines/dragon-race/presentation-contract.js",
@@ -3286,13 +3286,13 @@
     },
     {
       "file": "stadium-runtime.js",
-      "bytes": 33930,
-      "sha256": "2fa2b0468b82190f8b545ffe36862b41d51024341cb742485c2be702b60e9b38"
+      "bytes": 34411,
+      "sha256": "a7932f954ed75304197fc47e077776d03f6d870b200f62914fc5cb0ca79d3177"
     },
     {
       "file": "visual.css",
-      "bytes": 509093,
-      "sha256": "c4cb3522d2403f685baa41bb46e22699a9dbaf7c81127d2987a4a634451edeee"
+      "bytes": 509230,
+      "sha256": "bd9288046a81b6ad1fac4f0c6021b6215136b62e95e72c457adc58e921267dfe"
     }
   ]
 }

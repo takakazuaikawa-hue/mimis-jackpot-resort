@@ -285,10 +285,11 @@
       $('Round').textContent='ALL CHAPTERS / CLEAR';$('Prep').textContent='制覇記録 '+state.clears+'回';
       $('Speaker').textContent='ミミ';$('Line').textContent='みんなで、ここまで来られたね。この一勝も、君との大切な思い出だよ。';
     }
-    [0,1,2].forEach(c=>{paintReel(c);const moving=!!spin&&spin.stopped[c]===null,queued=!!spin?.pendingStops.includes(c);$('Reels').children[c].classList.toggle('is-spinning',moving);stops[c].disabled=!moving||queued||modalOpen();stops[c].textContent=queued?`STOP ${c+1} 予約`:spin&&spin.stopped[c]!==null?`STOP ${c+1} ✓`:`STOP ${c+1}`;});
+    [0,1,2].forEach(c=>{paintReel(c);const moving=!!spin&&spin.stopped[c]===null,queued=!!spin?.pendingStops.includes(c);$('Reels').children[c].classList.toggle('is-spinning',moving);stops[c].disabled=!window.MimiCabinetArt.ready||!moving||queued||modalOpen();stops[c].textContent=queued?`STOP ${c+1} 予約`:spin&&spin.stopped[c]!==null?`STOP ${c+1} ✓`:`STOP ${c+1}`;});
     renderCommand();const command=!$('Command').hidden,token=command?state.pending+state.phase+state.round:'';
     if(token!==commandToken){commandToken=token;commandSince=performance.now();}if(command)nextQueued=false;if(state.phase==='complete')auto=false;
     $('Spin').disabled=modalOpen()||command&&!canAdvanceCommand();$('Spin').textContent=feature||command?'PUSH':nextQueued?'予約済み':spin?(nextReel()<0?'次ゲーム予約':`STOP ${nextReel()+1}`):state.replay||state.phase==='bonus'?'FREE SPIN':'SPIN';
+    if(!window.MimiCabinetArt.ready){$('Spin').disabled=!window.MimiCabinetArt.failed;$('Spin').textContent=window.MimiCabinetArt.failed?'図柄を再読込':'図柄読込中';}
     $('Auto').textContent=auto?(command&&!canAdvanceCommand()?'AUTO 待機':'AUTO ON'):'AUTO OFF';$('Auto').setAttribute('aria-pressed',String(auto));$('Turbo').textContent=turbo?'TURBO ON':'TURBO OFF';$('Turbo').setAttribute('aria-pressed',String(turbo));
     $('InputHint').textContent=command&&!canAdvanceCommand()?'画面の選択肢を選んでね':'SPACE / ボタン連打で進む';$('Home').setAttribute('aria-disabled',String(!!spin));
     if(spin&&!frame){last=performance.now();frame=requestAnimationFrame(tick);}syncTrialMotion();syncAudio();scheduleControls();
@@ -305,8 +306,9 @@
     else if(!$('Command').hidden){if(auto&&canAdvanceCommand())later(commandSince+(['reward','next','champion'].includes(state.pending)?(turbo?1600:2600):(turbo?600:1200)),()=>$('Choices').firstElementChild.click());}
     else if(auto||nextQueued)later(settledAt+(nextQueued?(turbo?140:300):(turbo?420:900)),start);
   }
-  function primary(){if(document.hidden||modalOpen())return;if(feature?.cinematic){if(feature.step<cinematicLastStep())cinematicStep(cinematicLastStep());else{dismissFeature();render();}return;}if(feature){dismissFeature();render();return;}if(!$('Command').hidden){if(canAdvanceCommand())$('Choices').firstElementChild.click();return;}if(!spin){if(performance.now()<settledAt+(turbo?140:300)){nextQueued=true;render();}else start();return;}const col=nextReel();if(col>=0)stop(col);else{nextQueued=true;render();}}
+  function primary(){if(!window.MimiCabinetArt.ready){if(window.MimiCabinetArt.failed)window.MimiCabinetArt.retry();render();return;}if(document.hidden||modalOpen())return;if(feature?.cinematic){if(feature.step<cinematicLastStep())cinematicStep(cinematicLastStep());else{dismissFeature();render();}return;}if(feature){dismissFeature();render();return;}if(!$('Command').hidden){if(canAdvanceCommand())$('Choices').firstElementChild.click();return;}if(!spin){if(performance.now()<settledAt+(turbo?140:300)){nextQueued=true;render();}else start();return;}const col=nextReel();if(col>=0)stop(col);else{nextQueued=true;render();}}
   function start(){
+    if(!window.MimiCabinetArt.ready)return;
     if(spin||feature||!$('Command').hidden||modalOpen()||document.hidden||state.phase==='complete')return;
     const free=state.replay||state.phase==='bonus';if(!free&&state.credit<BET)return;
     clearSceneMotion();
@@ -320,7 +322,7 @@
     if(sound)audio.spinStart();save();render();
     window.dispatchEvent(new CustomEvent('mimi:cabinet-input', {detail:{machineId:'arena',type:'spin-start',transactionId:spin.session.id}}));
   }
-  function stop(col){if(!spin||!Number.isInteger(col)||col<0||col>2||spin.stopped[col]!==null||spin.pendingStops.includes(col)||modalOpen()||document.hidden)return;if(sessions.queueStop(spin.session,col)){save();render();}}
+  function stop(col){if(!window.MimiCabinetArt.ready||!spin||!Number.isInteger(col)||col<0||col>2||spin.stopped[col]!==null||spin.pendingStops.includes(col)||modalOpen()||document.hidden)return;if(sessions.queueStop(spin.session,col)){save();render();}}
   function commitStop(col){
     if(!spin||col===null||spin.stopped[col]!==null)return;const decision=core.chooseStop({col,flag:spin.flag,stopped:sessions.knownStops(spin.session),natural:positions[col]});if(!sessions.recordStop(spin.session,col,decision))return;
     spin.pendingStops=spin.session.pendingStopQueue;spin.stopped[col]=decision.index;spin.braking[col]=true;spin.lastStopAt=performance.now();positions[col]=decision.index;
@@ -353,6 +355,7 @@
     window.dispatchEvent(new CustomEvent('mimi:arena-settled',{detail:{games:state.games,payout:out.payout,damage:result.damage,kind:result.kind}}));
   }
   function tick(now){frame=0;if(!spin)return;const dt=Math.min((now-last)/1000,.1);last=now;[0,1,2].forEach(c=>{if(spin.stopped[c]===null){positions[c]=core.mod(positions[c]-dt*(turbo?34:24),core.stripLength(c));paintReel(c);}});frame=requestAnimationFrame(tick);}
+  window.addEventListener('mimi:cabinet-art',render);
   $('Spin').addEventListener('click',primary);$('FeatureContinue').addEventListener('click',primary);$('CinemaContinue').addEventListener('click',primary);stops.forEach((b,c)=>b.addEventListener('click',()=>stop(c)));
   $('Auto').addEventListener('click',()=>{if(auto)pause();else{auto=true;if(!$('Command').hidden)commandSince=performance.now();}render();});$('Turbo').addEventListener('click',()=>{turbo=!turbo;save();render();});
   $('Home').addEventListener('click',e=>{if(spin)e.preventDefault();else{pause();save();audioEnabled(false);}});

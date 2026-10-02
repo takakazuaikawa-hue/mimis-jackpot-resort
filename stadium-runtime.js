@@ -226,6 +226,7 @@
     }
   }
   function primary() {
+    if (!window.MimiCabinetArt.ready) { if (window.MimiCabinetArt.failed) window.MimiCabinetArt.retry(); render(); return; }
     if (document.hidden || $("Guide").open) return;
     if (feature) { dismissFeature(); render(); }
     if (!$("Command").hidden) { if (canAdvanceCommand()) $("Choices").firstElementChild.click(); return; }
@@ -305,7 +306,7 @@
       const moving = Boolean(spin && spin.stopped[c] === null);
       $("Reels").children[c].classList.toggle("is-spinning", moving);
       const queued = Boolean(spin?.pendingStops.includes(c));
-      stops[c].disabled = !moving || queued || $("Guide").open;
+      stops[c].disabled = !window.MimiCabinetArt.ready || !moving || queued || $("Guide").open;
       stops[c].textContent = queued ? `STOP ${c + 1} 予約` : spin?.stopped[c] !== null && spin ? `STOP ${c + 1} ✓` : `STOP ${c + 1}`;
     });
     renderBattingResult();
@@ -320,6 +321,7 @@
     if (state.phase === "complete") auto = false;
     $("Spin").disabled = (command && !canAdvanceCommand() && !feature) || $("Guide").open;
     $("Spin").textContent = feature || command ? "PUSH" : nextQueued ? "予約済み" : spin ? (nextReel() < 0 ? "次ゲーム予約" : `STOP ${nextReel() + 1}`) : state.phase === "bonus" || state.replay ? "FREE SPIN" : "SPIN";
+    if (!window.MimiCabinetArt.ready) { $("Spin").disabled = !window.MimiCabinetArt.failed; $("Spin").textContent = window.MimiCabinetArt.failed ? "図柄を再読込" : "図柄読込中"; }
     $("Cabinet").dataset.input = spin && nextReel() < 0 || nextQueued ? "queued" : "ready";
     $("Cabinet").dataset.auto = String(auto); $("Cabinet").dataset.turbo = String(turbo);
     $("Auto").setAttribute("aria-pressed", String(auto)); $("Turbo").setAttribute("aria-pressed", String(turbo));
@@ -333,6 +335,7 @@
     renderMusic();
   }
   function start() {
+    if (!window.MimiCabinetArt.ready) return;
     if (spin || feature || !$("Command").hidden || $("Guide").open || document.hidden || state.phase === "complete") return;
     const free = state.replay || state.phase === "bonus";
     if (!free && state.credit < BET) return;
@@ -349,7 +352,7 @@
     window.dispatchEvent(new CustomEvent('mimi:cabinet-input', {detail:{machineId:'stadium',type:'spin-start',transactionId:spin.session.id}}));
   }
   function stop(col) {
-    if (!spin || !Number.isInteger(col) || col < 0 || col > 2 || spin.stopped[col] !== null || spin.pendingStops.includes(col) || $("Guide").open || document.hidden) return;
+    if (!window.MimiCabinetArt.ready || !spin || !Number.isInteger(col) || col < 0 || col > 2 || spin.stopped[col] !== null || spin.pendingStops.includes(col) || $("Guide").open || document.hidden) return;
     if (sessions.queueStop(spin.session, col)) { save(); render(); }
   }
   function commitStop(col) {
@@ -413,6 +416,7 @@
     [0, 1, 2].forEach(c => { if (spin.stopped[c] === null) { positions[c] = core.mod(positions[c] - dt * (turbo ? 34 : 24), core.stripLength(c)); paintReel(c); } });
     frame = requestAnimationFrame(tick);
   }
+  window.addEventListener("mimi:cabinet-art", render);
   $("Spin").addEventListener("click", primary);
   $("FeatureContinue").addEventListener("click", primary);
   $("Auto").addEventListener("click", () => { if (auto) pause(); else auto = true; render(); });

@@ -8156,6 +8156,7 @@ body[data-cabinet-layout="desktop-v5"] .casino-table-hud { bottom: 4.5%; width: 
   [data-response-cabinet="arena"] { --response-light: #71e9e9; --response-dim: #244957; --response-metal: #ddc9a4; }
   [data-response-cabinet="guild"] { --response-light: #ffe49d; --response-dim: #594c2e; --response-metal: #b89b5e; }
   [data-response-cabinet="dragon-race"] { --response-light: #81e2cf; --response-dim: #264a45; --response-metal: #c7a566; }
+  [data-cabinet-art]:not([data-cabinet-art="ready"]) :is(.stadium-spin, .arena-spin, .guild-spin) { font-size: 13px; line-height: 1.6; }
   [data-response-phase="boss"] { --response-light: #eb94b8; }
   [data-response-phase="bonus"], [data-response-mode="win"] { --response-light: #ffe3a1; }
   :is(.stadium-theater, .arena-theater, .guild-stage, .game-shell[data-active-machine="dragon-race"] .dragon-stage) { isolation: isolate; }
