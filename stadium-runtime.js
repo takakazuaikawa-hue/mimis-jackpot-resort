@@ -308,7 +308,9 @@
     } else if (state.phase === "complete") { $("PrepLabel").textContent = "全4球団突破"; $("Prep").textContent = "CHAMPIONS"; }
     $("Games").textContent = `${state.games} G`;
     $("Progress").textContent = state.phase === "complete" ? "全4球団突破 · ミミと固定ナインの勝利" : state.phase === "bonus" ? state.bonus ? "10Gの無料ボーナス · 配当は今回のボーナス分を表示" : "10G完走 · 獲得配当を記録しました" : "成立役で出塁・長打。4球団を打ち抜こう。";
-    $("Line").textContent = resultText; $("Speaker").textContent = resultHeadline || "ミミ";
+    $("Line").textContent = resultText; $("Speaker").textContent = resultVoiceActor?.name || resultHeadline || "ミミ";
+    $("NextBatter").textContent = !spin && resultVoiceActor && !state.pending && !state.replay ? '次打者 · '+flow.PLAYERS[state.batter].name : '';
+    $("NextBatter").hidden = !$("NextBatter").textContent;
     $("Cinema").hidden = !resultActor || !resultHeadline || Boolean(state.pending) || state.phase === "complete" || state.phase === "bonus";
     if (resultActor && resultHeadline) { imageSource($("BattingArt"), resultActor.batting); $("BattingArt").alt = `${resultActor.name}の打撃`; $("Hit").textContent = resultHeadline; }
     [0, 1, 2].forEach(c => {
@@ -357,7 +359,8 @@
     attachSession(spin);
     resultActor = null; resultVoiceActor = null; resultHeadline = ""; resultDetail = null;
     resultVoiceActor = null;
-    resultText = state.phase === 'normal' ? flow.PLAYERS[state.batter].name+'「'+batterVoices[flow.PLAYERS[state.batter].number][0]+'」' : '勝利の一周も、みんなで走ろう！';
+    resultText = state.phase === 'normal' ? batterVoices[flow.PLAYERS[state.batter].number][0] : '勝利の一周も、みんなで走ろう！';
+    if (state.phase === 'normal') resultHeadline = flow.PLAYERS[state.batter].name;
     $("Cabinet").dataset.heat = ["bar", "seven_blue", "seven_red"].includes(flag) ? "strong" : "normal";
     document.querySelectorAll(".stadium-symbol.is-win").forEach(n => n.classList.remove("is-win"));
     if (sound) audio.spinStart(); save(); render();
@@ -406,8 +409,8 @@
     }
     resultVoiceActor = previousPhase === 'normal' ? settled.actor : null;
     if (resultVoiceActor) {
-      resultText += ' '+resultVoiceActor.name+'「'+batterVoices[resultVoiceActor.number][settled.hit?1:2]+'」';
-      if (!state.pending && !result.replayHit) resultText += ' 次打者：'+flow.PLAYERS[state.batter].name;
+      resultText = batterVoices[resultVoiceActor.number][settled.hit?1:2];
+      if (state.augment && !settled.hit && !result.replayHit) resultText += ' 改造は継続、次のヒットがホームラン！';
     }
     if (armed && !state.augment && settled.hit) {
       presentFeature("activate", armed, settled.actor, result.payout);

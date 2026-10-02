@@ -720,7 +720,12 @@
     }
     const conversation = roadTalk(member, tour);
     attr(root,'travelTalk',Boolean(conversation));
-    if (conversation) speaker(conversation[0] === 'ミミ' ? 'mimi' : member.id, conversation[1]);
+    if (conversation) {
+      const id = conversation[0] === 'ミミ' ? 'mimi' : member.id;
+      speaker(id, conversation[1]);
+      picture(el('.dragon-travel-portrait'), content.CAST[id].source);
+      el('.dragon-travel-portrait').alt = content.CAST[id].name;
+    }
     attr(root,"hasCall", Boolean(el(".dragon-line").textContent));
     text(".dragon-next", command === 0 ? "PUSH" : locked ? mode === "result" ? "PUSHで次へ" : "判定中" : api.state.spinning ? "STOP" : "SPIN");
     text(".dragon-save-error", saveConflict ? "別のタブで記録が更新されました。このタブは停止中です。再読み込みして続きを遊んでください。" : saveError ? "記録を保存できません。空き容量を確認してください。" : "");
@@ -1145,7 +1150,7 @@
       <ol class="dragon-lineup" aria-label="出走する竜"><li></li><li></li><li></li></ol>
       <div class="dragon-course"><div class="dragon-finish"></div>${[0, 1, 2].map(i => `<div class="dragon-runner runner-${i}"><canvas width="192" height="144" role="img"></canvas><span class="dragon-pick"></span></div>`).join("")}</div>
       <div class="dragon-streets"><span class="dragon-street">追走</span><span class="dragon-street">全速の直線</span><span class="dragon-street">写真判定</span></div>
-      <div class="dragon-story"><span class="dragon-speaker"></span><p class="dragon-line"></p><b class="dragon-next"></b></div>
+      <div class="dragon-story"><span class="dragon-travel-face"><img class="dragon-travel-portrait" alt=""></span><span class="dragon-speaker"></span><p class="dragon-line"></p><b class="dragon-next"></b></div>
       <div class="dragon-result" role="status"></div><div class="dragon-award"><span>WIN</span><strong>0</strong></div><div class="dragon-verdict"></div>
       <div class="dragon-milestone"><strong></strong><span></span></div><div class="dragon-new-reward" role="status"></div>
       <div class="dragon-retry" hidden><strong></strong><b aria-hidden="true"><i></i><i></i><i></i><i></i></b><span></span></div>

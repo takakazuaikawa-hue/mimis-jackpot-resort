@@ -1,8 +1,8 @@
 {
   "status": "PC PLAYTEST / PRODUCTION QUALITY UNAPPROVED",
-  "createdAt": "2026-10-02T13:52:29.791Z",
+  "createdAt": "2026-10-02T15:00:14.080Z",
   "entry": "index.html",
-  "bytes": 930251015,
+  "bytes": 930264921,
   "files": [
     {
       "file": "arena-flow.js",
@@ -2921,8 +2921,8 @@
     },
     {
       "file": "guild-runtime.js",
-      "bytes": 27671,
-      "sha256": "a5e2ce7173d227a2b97fa6e6d7a487b4e1de268ad6718c094fde96caf856d595"
+      "bytes": 27950,
+      "sha256": "1f4ba3f1a50199f0e4d156df8f4384b8b20584a0c706d0021d68bb635cdf9bc7"
     },
     {
       "file": "guild-scenes.js",
@@ -2936,13 +2936,13 @@
     },
     {
       "file": "index-guild.html",
-      "bytes": 7856,
-      "sha256": "6bfb99b078fd3e61e87eaca5eff126e3b81134b8cd1deef8841c7324431ac855"
+      "bytes": 7944,
+      "sha256": "b8717bb32a3d59c74e667ca05aa51dbfd360fe299a311750925ce52f6b4cdf5a"
     },
     {
       "file": "index-stadium.html",
-      "bytes": 8829,
-      "sha256": "20545c663bc7293231050631108162f369b2df16a39c03240f35ebb022fe3abf"
+      "bytes": 8900,
+      "sha256": "0d65534f3cc236c78f824a20cf2c689f6efd9613203830213d8a9d691e18fb68"
     },
     {
       "file": "index-v5.html",
@@ -3181,8 +3181,8 @@
     },
     {
       "file": "machines/dragon-race/player/visual.css",
-      "bytes": 567097,
-      "sha256": "0ed191b065ef316db2c0257b2da629fc71c35f995619f3514d5349f75ccf2b5b"
+      "bytes": 573573,
+      "sha256": "956ed5559f3d981aee065c6aff489f2ee75f85d84931d1c250408e91dd0603b6"
     },
     {
       "file": "machines/dragon-race/presentation-contract.js",
@@ -3196,8 +3196,8 @@
     },
     {
       "file": "machines/dragon-race/runtime.js",
-      "bytes": 94972,
-      "sha256": "28b2edf9c024090c472ff70bc2caea9f5cd4315f92cc0a3170d23c77253c790c"
+      "bytes": 95226,
+      "sha256": "cc82cac7b77850e5d72e3434792dd86d59a5b64e3dbf7141d0d88a09924d9c27"
     },
     {
       "file": "machines/dragon-race/spectacle.js",
@@ -3336,13 +3336,13 @@
     },
     {
       "file": "stadium-runtime.js",
-      "bytes": 36955,
-      "sha256": "b149184220ef62f9e1853dcb49383a287f7a6bd11ef29fbb8a8f2cad54c4d875"
+      "bytes": 37217,
+      "sha256": "a1ecf467142010f434e752e3353d6debca703f8558aa7dd15b65256eab226f59"
     },
     {
       "file": "visual.css",
-      "bytes": 510859,
-      "sha256": "330274d743ee36a9305c6b3b182a5862a755c7e9305725383a4cecc185c6c31a"
+      "bytes": 517335,
+      "sha256": "c185a01f8127a726774a12ae879801dc67e6b060d9fa5ff9e1ca56e0a1c71e61"
     }
   ]
 }
