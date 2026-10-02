@@ -9,6 +9,33 @@
   audio.setMusicVolume(0.15);
   let castChoice = -1;
   let trialMotionFailed=false;
+  let spellOwner=null,spellLoadingTimer=0,spellStatus='';
+  function stopSpell(){
+    clearTimeout(spellLoadingTimer);spellLoadingTimer=0;spellOwner=null;spellStatus='';
+    const video=$('SpellVideo');video.pause();video.hidden=true;
+  }
+  function spellFallback(owner){
+    if(!owner||spellOwner!==owner||feature!==owner)return;
+    stopSpell();owner.until=performance.now()+cinematicDuration(owner.step);
+    if(document.hidden||modalOpen())owner.remaining=cinematicDuration(owner.step);
+    render();
+  }
+  function syncSpell(){
+    const video=$('SpellVideo'),enabled=feature?.cinematic&&!feature.trialOutcome&&feature.step<2&&!reduced.matches;
+    if(!enabled){if(spellOwner)stopSpell();return;}
+    if(spellOwner!==feature&&!feature.videoAttempted){
+      const owner=feature;owner.videoAttempted=true;spellOwner=owner;spellStatus='loading';
+      video.hidden=true;video.muted=true;video.playbackRate=turbo?1.5:1;
+      // The settled game owns damage. Media is optional and never gates PUSH.
+      if(!video.getAttribute('src'))video.src='./assets/arena/blackstar-release-hf-v1.mp4';
+      else if(video.error)video.load();
+      else if(video.readyState)video.currentTime=0;
+      spellLoadingTimer=setTimeout(()=>spellFallback(owner),5000);
+    }
+    if(spellOwner!==feature)return;
+    if(document.hidden||modalOpen()){video.pause();return;}
+    if(video.paused){const owner=spellOwner;video.play().catch(()=>spellFallback(owner));}
+  }
   function syncTrialMotion(){
     const video=$('TrialMotion'),enabled=state.phase==='trial'&&!state.pending&&!reduced.matches&&!trialMotionFailed;
     if(!video.getAttribute('src'))return;
@@ -62,6 +89,7 @@
   function cinematicLastStep(){return feature?.trialOutcome?2:3;}
   function cinematicDuration(step){return reduced.matches?(step===cinematicLastStep()?1200:0):(feature?.trialOutcome?[450,950,1800][step]:[650,750,850,1800][step])*(feature?.speed||1);}
   function cinematicStep(step){
+    if(step>=2)stopSpell();
     audio.stopEffects();clearSceneMotion();feature.step=step;feature.until=performance.now()+cinematicDuration(step);render();
     if(sound&&!document.hidden&&!modalOpen()){
       if(feature.trialOutcome){if(step===1)audio.cue(feature.trialOutcome==='trialWin'?'commandReady':'notice');}
@@ -69,7 +97,7 @@
     }
     if(step<cinematicLastStep())animateScene($('CinemaArt'),[{transform:feature.trialOutcome?'scale(1.025)':step===2?'scale(1.07) translateX(-14px)':'scale(1.025)'},{transform:'scale(1) translateX(0)'}],feature.trialOutcome?1100:step===2?500:1000);
   }
-  function freezeScene(){if(feature&&!Number.isFinite(feature.remaining))feature.remaining=Math.max(0,feature.until-performance.now());sceneAnimations.forEach(a=>{if(a.playState==='running')a.pause();});}
+  function freezeScene(){if(feature&&!Number.isFinite(feature.remaining))feature.remaining=Math.max(0,feature.until-performance.now());$('SpellVideo').pause();sceneAnimations.forEach(a=>{if(a.playState==='running')a.pause();});}
   function resumeScene(){if(document.hidden||modalOpen())return;if(feature&&Number.isFinite(feature.remaining)){feature.until=performance.now()+feature.remaining;delete feature.remaining;}sceneAnimations.forEach(a=>{if(a.playState==='paused')a.play();});}
   let sceneAnimations = [];
   function clearSceneMotion() { sceneAnimations.forEach(a=>a.cancel()); sceneAnimations=[]; }
@@ -151,13 +179,15 @@
   $('Reels').innerHTML=[0,1,2].map(c=>`<div class="arena-reel" aria-label="リール${c+1}">${[0,1,2].map(()=>'<div class="arena-symbol"><img alt=""></div>').join('')}</div>`).join('');
   $('BonusLamps').innerHTML=Array.from({length:10},()=>'<i></i>').join('');
   function chooseCast(index){castChoice=index;save();$('CastPicker').close();render();}
-  flow.CAST.forEach((actor,index)=>{const button=document.createElement('button');button.type='button';button.setAttribute('aria-label',actor.name+'を選ぶ');const img=document.createElement('img');img.src=actor.battleArt||actor.image;img.className=actor.battleArt?'is-authored':'';img.alt='';const name=document.createElement('strong');name.textContent=actor.name;const role=document.createElement('small');role.textContent=actor.technique+' / '+actor.role;button.append(img,name,role);button.addEventListener('click',()=>chooseCast(index));$('CastGrid').append(button);});
+  flow.CAST.forEach((actor,index)=>{const button=document.createElement('button');button.type='button';button.setAttribute('aria-label',actor.name+'を選ぶ');const img=document.createElement('img');img.loading='lazy';img.fetchPriority='low';img.src=actor.battleArt||actor.image;img.className=actor.battleArt?'is-authored':'';img.alt='';const name=document.createElement('strong');name.textContent=actor.name;const role=document.createElement('small');role.textContent=actor.technique+' / '+actor.role;button.append(img,name,role);button.addEventListener('click',()=>chooseCast(index));$('CastGrid').append(button);});
   $('CastRotate').addEventListener('click',()=>chooseCast(-1));
   $('CastOpen').addEventListener('click',()=>{if(spin||feature)return;pause();freezeScene();audioEnabled(false);$('CastPicker').showModal();render();});
   $('CastClose').addEventListener('click',()=>$('CastPicker').close());
   $('CastPicker').addEventListener('close',()=>{resumeScene();audioEnabled(sound&&!document.hidden&&!modalOpen());render();});
-  [...flow.CAST.filter(a=>a.battleArt).map(a=>a.battleArt),...flow.ALLIES.map(a=>a.image),...Object.values(cinematicArt),...Object.values(trialOutcomeArt),...bossScenes.flatMap(s=>Object.values(s.art)),...blackstarShots,...Object.values(tokimekiScenes).map(s=>s.image),...flow.BOSSES.map(b=>b.image),...core.SYMBOLS.map(s=>symbolPath+s.img)].forEach(src=>{const img=new Image();img.src=src;});
+  const warmedArt=new Set();
+  function warmArt(src){if(!src||warmedArt.has(src))return;warmedArt.add(src);const img=new Image();img.fetchPriority='low';img.src=src;}
   function advance(action) {
+    stopSpell();
     audio.stopEffects();clearSceneMotion();
     const before=state; state=flow.advance(state,action); result=null; feature=null; nextQueued=false;
     if (action==='strike'||action==='guard') resultText=action==='strike' ? '黒星、準備完了！ 次の非REPLAYで4ダメージを追加するよ。' : '隔壁、準備完了！ 次の非REPLAYで回復して反撃だよ。';
@@ -292,16 +322,17 @@
     if(!window.MimiCabinetArt.ready){$('Spin').disabled=!window.MimiCabinetArt.failed;$('Spin').textContent=window.MimiCabinetArt.failed?'図柄を再読込':'図柄読込中';}
     $('Auto').textContent=auto?(command&&!canAdvanceCommand()?'AUTO 待機':'AUTO ON'):'AUTO OFF';$('Auto').setAttribute('aria-pressed',String(auto));$('Turbo').textContent=turbo?'TURBO ON':'TURBO OFF';$('Turbo').setAttribute('aria-pressed',String(turbo));
     $('InputHint').textContent=command&&!canAdvanceCommand()?'画面の選択肢を選んでね':'SPACE / ボタン連打で進む';$('Home').setAttribute('aria-disabled',String(!!spin));
-    if(spin&&!frame){last=performance.now();frame=requestAnimationFrame(tick);}syncTrialMotion();syncAudio();scheduleControls();
+    if(spin&&!frame){last=performance.now();frame=requestAnimationFrame(tick);}syncTrialMotion();syncSpell();syncAudio();scheduleControls();window.MimiCabinetCommands.render();
+    if(window.MimiCabinetArt.ready){warmArt(state.phase==='trial'?trialOutcomeArt.trialWin:state.phase==='battle'?currentPerformer().battleArt:null);}
   }
-  function dismissFeature(){audio.stopEffects();clearSceneMotion();feature=null;}
+  function dismissFeature(){stopSpell();audio.stopEffects();clearSceneMotion();feature=null;}
   function canAdvanceCommand(){return ['explore','trial','trialWin','intro','reward','next','champion'].includes(state.pending);}
   function nextReel(){return spin?spin.stopped.findIndex((n,c)=>n===null&&!spin.pendingStops.includes(c)):-1;}
   function pause(){auto=false;nextQueued=false;clearTimeout(controlTimer);controlEpoch++;}
   function scheduleControls(){
     clearTimeout(controlTimer);const epoch=++controlEpoch,transaction=spin,now=performance.now();if(document.hidden||modalOpen())return;
     const later=(due,action)=>{controlTimer=setTimeout(()=>{if(epoch===controlEpoch&&spin===transaction&&!document.hidden&&!modalOpen())action();},Math.max(0,due-now));};
-    if(feature){if(feature.cinematic&&feature.step<cinematicLastStep())later(feature.until,()=>cinematicStep(feature.step+1));else if(auto||nextQueued)later(feature.until,()=>{dismissFeature();render();});return;}
+    if(feature){if(spellOwner===feature&&spellStatus==='loading')return;if(feature.cinematic&&feature.step<cinematicLastStep())later(feature.until,()=>cinematicStep(spellOwner===feature?2:feature.step+1));else if(auto||nextQueued)later(feature.until,()=>{dismissFeature();render();});return;}
     if(spin){if(spin.pendingStops.length)later(spin.started+420,()=>commitStop(sessions.takeReadyStop(spin.session,()=>true)));else if(auto&&nextReel()>=0)later(spin.lastStopAt?spin.lastStopAt+(turbo?200:320):spin.started+(turbo?420:900),()=>stop(nextReel()));}
     else if(!$('Command').hidden){if(auto&&canAdvanceCommand())later(commandSince+(['reward','next','champion'].includes(state.pending)?(turbo?1600:2600):(turbo?600:1200)),()=>$('Choices').firstElementChild.click());}
     else if(auto||nextQueued)later(settledAt+(nextQueued?(turbo?140:300):(turbo?420:900)),start);
@@ -363,8 +394,16 @@
   $('Sound').addEventListener('click',()=>{sound=!sound;if(sound)audio.unlock();audioEnabled(sound);$('Sound').textContent=sound?'SOUND ON':'SOUND OFF';$('Sound').setAttribute('aria-pressed',String(sound));if(sound)audio.cue('commandOpen');syncAudio();});
   window.addEventListener('keydown',e=>{if(e.repeat||e.altKey||e.ctrlKey||e.metaKey||modalOpen())return;if(e.code==='Space'&&(e.target===document.body||e.target===$('Spin')||stops.includes(e.target))){e.preventDefault();primary();}if(['Digit1','Digit2','Digit3'].includes(e.code)){e.preventDefault();stop(Number(e.code.slice(-1))-1);}});
   $('TrialMotion').addEventListener('loadeddata',syncTrialMotion);
+  $('SpellVideo').addEventListener('playing',()=>{
+    const owner=spellOwner;if(!owner||owner!==feature)return;
+    clearTimeout(spellLoadingTimer);spellStatus='playing';$('SpellVideo').hidden=false;
+    owner.until=performance.now()+(Number.isFinite($('SpellVideo').duration)?Math.max(0,$('SpellVideo').duration-$('SpellVideo').currentTime)*1000/$('SpellVideo').playbackRate:5100)+750;
+    render();
+  });
+  $('SpellVideo').addEventListener('ended',()=>{if(spellOwner===feature&&feature&&!document.hidden&&!modalOpen())cinematicStep(2);});
+  $('SpellVideo').addEventListener('error',()=>spellFallback(spellOwner));
   $('TrialMotion').addEventListener('error',()=>{trialMotionFailed=true;$('TrialMotion').hidden=true;$('TrialMotion').pause();});
-  reduced.addEventListener('change',()=>{clearSceneMotion();syncTrialMotion();});
-  window.addEventListener('resize',resize);document.addEventListener('visibilitychange',()=>{if(document.hidden){pause();freezeScene();}else resumeScene();audioEnabled(sound&&!document.hidden&&!modalOpen());render();});window.addEventListener('pagehide',()=>{pause();save();$('TrialMotion').pause();audioEnabled(false);});
+  reduced.addEventListener('change',()=>{clearSceneMotion();syncTrialMotion();if(reduced.matches&&feature?.cinematic)cinematicStep(cinematicLastStep());else render();});
+  window.addEventListener('resize',resize);document.addEventListener('visibilitychange',()=>{if(document.hidden){pause();freezeScene();}else resumeScene();audioEnabled(sound&&!document.hidden&&!modalOpen());render();});window.addEventListener('pagehide',()=>{pause();freezeScene();save();$('TrialMotion').pause();audioEnabled(false);});
   audioEnabled(false);resize();save();render();if(spin?.stopped.every(n=>n!==null))settle();$('Cabinet').dataset.runtimeReady='true';
 })();

@@ -62,11 +62,8 @@
     const scale = Math.min(innerWidth / 1280, innerHeight / 720);
     $("Cabinet").style.transform = `translate(-50%, -50%) scale(${scale})`;
   }
-  function preload(src) { const img = new Image(); img.src = src; }
-  core.SYMBOLS.forEach(s => preload(symbolPath + s.img));
-  flow.TEAMS.forEach(t => preload(t.image));
-  flow.PLAYERS.forEach(p => preload(p.image));
-  [ART + "victory-stage.png", ART + "surgery-stage.png", ART + "activation-stage.png", ...Object.values(MODS).map(m => m.art)].forEach(preload);
+  const preloaded = new Set();
+  function preload(src) { if(preloaded.has(src))return;preloaded.add(src);const img = new Image();img.fetchPriority="low";img.src = src; }
   function imageSource(node, src) { if (node.getAttribute("src") !== src) node.src = src; }
   function paintReel(col) {
     const cells = $("Reels").children[col].children;
@@ -228,7 +225,7 @@
   function primary() {
     if (!window.MimiCabinetArt.ready) { if (window.MimiCabinetArt.failed) window.MimiCabinetArt.retry(); render(); return; }
     if (document.hidden || $("Guide").open) return;
-    if (feature) { dismissFeature(); render(); }
+    if (feature) { dismissFeature(); render(); return; }
     if (!$("Command").hidden) { if (canAdvanceCommand()) $("Choices").firstElementChild.click(); return; }
     if (!spin) {
       if (performance.now() < settledAt + (turbo ? 140 : 300)) { nextQueued = true; render(); }
@@ -329,10 +326,11 @@
     $("Turbo").textContent = turbo ? "TURBO ON" : "TURBO OFF";
     $("Home").setAttribute("aria-disabled", String(Boolean(spin)));
     $("InputHint").textContent = feature ? "PUSH / SPACEで次へ" : nextQueued ? "判定後に1ゲーム開始" : command && !canAdvanceCommand() ? "画面の選択肢を選んでね" : "ボタン / SPACE 連打で進む";
-    preload(flow.PLAYERS[state.batter].batting);
+    if(window.MimiCabinetArt.ready){preload(flow.PLAYERS[state.batter].batting);preload(flow.PLAYERS[(state.batter+1)%flow.PLAYERS.length].image);}
     if (spin && !frame) { last = performance.now(); frame = requestAnimationFrame(tick); }
     scheduleControls();
     renderMusic();
+    window.MimiCabinetCommands.render();
   }
   function start() {
     if (!window.MimiCabinetArt.ready) return;

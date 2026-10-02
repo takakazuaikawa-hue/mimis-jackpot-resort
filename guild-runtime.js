@@ -50,7 +50,7 @@
     if(!state.replay&&state.phase!=='bonus'&&state.credit<BET)return {text:'CREDIT不足です。無料で300補充できます。',choices:[['CREDITを300補充','refill']],safe:false,key:'refill'};
     return null;
   }
-  function advance(action){if(spin||feature||paused())return;state=flow.advance(state,action);result=null;resultView=null;reaction=null;queued=false;if(action==='restart')document.querySelectorAll('.guild-symbol.is-win').forEach(n=>n.classList.remove('is-win'));speaker='ミミ';line=action==='intro'?flow.TOWNS[state.round].reply:action==='rumor'?'噂をひとつ。次の勝負は、街じゅうが見ていますよ！':action==='tea'?'ひと息つきましょう。お茶なら、まだありますから。':action==='reward'?'相手だった皆さんも、今夜は一緒のテーブルです。':action==='final'?'嘘つきばかりで、にぎやかですね。……お茶、もう一杯いかがですか？':'さあ、次の一手をどうぞ！';if(sound)audio.cue(action==='reward'?'bonus':'commandAdvance');const storyKind={welcome:'opening',success:'duel',reward:'after'}[action],storyId=action==='final'?'homecoming':storyKind?storyKind+'-'+state.round:null;if(storyId)beginFeature(scenes.story(storyId),storyId);else beginFeature(scenes.action(action,state,flow.TOWNS[state.round]));save();render();}
+  function advance(action){if(spin||feature||paused())return;state=flow.advance(state,action);result=null;resultView=null;reaction=null;queued=false;if(action==='restart')document.querySelectorAll('.guild-symbol.is-win').forEach(n=>n.classList.remove('is-win'));speaker='ミミ';line=action==='intro'?flow.TOWNS[state.round].reply:action==='rumor'?'噂をひとつ。次の勝負は、街じゅうが見ていますよ！':action==='tea'?'ひと息つきましょう。お茶なら、まだありますから。':action==='reward'?'相手だった皆さんも、今夜は一緒のテーブルです。':action==='final'?'嘘つきばかりで、にぎやかですね。……お茶、もう一杯いかがですか？':'さあ、次の一手をどうぞ！';if(sound)audio.cue(action==='reward'?'bonus':'commandAdvance');const storyKind={welcome:'opening',success:'duel',reward:'after'}[action],storyId=action==='final'?'homecoming':action==='trial'&&state.round===0?'bell-chest':storyKind?storyKind+'-'+state.round:null;if(storyId)beginFeature(scenes.story(storyId),storyId);else beginFeature(scenes.action(action,state,flow.TOWNS[state.round]));save();render();}
   function render(){
     const t=flow.TOWNS[state.round],p=state.phase,cmd=command();
     const aim=presentation.objective(state),reach=spin?presentation.anticipation(spin.stopped):null;
@@ -98,7 +98,7 @@
     stops.forEach((b,c)=>{b.disabled=!window.MimiCabinetArt.ready||!spin||spin.stopped[c]!==null||spin.pendingStops.includes(c);b.textContent=spin?.pendingStops.includes(c)?'停止予約':`STOP ${c+1}`;});
     $('Auto').textContent=auto?'AUTO ON':'AUTO OFF';$('Auto').setAttribute('aria-pressed',String(auto));$('Turbo').textContent=turbo?'TURBO ON':'TURBO OFF';$('Turbo').setAttribute('aria-pressed',String(turbo));
     $('Route').innerHTML=flow.TOWNS.map((town,i)=>`<li class="${i<state.recruited?'is-ally':i===state.round?'is-current':''}">${i<state.recruited?`<img src="${town.portrait}" alt="">`:''}<span>${i<state.recruited?town.boss+' · 仲間':town.name}</span></li>`).join('');$('Games').textContent=`${state.games} G`;
-    positions.forEach((_,c)=>paint(c));syncAudio();schedule();
+    positions.forEach((_,c)=>paint(c));syncAudio();schedule();window.MimiCabinetCommands.render();
     if(spin&&!paused()&&!frame){last=performance.now();frame=requestAnimationFrame(tick);}else if((!spin||paused())&&frame){cancelAnimationFrame(frame);frame=0;}
   }
   function nextReel(){return spin?spin.stopped.findIndex((n,c)=>n===null&&!spin.pendingStops.includes(c)):-1;}

@@ -7794,6 +7794,7 @@ body[data-cabinet-layout="desktop-v5"] .casino-table-hud { bottom: 4.5%; width: 
 .arena-cast-picker button[aria-pressed='true'] { border-color:#ffdb88; box-shadow:inset 0 0 0 2px #ffdb88; background-color:#254854; }
 .arena-cinema { position:absolute; inset:0; z-index:12; background:#020c18; overflow:hidden; }
 .arena-cinema>img { width:100%; height:100%; object-fit:cover; object-position:center; }
+.arena-spell-video { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; pointer-events:none; }
 .arena-cinema[data-step='1']>img { object-position:center 42%; }
 .arena-cinema-shade { position:absolute; inset:0; background:linear-gradient(0deg,#010916ee,transparent 60%),linear-gradient(90deg,#01091677,transparent 60%); }
 .arena-cinema-copy { position:absolute; left:42px; bottom:65px; right:42px; text-shadow:0 2px 12px #000; }
@@ -7929,6 +7930,15 @@ body[data-cabinet-layout="desktop-v5"] .casino-table-hud { bottom: 4.5%; width: 
 .guild-command p { font-size:13px; line-height:1.55; margin:0 0 10px; color:#f1dfbe; }
 .guild-command>div { display:flex; gap:8px; }
 .guild-command button { flex:1; padding:9px 12px; font-size:14px; font-weight:700; background:linear-gradient(#e4c383,#b08b47); color:#241b0b; border-color:#f3dc9c; box-shadow:0 2px 0 #5d492a; }
+
+/* A command stays on the LCD; its action stays on the physical deck. */
+@media (min-width:880px) and (min-height:600px) {
+  [data-command-deck="continue"] .cabinet-command-choices { display:none; }
+  [data-command-deck="choice"] .cabinet-command-choices button { opacity:.68; outline:1px solid transparent; outline-offset:3px; transition:opacity .15s; }
+  [data-command-deck="choice"] .cabinet-command-choices button[data-deck-selected="true"] { opacity:1; outline-color:#ffdf8d; box-shadow:0 0 16px #e9b9675c; }
+  [data-command-deck="choice"] :is(.stadium-stops,.arena-stops,.guild-stops) button[aria-pressed="true"] { color:#fff0b7; border-color:#ffe392; box-shadow:inset 0 1px 6px #ffca6060,0 0 12px #e7ad4270; }
+  [data-command-deck] .cabinet-command-hint { line-height:1.35; text-align:center; white-space:normal; }
+}
 .guild-cabinet[data-phase="boss"] .guild-story { top:12px; }
 .guild-cabinet[data-phase="boss"] .guild-steps { margin-bottom:8px; padding-bottom:8px; }
 .guild-cabinet[data-phase="boss"] .guild-story h2 { margin:8px 0; }

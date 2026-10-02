@@ -7,13 +7,67 @@
   if (!shell) return;
   const machine = dragon ? "dragon-race" : shell.id.replace("Cabinet", "");
   if (!dragon) {
+    const primary = document.getElementById(machine + "Spin");
+    const stops = [...shell.querySelectorAll(`[data-${machine}-stop]`)];
+    const panel = document.getElementById(machine + "Command");
+    const choices = document.getElementById(machine + "Choices");
+    const hint = document.getElementById(machine + "InputHint");
+    choices.classList.add("cabinet-command-choices"); hint.classList.add("cabinet-command-hint");
+    let commandToken = "", selected = 0, active = false;
+    const available = () => window.MimiCabinetArt?.ready && !document.hidden && !shell.querySelector("dialog[open]");
+    function renderCommands() {
+      const buttons = [...choices.children];
+      active = available() && !panel.hidden && Boolean(buttons.length)
+        && !shell.querySelector(`.${machine}-feature:not([hidden]), .arena-cinema:not([hidden]), .arena-cutin:not([hidden])`);
+      const token = active ? [shell.dataset.pending, shell.dataset.phase, shell.dataset.round || shell.dataset.team, buttons.map(b => b.textContent).join("|")].join(":") : "";
+      if (token !== commandToken) { commandToken = token; selected = 0; }
+      shell.dataset.commandDeck = active ? buttons.length > 1 ? "choice" : "continue" : "";
+      if (!active) {
+        stops.forEach(b => { b.removeAttribute("aria-pressed"); b.removeAttribute("aria-label"); });
+        return;
+      }
+      primary.disabled = false; primary.textContent = "PUSH";
+      primary.setAttribute("aria-describedby", hint.id);
+      hint.textContent = buttons.length > 1 ? "STOP 1 / 2で選択 → PUSHで決定" : "PUSH · " + buttons[0].textContent;
+      buttons.forEach((button, index) => { button.dataset.deckSelected = String(index === selected); });
+      stops.forEach((button, index) => {
+        const selectable = buttons.length > 1 && index < buttons.length;
+        button.disabled = !selectable;
+        button.textContent = selectable ? `選択 ${index + 1}` : `STOP ${index + 1}`;
+        if (selectable) { button.setAttribute("aria-label", buttons[index].textContent + "を選択"); button.setAttribute("aria-pressed", String(index === selected)); }
+        else { button.removeAttribute("aria-pressed"); button.removeAttribute("aria-label"); }
+      });
+    }
+    function select(index) {
+      if (!active || !available() || choices.children.length < 2 || !choices.children[index]) return false;
+      selected = index; renderCommands(); return true;
+    }
+    function confirm() {
+      if (!active || !available()) return false;
+      const button = choices.children[selected];
+      if (!button || button.disabled) return false;
+      button.click(); return true;
+    }
+    primary.addEventListener("click", event => { if (active && available()) { event.stopImmediatePropagation(); confirm(); } }, true);
+    stops.forEach((button, index) => button.addEventListener("click", event => { if (select(index)) event.stopImmediatePropagation(); }, true));
+    window.addEventListener("keydown", event => {
+      if (!active || !available() || event.repeat || event.altKey || event.ctrlKey || event.metaKey) return;
+      if (event.code === "Space" && (event.target === document.body || event.target === primary || stops.includes(event.target))) {
+        event.preventDefault(); event.stopImmediatePropagation(); confirm();
+      } else if (/^Digit[123]$/.test(event.code) && select(Number(event.code.slice(-1)) - 1)) {
+        event.preventDefault(); event.stopImmediatePropagation();
+      }
+    }, true);
+    window.MimiCabinetCommands = Object.freeze({ render: renderCommands });
+  }
+  if (!dragon) {
     let ready = false, failed = false, ticket = 0, images = [];
     function load() {
       if (!failed && ticket) return;
       const owner = ++ticket; ready = false; failed = false;
       shell.dataset.cabinetArt = "loading";
       images = [...new Set(window.SlotCore.SYMBOLS.map(symbol => symbol.img))].map(file => {
-        const image = new Image(); image.src = "./assets/generated/v3/symbols/dist/" + file; return image;
+        const image = new Image(); image.fetchPriority = "high"; image.src = "./assets/generated/v3/symbols/dist/" + file; return image;
       });
       let timeout;
       Promise.race([Promise.all(images.map(image => image.decode())), new Promise((_, reject) => {

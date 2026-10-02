@@ -1,8 +1,8 @@
 {
   "status": "PC PLAYTEST / PRODUCTION QUALITY UNAPPROVED",
-  "createdAt": "2026-10-02T09:20:24.581Z",
+  "createdAt": "2026-10-02T12:22:24.525Z",
   "entry": "index.html",
-  "bytes": 905394933,
+  "bytes": 916092841,
   "files": [
     {
       "file": "arena-flow.js",
@@ -11,8 +11,8 @@
     },
     {
       "file": "arena-runtime.js",
-      "bytes": 46939,
-      "sha256": "102139d19a2abae8179c866c7b0360bccef33e85359b293e60a046832a20a602"
+      "bytes": 49282,
+      "sha256": "ee3940f0cedbc42bffac479ed717313e0c008d64d4b79c1515894ab159c30ee3"
     },
     {
       "file": "assets/Jackpot.mp3",
@@ -78,6 +78,11 @@
       "file": "assets/arena/blackstar-gather-v2.png",
       "bytes": 2723681,
       "sha256": "109987c01072df4fea7a44e3bd35b107fa97ea4f0e758dcae133e398d2cae4f4"
+    },
+    {
+      "file": "assets/arena/blackstar-release-hf-v1.mp4",
+      "bytes": 2067009,
+      "sha256": "72b4bcd7a4db1074c4973a436180c60e1740bd9f7aa9ca8d8790eb12f2187565"
     },
     {
       "file": "assets/arena/blackstar-release-v1.png",
@@ -1360,6 +1365,11 @@
       "sha256": "1d4ddd457fecfee368b786a2989ec37935fb9d0247cd4e6fb5ac00c3911251af"
     },
     {
+      "file": "assets/guild/bell-chest-encounter-v1.png",
+      "bytes": 2325994,
+      "sha256": "4d39f610ce01b2459393e340eaffa80e5ccb8440ac11a15c8244d4c0d0386d49"
+    },
+    {
       "file": "assets/guild/crowd.jpg",
       "bytes": 427577,
       "sha256": "9750a0e200c45cd235686f3268027843760453bfa64530bef35fee1644dba5cb"
@@ -1420,6 +1430,11 @@
       "sha256": "4eb32248b482f795c9430ef4f7990cba1ce74ec04f41f85c1482794f2d4f3d19"
     },
     {
+      "file": "assets/guild/gardo-portrait-hand-v2.png",
+      "bytes": 2349980,
+      "sha256": "17e4016f652822cca3bed54ccdd2374ebd4ea8fba8c1ce6ff982da1c47300866"
+    },
+    {
       "file": "assets/guild/gardo-portrait.jpg",
       "bytes": 156578,
       "sha256": "500ab7f09d87a42e1466b224e09b78d68eb34ed545b906d7aa1e634948c74c5b"
@@ -1460,6 +1475,11 @@
       "sha256": "8cb888e7543d7665d314cdf6fafc797895be8dbec79bf37cac066cbdff4b179c"
     },
     {
+      "file": "assets/guild/mimi-serious-identity-v2.png",
+      "bytes": 1914442,
+      "sha256": "17ff354deede89ae9e6552fb352375c534342a3ed8f408a9f8c30135ec0c0528"
+    },
+    {
       "file": "assets/guild/mimi-serious.jpg",
       "bytes": 95842,
       "sha256": "586fa1a5314d76a6c78221c8e13953a024577680b2c142ba8f97f6ecb6aad08f"
@@ -1468,6 +1488,11 @@
       "file": "assets/guild/mimi-smile.jpg",
       "bytes": 90658,
       "sha256": "1f47a43658c3f5451a156ae1b694b717923ee3ff50b33b261cf77b0e111136ee"
+    },
+    {
+      "file": "assets/guild/mimi-worried-identity-v2.png",
+      "bytes": 2031201,
+      "sha256": "67c2d54dd50b6d9abd34a3f888a029c6bbf5d251e4b539681b1e67e0aba39b80"
     },
     {
       "file": "assets/guild/mimi-worried.jpg",
@@ -2451,8 +2476,8 @@
     },
     {
       "file": "cabinet-response.js",
-      "bytes": 7604,
-      "sha256": "3189dc78cbf2c8546242ab4f32b1415b72bddb67fc8bdb95201e3272d0c619ad"
+      "bytes": 11214,
+      "sha256": "c2f5660e7ffd74ce0444397d4b01cfcaef9dba440e8611bbab0e3dc710c62343"
     },
     {
       "file": "casino-loop.js",
@@ -2871,18 +2896,18 @@
     },
     {
       "file": "guild-runtime.js",
-      "bytes": 27615,
-      "sha256": "7c3b70a28234c4692229f3029b2907be8b25fe6c688a1dc8cc3e681eb7c11778"
+      "bytes": 27698,
+      "sha256": "79f9818e4d804d9f44f1140f6f83cd6be0272d69af4b881f7066523165a55799"
     },
     {
       "file": "guild-scenes.js",
-      "bytes": 17049,
-      "sha256": "a157bda383c3a67184d2eb22c75049d0ec1c63d6b7069f5cceb5206359eb7a9a"
+      "bytes": 18339,
+      "sha256": "6ce1a749103464166bb7eb87af6e06ed52403c23cfd4f33fd4cfff4e14de2673"
     },
     {
       "file": "index-arena.html",
-      "bytes": 8475,
-      "sha256": "3cbfc5db8c668b3bc7592b8ac1c2d507ac9ee5038e4994b396fa31f04365b82a"
+      "bytes": 8596,
+      "sha256": "b39bc64801b6406c0659f7a9479eff1ceb39cff7ed53355125ba031e3fcc0fe3"
     },
     {
       "file": "index-guild.html",
@@ -3131,8 +3156,8 @@
     },
     {
       "file": "machines/dragon-race/player/visual.css",
-      "bytes": 565468,
-      "sha256": "9303d32dc17b8a35cdd429d1f8dc87ad6f89d3bdf949691afd013fd53ede18c3"
+      "bytes": 566408,
+      "sha256": "15909e72dba12a5b087391ff08f484cb7059619e597435ab451442922a88501a"
     },
     {
       "file": "machines/dragon-race/presentation-contract.js",
@@ -3286,13 +3311,13 @@
     },
     {
       "file": "stadium-runtime.js",
-      "bytes": 34411,
-      "sha256": "a7932f954ed75304197fc47e077776d03f6d870b200f62914fc5cb0ca79d3177"
+      "bytes": 34366,
+      "sha256": "26f741e4189ee42b0d2c22b7781dedc4beb653f9a5099855d3bb55cd42dd5a14"
     },
     {
       "file": "visual.css",
-      "bytes": 509230,
-      "sha256": "bd9288046a81b6ad1fac4f0c6021b6215136b62e95e72c457adc58e921267dfe"
+      "bytes": 510170,
+      "sha256": "63aae7c3f3622890d9b3a7c9f3d5fa4e8068a6819ee64b64035e112fd88543af"
     }
   ]
 }
