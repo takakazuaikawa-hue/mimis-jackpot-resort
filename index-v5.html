@@ -236,6 +236,16 @@
       </nav>
 
       <main class="game-shell" id="gameShell" data-art-status="candidate" data-cabinet-status="PRODUCTION UNAPPROVED">
+        <div class="cabinet-housing" aria-hidden="true">
+          <img src="./assets/cabinet-v6/mimi-jackpot-housing-v1.png" alt="" decoding="async" fetchpriority="high">
+          <div class="cabinet-crown"><strong>MIMI'S JACKPOT RESORT</strong></div>
+        </div>
+        <div class="cabinet-lights" data-mode="idle" data-stop-count="0" aria-hidden="true">
+          <div class="cabinet-lamp-rail cabinet-lamp-left"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          <div class="cabinet-lamp-rail cabinet-lamp-right"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          <i class="cabinet-ear-light cabinet-ear-left"></i><i class="cabinet-ear-light cabinet-ear-right"></i>
+          <i class="cabinet-crown-light"></i><i class="cabinet-deck-light"></i>
+        </div>
         <div class="cabinet-art" aria-hidden="true">
           <img class="cabinet-layer cabinet-layer-outer" alt="" data-inactive-src="./assets/cabinet-v5-candidates/final/cabinet-outer-frame.png" data-candidate-asset="assets/cabinet-v5-candidates/final/cabinet-outer-frame.png">
           <img class="cabinet-layer cabinet-layer-crystal" alt="" data-inactive-src="./assets/cabinet-v5-candidates/final/cabinet-crystal-finials.png" data-candidate-asset="assets/cabinet-v5-candidates/final/cabinet-crystal-finials.png">
@@ -312,7 +322,6 @@
               <strong class="casino-poker-action"></strong>
             </div>
             <div class="casino-table-hud" id="casinoTableHud" aria-live="polite"></div>
-            <div class="casino-run-route" id="casinoRunRoute" hidden></div>
             <div class="casino-table-vfx" aria-hidden="true">
               <div class="casino-role-signature">
                 <i class="casino-role-aura casino-role-aura-outer"></i>
@@ -463,6 +472,7 @@
           </div>
           <div class="offscreen-refs" aria-hidden="true"><div id="log"></div></div>
         </section>
+        <div class="casino-run-route" id="casinoRunRoute" hidden></div>
       </main>
 
       <div class="help-overlay" id="helpOverlay" hidden>
@@ -538,6 +548,7 @@
   <script src="./resort-stay.js"></script>
   <script src="./machines/catalog.js"></script>
   <script src="./machines/lobby.js"></script>
+  <script src="./cabinet-lights.js"></script>
   <script src="./game.js"></script>
 </body>
 </html>

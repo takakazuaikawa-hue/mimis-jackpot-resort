@@ -1,8 +1,8 @@
 {
   "status": "PC PLAYTEST / PRODUCTION QUALITY UNAPPROVED",
-  "createdAt": "2026-10-02T00:37:34.564Z",
+  "createdAt": "2026-10-02T01:46:46.555Z",
   "entry": "index.html",
-  "bytes": 903813099,
+  "bytes": 905558992,
   "files": [
     {
       "file": "arena-flow.js",
@@ -628,6 +628,11 @@
       "file": "assets/cabinet-v5-candidates/final/cabinet-title-bridge.png",
       "bytes": 50457,
       "sha256": "6cf14a88a4b7a9c5c817e526f453a44f44eab837c0c945bcf078c304dfe44dc6"
+    },
+    {
+      "file": "assets/cabinet-v6/mimi-jackpot-housing-v1.png",
+      "bytes": 1726989,
+      "sha256": "92236e284aacccf2a21c7e8d11b56f6c398abbf9c27d7e8d1a24f221c0bb60d3"
     },
     {
       "file": "assets/casino-loop-v5/slot-selection-cabinet-v1.png",
@@ -2440,6 +2445,11 @@
       "sha256": "3377e3aa30dfb0e43a8ae4b2694d35aac56fcdbbd54e75422740f666ca9a8722"
     },
     {
+      "file": "cabinet-lights.js",
+      "bytes": 4257,
+      "sha256": "00ce9e2347b22b3ec5469d6685cb23273a6457b00b4174621e41b5969f51ddd4"
+    },
+    {
       "file": "casino-loop.js",
       "bytes": 9172,
       "sha256": "0250bdb6b5c84608e11a23b8aedef7fd7b2d7fadec78a2c5b9cb827239582850"
@@ -2881,8 +2891,8 @@
     },
     {
       "file": "index-v5.html",
-      "bytes": 39536,
-      "sha256": "402ff3c73e3e3d7071537d82328937a48f862ad9a43fd720f3327e638c911599"
+      "bytes": 40392,
+      "sha256": "83ee3323b2a1c08fecec8baf86502033d5009203dbf3f37136fa7338d3558e3a"
     },
     {
       "file": "machine-presentation-blueprint.js",
@@ -3276,8 +3286,8 @@
     },
     {
       "file": "visual.css",
-      "bytes": 477913,
-      "sha256": "634024c7d701c87f7ce12f3c0ff1ff0c3709b97a6c235bd33e315f413ce97730"
+      "bytes": 491704,
+      "sha256": "bda30b42aa09aea2439109849b2acc61aaf5d4b88bee4e4806339215824280c5"
     }
   ]
 }

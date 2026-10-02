@@ -4207,6 +4207,128 @@ body[data-cabinet-layout="desktop-v5"] .casino-table-hud { bottom: 4.5%; width: 
   .toast.show { opacity: 1; translate: -50% 0; }
 }
 
+/* A real cabinet face surrounds live HTML windows; its raster never contains
+   reels, counters or buttons. Old portal candidates remain inactive. */
+@layer screens {
+  .cabinet-housing, .cabinet-lights { display: none; }
+  @media (min-width: 880px) and (min-height: 600px) {
+    body[data-cabinet-layout="desktop-v5"] .game-shell {
+      width: min(calc(100vw - 28px), calc((100dvh - 64px) * 1.32), 1380px);
+      height: calc(100dvh - 64px); aspect-ratio: auto; overflow: visible;
+      border: 0; border-radius: 0; background: transparent; box-shadow: none;
+    }
+    body[data-cabinet-layout="desktop-v5"] .cabinet-housing { display: block; position: absolute; z-index: 20; inset: 0; pointer-events: none; filter: drop-shadow(0 14px 14px #000b); }
+    .cabinet-housing > img { width: 100%; height: 100%; object-fit: fill; }
+    .cabinet-crown { position: absolute; top: 10%; left: 20%; right: 20%; height: 6%; display: grid; align-items: center; text-align: center; }
+    .cabinet-crown strong { color: #ffdda0; font: 700 clamp(18px, 2.1vw, 28px)/1.05 Georgia, serif; letter-spacing: .015em; text-shadow: 0 2px 2px #000, 0 0 7px #c18d4260; }
+    body[data-cabinet-layout="desktop-v5"] .theater { left: 16.5%; top: 19.4%; width: 67%; height: 24.2%; border: 0; border-radius: 6px; box-shadow: none; }
+    body[data-cabinet-layout="desktop-v5"] .machine { left: 14.5%; right: 14.5%; top: 46.5%; bottom: 15.5%; display: block; overflow: visible; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+  }
+}
+@media (min-width: 880px) and (min-height: 600px) {
+  body[data-cabinet-layout="desktop-v5"] .casino-run-route { z-index: 22; top: 86%; left: 32%; right: 32%; padding: 3px 5px; border-radius: 4px; background: #061e20ee; }
+  body[data-cabinet-layout="desktop-v5"] .casino-run-route > p { display: none; }
+  body[data-cabinet-layout="desktop-v5"] .casino-table-route { margin: 0; }
+  body[data-cabinet-layout="desktop-v5"] .casino-table-route li { grid-template-columns: 12px minmax(0, 1fr); gap: 1px 3px; padding: 2px; background: transparent; border-color: transparent; }
+  body[data-cabinet-layout="desktop-v5"] .casino-table-route li b { width: 12px; height: 12px; font-size: 9px; }
+  body[data-cabinet-layout="desktop-v5"] .casino-table-route li span { font-size: 10px; white-space: nowrap; }
+  body[data-cabinet-layout="desktop-v5"] .casino-table-route li small { font-size: 8px; white-space: nowrap; }
+  /* Compact the former full-window dialogue for the real recessed LCD. */
+  body[data-cabinet-layout="desktop-v5"] .chapter-command { padding: 7px 12px; }
+  body[data-cabinet-layout="desktop-v5"] .chapter-command-frame { min-height: 62px; padding: 8px 14px; grid-template-columns: 64px minmax(0, 1fr) auto; }
+  body[data-cabinet-layout="desktop-v5"] .chapter-command-frame > span { margin-right: 10px; font-size: 11px; }
+  body[data-cabinet-layout="desktop-v5"] .chapter-command-frame > strong { font-size: 17px; }
+  body[data-cabinet-layout="desktop-v5"] .chapter-command-frame > small { font-size: 11px; }
+  body[data-cabinet-layout="desktop-v5"] .game-shell.presentation-active .presentation-narrative { min-height: 60px; padding: 6px 10px; grid-template-columns: 64px minmax(0, 1fr); gap: 2px 8px; }
+  body[data-cabinet-layout="desktop-v5"] .game-shell.presentation-active .presentation-narrative span { font-size: 10px; }
+  body[data-cabinet-layout="desktop-v5"] .game-shell.presentation-active .presentation-narrative strong { font-size: 16px; }
+  body[data-cabinet-layout="desktop-v5"] .game-shell.presentation-active .presentation-narrative p { font-size: 12px; }
+  body[data-cabinet-layout="desktop-v5"] .game-shell.presentation-active .presentation-narrative small { font-size: 11px; }
+  body[data-cabinet-layout="desktop-v5"] .treasure-bonus-hero { top: -10%; height: 125%; }
+  body[data-cabinet-layout="desktop-v5"] .treasure-feature-status { bottom: 3%; padding: 6px 10px; }
+  body[data-cabinet-layout="desktop-v5"] .treasure-feature-status small { font-size: 10px; }
+  body[data-cabinet-layout="desktop-v5"] .treasure-feature-status strong { margin: 2px 0; font-size: 16px; }
+  body[data-cabinet-layout="desktop-v5"] .treasure-feature-status span { font-size: 11px; }
+  body[data-cabinet-layout="desktop-v5"] .treasure-bonus-order-award { min-width: 240px; width: 48%; grid-template-columns: 42px minmax(0, 1fr); gap: 8px; padding: 6px 10px; }
+  body[data-cabinet-layout="desktop-v5"] .treasure-bonus-order-seal { width: 40px; }
+  body[data-cabinet-layout="desktop-v5"] .treasure-bonus-order-copy { padding-left: 7px; }
+  body[data-cabinet-layout="desktop-v5"] .treasure-bonus-order-copy strong { font-size: 13px; }
+  body[data-cabinet-layout="desktop-v5"] .treasure-bonus-order-copy span { font-size: 11px; }
+}
+@layer components {
+  @media (min-width: 880px) and (min-height: 600px) {
+    body[data-cabinet-layout="desktop-v5"] .machine-marquee { display: contents; }
+    body[data-cabinet-layout="desktop-v5"] .machine-marquee > div:first-child strong { display: none; }
+    body[data-cabinet-layout="desktop-v5"] .machine-stage-label { position: absolute; top: 2px; left: 1%; width: 15%; text-align: center; font: 700 10px/1.2 "Yu Gothic", sans-serif; }
+    body[data-cabinet-layout="desktop-v5"] .jackpot { position: absolute; z-index: 22; top: 0; right: 0; width: 16%; display: grid; justify-items: center; }
+    body[data-cabinet-layout="desktop-v5"] .jackpot span { font-size: 9px; }
+    body[data-cabinet-layout="desktop-v5"] .jackpot strong { font-size: 20px; line-height: 1.1; }
+    body[data-cabinet-layout="desktop-v5"] .machine-playfield { position: absolute; inset: 0 0 auto; height: 62%; display: block; padding: 0; border: 0; background: transparent; }
+    body[data-cabinet-layout="desktop-v5"] .reel-frame { position: absolute; left: 16.5%; right: 16.5%; top: 4%; bottom: 4%; width: auto; height: auto; min-height: 0; margin: 0; border: 0; border-radius: 3px; box-shadow: inset 0 8px 14px #3f200d4d, inset 0 -8px 14px #3f200d4d; }
+    body[data-cabinet-layout="desktop-v5"] .machine-metrics { position: absolute; z-index: 22; left: .7%; top: 13%; bottom: 1%; width: 13.5%; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 32px 30px minmax(0, 1fr); gap: 3px; padding: 0; }
+    body[data-cabinet-layout="desktop-v5"] .machine-metrics .metric { display: grid; align-content: center; justify-items: center; gap: 1px; min-height: 0; padding: 2px; }
+    body[data-cabinet-layout="desktop-v5"] .metric span { font-size: 9px; }
+    body[data-cabinet-layout="desktop-v5"] .machine-metrics .metric strong { font-size: 19px; line-height: 1; }
+    body[data-cabinet-layout="desktop-v5"] .bet-step { grid-column: 1 / -1; gap: 3px; }
+    body[data-cabinet-layout="desktop-v5"] .bet-step button { min-height: 28px; padding: 2px; }
+    body[data-cabinet-layout="desktop-v5"] .mode-controls { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 3px; }
+    body[data-cabinet-layout="desktop-v5"] .mode-controls button { min-height: 28px; padding: 2px; font-size: 9px; }
+    body[data-cabinet-layout="desktop-v5"] .machine-status { position: absolute; z-index: 22; right: .7%; top: 24%; bottom: 0; width: 14%; display: flex; flex-direction: column; justify-content: center; gap: 4px; padding: 0; }
+    body[data-cabinet-layout="desktop-v5"] .machine-status .metric { display: grid; align-content: center; grid-template-columns: 1fr; gap: 0; padding: 2px 3px; min-height: 32px; }
+    body[data-cabinet-layout="desktop-v5"] .machine-status .metric strong { font-size: 21px; line-height: 1.1; }
+    body[data-cabinet-layout="desktop-v5"] .treasure-stock { gap: 2px; }
+    body[data-cabinet-layout="desktop-v5"] .treasure-slot.bet-coin { width: 18px; height: 18px; }
+    body[data-cabinet-layout="desktop-v5"] .machine-controls { position: absolute; z-index: 22; left: -6%; right: -6%; top: 65%; bottom: 0; grid-template-columns: minmax(118px, 1fr) minmax(0, 3fr) 86px; gap: 6px; padding: 5px 10px 9px; border: 0; background: transparent; box-shadow: none; }
+    body[data-cabinet-layout="desktop-v5"] .machine-controls::before { display: none; }
+    body[data-cabinet-layout="desktop-v5"] .spin-receipt { min-height: 60px; gap: 2px; padding: 4px 8px; border-radius: 5px; background: #072428dc; box-shadow: inset 0 1px #efcb8444, 0 2px 5px #0007; }
+    body[data-cabinet-layout="desktop-v5"] .spin-receipt > span { font-size: 9px; }
+    body[data-cabinet-layout="desktop-v5"] .spin-receipt > strong { font-size: 14px; }
+    body[data-cabinet-layout="desktop-v5"] .spin-receipt:is([data-outcome="win"], [data-outcome="jackpot"]) > strong { font-size: 26px; }
+    body[data-cabinet-layout="desktop-v5"] .spin-receipt > small { font-size: 9px; }
+    body[data-cabinet-layout="desktop-v5"] .stop-row { padding: 0; gap: 10px; }
+    body[data-cabinet-layout="desktop-v5"] .machine-controls .stop-button { width: 100%; min-height: 52px; padding: 0 5px; font-size: 11px; }
+    body[data-cabinet-layout="desktop-v5"] .stop-button span { width: 18px; height: 18px; margin-right: 3px; font-size: 10px; }
+    body[data-cabinet-layout="desktop-v5"] .machine-controls :is(.spin-button, .push-button) { width: 70px; min-height: 70px; }
+    body[data-cabinet-layout="desktop-v5"] .machine-controls .spin-button.is-resolving:disabled { width: 80px; min-height: 52px; }
+  }
+}
+@layer motion {
+  @media (min-width: 880px) and (min-height: 600px) {
+    .cabinet-lights { --lamp-color: #56f9ec; display: block; position: absolute; z-index: 21; inset: 0; pointer-events: none; isolation: isolate; }
+    .cabinet-lights[data-phase="chance"], .cabinet-lights[data-mode="read"] { --lamp-color: #ffc855; }
+    .cabinet-lights[data-phase="bonus"] { --lamp-color: #ff86bf; }
+    .cabinet-lights[data-phase="boss"] { --lamp-color: #a992ff; }
+    .cabinet-lights:is([data-mode="win"], [data-mode="jackpot"]) { --lamp-color: #ffda78; }
+    .cabinet-lamp-rail { position: absolute; top: 20.5%; height: 49.5%; width: 3.1%; display: grid; grid-template-rows: repeat(8, 1fr); gap: 5px; }
+    .cabinet-lamp-left { left: 9%; transform: skewX(-5deg); }
+    .cabinet-lamp-right { right: 9%; transform: skewX(5deg); }
+    .cabinet-lamp-rail i { border-radius: 3px; opacity: .2; background: linear-gradient(135deg, #ffffff90, var(--lamp-color) 48%, #ffffff60); box-shadow: 0 0 9px var(--lamp-color), 0 0 19px color-mix(in srgb, var(--lamp-color) 65%, transparent); transition: opacity 220ms; }
+    .cabinet-lamp-rail i:nth-child(2) { --lamp-index: 1; }.cabinet-lamp-rail i:nth-child(3) { --lamp-index: 2; }.cabinet-lamp-rail i:nth-child(4) { --lamp-index: 3; }.cabinet-lamp-rail i:nth-child(5) { --lamp-index: 4; }.cabinet-lamp-rail i:nth-child(6) { --lamp-index: 5; }.cabinet-lamp-rail i:nth-child(7) { --lamp-index: 6; }.cabinet-lamp-rail i:nth-child(8) { --lamp-index: 7; }
+    .cabinet-ear-light { position: absolute; top: 4%; width: 6%; height: 10%; border-radius: 70% 15% 70% 15%; opacity: .12; background: radial-gradient(ellipse, #fff7, var(--lamp-color) 30%, transparent 75%); filter: drop-shadow(0 0 12px var(--lamp-color)); }
+    .cabinet-ear-left { left: 15%; transform: rotate(-26deg); }.cabinet-ear-right { right: 15%; transform: rotate(26deg); }
+    .cabinet-crown-light { position: absolute; top: 15.5%; left: 24%; right: 24%; height: .5%; border-radius: 50%; opacity: .25; background: var(--lamp-color); box-shadow: 0 0 14px var(--lamp-color); }
+    .cabinet-deck-light { position: absolute; top: 84%; left: 13%; right: 13%; height: .45%; opacity: .25; background: linear-gradient(90deg, transparent, var(--lamp-color), transparent); box-shadow: 0 0 13px var(--lamp-color); }
+    .cabinet-lights[data-mode="spin"] .cabinet-lamp-rail i { animation: cabinetLampChase 1600ms linear infinite; animation-delay: calc(var(--lamp-index, 0) * -160ms); }
+    .cabinet-lights[data-mode="spin"] .cabinet-lamp-right i { animation-direction: reverse; }
+    .cabinet-lights[data-mode="stop"] .cabinet-lamp-rail i { opacity: .75; }
+    .cabinet-lights[data-mode="stop"][data-stop-reel="0"] .cabinet-lamp-left i,
+    .cabinet-lights[data-mode="stop"][data-stop-reel="2"] .cabinet-lamp-right i { animation: cabinetLampStop 420ms ease-out both; }
+    .cabinet-lights[data-mode="stop"][data-stop-reel="1"] :is(.cabinet-crown-light, .cabinet-deck-light) { animation: cabinetLampStop 420ms ease-out both; }
+    .cabinet-lights:is([data-mode="win"], [data-mode="jackpot"]) .cabinet-lamp-rail i { animation: cabinetLampCelebrate 1800ms ease-in-out both; animation-delay: calc(var(--lamp-index, 0) * 55ms); }
+    .cabinet-lights:is([data-mode="win"], [data-mode="jackpot"]) :is(.cabinet-ear-light, .cabinet-crown-light, .cabinet-deck-light) { opacity: .8; animation: cabinetLampCelebrate 1800ms ease-in-out both; }
+    .cabinet-lights:is([data-mode="chance"], [data-mode="bonus"], [data-mode="boss"], [data-mode="read"], [data-mode="replay"]) .cabinet-lamp-rail i { opacity: .55; animation: cabinetLampBreathe 2400ms ease-in-out infinite; animation-delay: calc(var(--lamp-index, 0) * -120ms); }
+    .cabinet-lights:is([data-mode="chance"], [data-mode="bonus"], [data-mode="boss"], [data-mode="read"]) .cabinet-ear-light { opacity: .65; }
+    @keyframes cabinetLampChase { 0%, 68%, 100% { opacity: .18; } 28% { opacity: .95; } }
+    @keyframes cabinetLampStop { 0% { opacity: .95; } 100% { opacity: .18; } }
+    @keyframes cabinetLampCelebrate { 0%, 100% { opacity: .28; } 24%, 65% { opacity: .95; } 44% { opacity: .55; } }
+    @keyframes cabinetLampBreathe { 0%, 100% { opacity: .35; } 50% { opacity: .8; } }
+  }
+}
+@layer a11y {
+  .cabinet-lights[data-reduced="true"] :is(i, .cabinet-lamp-rail) { animation: none; transition: none; }
+  .cabinet-lights[data-suspended="true"] :is(i, .cabinet-lamp-rail) { animation: none; transition: none; opacity: .12; }
+}
+
 @layer motion {
   @keyframes casinoPokerDealConduit {
     0% { opacity: 0; translate: -50% -28%; scale: .42 1; }
