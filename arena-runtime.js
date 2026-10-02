@@ -318,17 +318,19 @@
     if(state.phase==='bonus'){resultHeadline=tokimekiScene().name;resultText=tokimekiScene().lines[Math.min(3,Math.floor((10-state.bonus)/3))];}
     $('Cabinet').dataset.heat=['bar','seven_blue','seven_red'].includes(flag)?'strong':'normal';document.querySelectorAll('.arena-symbol.is-win').forEach(n=>n.classList.remove('is-win'));
     if(sound)audio.spinStart();save();render();
+    window.dispatchEvent(new CustomEvent('mimi:cabinet-input', {detail:{machineId:'arena',type:'spin-start',transactionId:spin.session.id}}));
   }
   function stop(col){if(!spin||!Number.isInteger(col)||col<0||col>2||spin.stopped[col]!==null||spin.pendingStops.includes(col)||modalOpen()||document.hidden)return;if(sessions.queueStop(spin.session,col)){save();render();}}
   function commitStop(col){
     if(!spin||col===null||spin.stopped[col]!==null)return;const decision=core.chooseStop({col,flag:spin.flag,stopped:sessions.knownStops(spin.session),natural:positions[col]});if(!sessions.recordStop(spin.session,col,decision))return;
     spin.pendingStops=spin.session.pendingStopQueue;spin.stopped[col]=decision.index;spin.braking[col]=true;spin.lastStopAt=performance.now();positions[col]=decision.index;
-    if(sound)audio.reelStop(col,decision.slip);save();render();const transaction=spin;
+    if(sound)audio.reelStop(col,decision.slip);save();render();window.dispatchEvent(new CustomEvent('mimi:cabinet-input', {detail:{machineId:'arena',type:'stop-accepted',transactionId:spin.session.id,reelIndex:col}}));const transaction=spin;
     if(!reduced.matches)$('Reels').children[col].animate([{transform:'translateY(-9px)'},{transform:'translateY(2px)'},{transform:'translateY(0)'}],{duration:turbo?70:180});
     setTimeout(()=>{if(spin!==transaction)return;spin.braking[col]=false;sessions.markSettled(spin.session,col);if(spin.stopped.every(n=>n!==null)&&!spin.braking.some(Boolean))settle();else render();},reduced.matches?0:turbo?80:200);
   }
   function settle(){
     if(!spin||!sessions.resolve(spin.session))return;
+    const transactionId=spin.session.id;
     const grid=spin.stopped.map((n,c)=>core.windowAt(c,n)),out=core.evaluateGrid(grid,{bet:BET});
     const symbols=out.litLines.map(l=>grid[l.cells[0][0]][l.cells[0][1]].id).filter(id=>id!=='replay');const symbol=symbols.sort((a,b)=>core.SYMBOL_BY_ID.get(b).pay-core.SYMBOL_BY_ID.get(a).pay)[0]||'none';
     const performer=currentPerformer(),blackstar=state.phase==='battle'&&state.order==='strike'&&!out.replayHit&&state.round===0;
@@ -347,6 +349,7 @@
     if(sound&&!feature?.cinematic){const cue=result.kind==='victory'?'bossDefeat':result.kind==='guard'?'revive':result.damage?'bossHit':result.kind==='miss'?'bossAttack':result.kind==='replay'?'notice':null;if(cue)audio.cue(cue);}
     playResultScene();
     if(document.hidden||modalOpen())freezeScene();
+    window.dispatchEvent(new CustomEvent('mimi:cabinet-result', {detail:{machineId:'arena',type:'revealed',transactionId,payout:out.payout,replay:Boolean(out.replayHit)}}));
     window.dispatchEvent(new CustomEvent('mimi:arena-settled',{detail:{games:state.games,payout:out.payout,damage:result.damage,kind:result.kind}}));
   }
   function tick(now){frame=0;if(!spin)return;const dt=Math.min((now-last)/1000,.1);last=now;[0,1,2].forEach(c=>{if(spin.stopped[c]===null){positions[c]=core.mod(positions[c]-dt*(turbo?34:24),core.stripLength(c));paintReel(c);}});frame=requestAnimationFrame(tick);}

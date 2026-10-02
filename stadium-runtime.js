@@ -346,6 +346,7 @@
     $("Cabinet").dataset.heat = ["bar", "seven_blue", "seven_red"].includes(flag) ? "strong" : "normal";
     document.querySelectorAll(".stadium-symbol.is-win").forEach(n => n.classList.remove("is-win"));
     if (sound) audio.spinStart(); save(); render();
+    window.dispatchEvent(new CustomEvent('mimi:cabinet-input', {detail:{machineId:'stadium',type:'spin-start',transactionId:spin.session.id}}));
   }
   function stop(col) {
     if (!spin || !Number.isInteger(col) || col < 0 || col > 2 || spin.stopped[col] !== null || spin.pendingStops.includes(col) || $("Guide").open || document.hidden) return;
@@ -359,6 +360,7 @@
     spin.pendingStops = spin.session.pendingStopQueue;
     spin.stopped[col] = decision.index; spin.braking[col] = true; spin.lastStopAt = performance.now(); positions[col] = decision.index;
     if (sound) audio.reelStop(col, decision.slip); save(); render();
+    window.dispatchEvent(new CustomEvent('mimi:cabinet-input', {detail:{machineId:'stadium',type:'stop-accepted',transactionId:spin.session.id,reelIndex:col}}));
     const transaction = spin;
     const node = $("Reels").children[col];
     node.animate(reduced.matches ? [] : [{ transform: "translateY(-9px)" }, { transform: "translateY(2px)" }, { transform: "translateY(0)" }], { duration: reduced.matches ? 0 : turbo ? 70 : 180 });
@@ -372,6 +374,7 @@
   }
   function settle() {
     if (!spin || !sessions.resolve(spin.session)) return;
+    const transactionId = spin.session.id;
     const grid = spin.stopped.map((n, c) => core.windowAt(c, n));
     const result = core.evaluateGrid(grid, { bet: BET });
     const paidSymbols = result.litLines.map(line => grid[line.cells[0][0]][line.cells[0][1]].id).filter(id => id !== "replay");
@@ -400,6 +403,7 @@
       $("VictoryWin").animate([{ color: "#ffffff", transform: "translateY(-5px)" }, { color: "#ffdb87", transform: "translateY(0)" }], { duration: turbo ? 200 : 500, easing: "ease-out" });
     }
     if (settled.hit && state.phase !== "bonus" && !state.pending) $("Cinema").animate(reduced.matches ? [] : [{ opacity: 0, transform: "translateX(35px)" }, { opacity: 1, transform: "translateX(0)" }], { duration: reduced.matches ? 0 : 400, easing: "ease-out" });
+    window.dispatchEvent(new CustomEvent('mimi:cabinet-result', {detail:{machineId:'stadium',type:'revealed',transactionId,payout:result.payout,replay:Boolean(result.replayHit)}}));
     window.dispatchEvent(new CustomEvent("mimi:stadium-settled", { detail: { games: state.games, payout: result.payout } }));
   }
   function tick(now) {

@@ -8149,4 +8149,50 @@ body[data-cabinet-layout="desktop-v5"] .casino-table-hud { bottom: 4.5%; width: 
   .dragon-hardware i { width: 14px; height: 5px; border: 1px solid #ad9761; background: #304b48; border-radius: 0 5px; }
   .dragon-hardware > div:last-child i { height: 9px; width: 9px; rotate: 45deg; border-radius: 1px; }
   .dragon-hardware .is-lit { background: #9dfce6; box-shadow: 0 0 7px #8cfadd; }
+
+  /* Independent cabinets: physical edge optics, outside the scene/text. */
+  [data-response-cabinet] { --response-light: #f4c77d; --response-dim: #584022; --response-metal: #cfa86a; }
+  [data-response-cabinet="stadium"] { --response-light: #ffac45; --response-dim: #4e341d; --response-metal: #b4a18b; }
+  [data-response-cabinet="arena"] { --response-light: #71e9e9; --response-dim: #244957; --response-metal: #ddc9a4; }
+  [data-response-cabinet="guild"] { --response-light: #ffe49d; --response-dim: #594c2e; --response-metal: #b89b5e; }
+  [data-response-cabinet="dragon-race"] { --response-light: #81e2cf; --response-dim: #264a45; --response-metal: #c7a566; }
+  [data-response-phase="boss"] { --response-light: #eb94b8; }
+  [data-response-phase="bonus"], [data-response-mode="win"] { --response-light: #ffe3a1; }
+  :is(.stadium-theater, .arena-theater, .guild-stage, .game-shell[data-active-machine="dragon-race"] .dragon-stage) { isolation: isolate; }
+  .cabinet-response-frame { position: absolute; z-index: 35; inset: 0; overflow: hidden; pointer-events: none; border-radius: 8px; box-shadow: inset 0 0 0 2px #030909, inset 0 0 0 4px var(--response-metal), inset 0 0 0 6px #030c0ce6, inset 0 9px 12px #0009, inset 0 -8px 10px #0007; }
+  .cabinet-response-frame::before, .cabinet-response-frame::after { content: ""; position: absolute; top: 8px; bottom: 8px; width: 12px; border: 1px solid var(--response-metal); border-radius: 8px; background: linear-gradient(90deg, #111c21, #475054 32%, #1a252b 56%, #080f14); box-shadow: inset 0 1px #ffefbc77, 0 2px 4px #0008; }
+  .cabinet-response-frame::before { left: 3px; }
+  .cabinet-response-frame::after { right: 3px; }
+  .cabinet-response-rail { position: absolute; z-index: 1; top: 22px; bottom: 22px; width: 6px; display: flex; flex-direction: column; justify-content: space-between; }
+  .cabinet-response-rail.left { left: 7px; }
+  .cabinet-response-rail.right { right: 7px; }
+  .cabinet-response-rail i { display: block; height: 16px; border: 1px solid #fff4cc66; border-radius: 2px; background: var(--response-dim); box-shadow: inset 0 1px #ffffff30, inset 0 -3px 2px #0006; }
+  [data-response-cabinet="stadium"] .cabinet-response-rail i { height: 22px; border-radius: 1px; }
+  [data-response-cabinet="arena"] .cabinet-response-rail i { width: 8px; height: 8px; rotate: 45deg; border-radius: 1px; }
+  [data-response-cabinet="guild"] .cabinet-response-rail i { height: 11px; border-radius: 50% 50% 3px 3px; }
+  [data-response-cabinet="dragon-race"] .cabinet-response-rail i { height: 25px; border-radius: 5px 0; }
+  :is(.stadium-reel-block, .arena-reel-block, .guild-reel-block) { position: relative; }
+  .cabinet-response-trail { position: absolute; z-index: 4; left: 13px; right: 13px; top: -7px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; height: 4px; pointer-events: none; }
+  .cabinet-response-trail i { border-radius: 3px; background: var(--response-dim); border: 1px solid var(--response-metal); box-shadow: inset 0 1px #ffffff40; }
+  [data-response-cabinet="guild"] .cabinet-response-trail { left: 7px; right: 7px; gap: 5px; }
+  [data-response-cabinet="dragon-race"] .cabinet-response-trail { top: 2px; left: calc(3% + 3px); right: calc(3% + 3px); gap: 3%; height: 3px; }
+  [data-response-mode="spin"] .cabinet-response-rail i, [data-response-mode="stop"] .cabinet-response-rail i { animation: cabinet-response-chase 1.15s linear infinite; animation-delay: calc(var(--lamp-step) * -.12s); }
+  [data-response-cabinet="stadium"] .cabinet-response-rail.right i { animation-direction: reverse; }
+  [data-response-cabinet="guild"] .cabinet-response-rail.right i { animation-delay: calc(var(--lamp-step) * -.12s - .4s); }
+  [data-response-mode="stop"][data-response-stop-reel="0"] .cabinet-response-rail.left i,
+  [data-response-mode="stop"][data-response-stop-reel="2"] .cabinet-response-rail.right i,
+  [data-response-mode="stop"][data-response-stop-reel="1"] .cabinet-response-rail i:nth-child(4),
+  [data-response-mode="stop"][data-response-stop-reel="1"] .cabinet-response-rail i:nth-child(5) { animation: cabinet-response-ack .42s ease-out; }
+  .cabinet-response-trail i[data-accepted="true"] { background: var(--response-light); box-shadow: 0 0 8px var(--response-light), inset 0 1px #ffffef; }
+  [data-response-mode="win"] .cabinet-response-rail i { animation: cabinet-response-win .85s ease-out 2; animation-delay: calc(var(--lamp-step) * .025s); }
+  [data-response-mode="replay"] .cabinet-response-rail i { background: #95d9ff; box-shadow: 0 0 7px #95d9ff; }
+  [data-response-phase="chance"] .cabinet-response-rail i:nth-child(even),
+  [data-response-phase="boss"] .cabinet-response-rail i:nth-child(odd),
+  [data-response-phase="bonus"] .cabinet-response-rail i { background: var(--response-light); box-shadow: 0 0 5px var(--response-light); }
+  [data-response-cabinet][data-response-reduced="true"] .cabinet-response-frame .cabinet-response-rail i { animation: none; }
+  [data-response-reduced="true"]:is([data-response-mode="spin"], [data-response-mode="stop"], [data-response-mode="win"]) .cabinet-response-rail i { background: var(--response-light); box-shadow: 0 0 4px var(--response-light); }
+  [data-response-cabinet][data-response-suspended="true"] :is(.cabinet-response-frame .cabinet-response-rail i, .cabinet-response-trail i) { animation: none; background: var(--response-dim); box-shadow: inset 0 1px #ffffff30; }
+  @keyframes cabinet-response-chase { 0%, 65%, 100% { background: var(--response-dim); box-shadow: inset 0 1px #ffffff30; } 20%, 38% { background: var(--response-light); box-shadow: 0 0 9px var(--response-light); } }
+  @keyframes cabinet-response-ack { from { background: #ffffe8; box-shadow: 0 0 12px var(--response-light); } to { background: var(--response-dim); box-shadow: none; } }
+  @keyframes cabinet-response-win { 0%, 100% { background: var(--response-dim); box-shadow: none; } 15%, 65% { background: var(--response-light); box-shadow: 0 0 11px var(--response-light); } }
 }
