@@ -1,8 +1,8 @@
 {
   "status": "PC PLAYTEST / PRODUCTION QUALITY UNAPPROVED",
-  "createdAt": "2026-10-02T02:22:01.620Z",
+  "createdAt": "2026-10-02T07:59:32.003Z",
   "entry": "index.html",
-  "bytes": 905257517,
+  "bytes": 905371744,
   "files": [
     {
       "file": "arena-flow.js",
@@ -11,8 +11,8 @@
     },
     {
       "file": "arena-runtime.js",
-      "bytes": 45271,
-      "sha256": "7ca4cf4919310698ec9e0aa67afa4b37e35e3acba25c7ffb129e4fd32242ed28"
+      "bytes": 45978,
+      "sha256": "8b66d43f0295b16c163e1d8f672c613e43db755656870937081a97bd84b0f50b"
     },
     {
       "file": "assets/Jackpot.mp3",
@@ -2851,8 +2851,8 @@
     },
     {
       "file": "game.js",
-      "bytes": 219234,
-      "sha256": "544e1c4eb067c4326a93323e4130fbba491ca11c4be0c96e95675dd983a95f6c"
+      "bytes": 221560,
+      "sha256": "5d8b7147e9dd442ecb06bf0cab359913ca252c029b69aeeb54899804af055fa4"
     },
     {
       "file": "guild-flow.js",
@@ -2866,8 +2866,8 @@
     },
     {
       "file": "guild-runtime.js",
-      "bytes": 26000,
-      "sha256": "c9fec448a66a12b4cfd9cf23156ecc295060483cee68cddaed1239aad6f54659"
+      "bytes": 26674,
+      "sha256": "e5593f2664a8aef73ce178f080cb20a245aaf61f3c869941be51498a34e18e70"
     },
     {
       "file": "guild-scenes.js",
@@ -2881,8 +2881,8 @@
     },
     {
       "file": "index-guild.html",
-      "bytes": 7610,
-      "sha256": "cff75108405631a614fbdecef4cce61f92b7e83b56505a2108dfe42e89636916"
+      "bytes": 7811,
+      "sha256": "f22fee5524c07b3a9a02a4f58c5f2541e8edf40b24a0054425adbfb128d84c98"
     },
     {
       "file": "index-stadium.html",
@@ -2891,8 +2891,8 @@
     },
     {
       "file": "index-v5.html",
-      "bytes": 40397,
-      "sha256": "e15c64d0129b3214a5d45f93be148d14882ade16cdd5d93ace0c23f2c7fa9a3b"
+      "bytes": 40986,
+      "sha256": "fd61637bbad353d6877be76d67407f95ee962a4b51731c0e752c53f2fd28b780"
     },
     {
       "file": "machine-presentation-blueprint.js",
@@ -2901,8 +2901,8 @@
     },
     {
       "file": "machines/catalog.js",
-      "bytes": 2641,
-      "sha256": "212ad19cd767e5412d07b40a8a833d7fced7185dacf365b93acb5b12910ff04f"
+      "bytes": 2918,
+      "sha256": "df446320ad894926a0252f085926c1b94bd8cb7838e53c586fe03a0a97828e21"
     },
     {
       "file": "machines/dragon-race/assets/characters-v1/makura-race-v1.png",
@@ -3126,8 +3126,8 @@
     },
     {
       "file": "machines/dragon-race/player/visual.css",
-      "bytes": 461481,
-      "sha256": "4b92f4eee84a5bd7cc2ae8158dc3b2169b81217a13c077732f76986b516055ca"
+      "bytes": 559333,
+      "sha256": "c43ed24750af9cbbe38a071640af5d1187b3f09b8c9bda31fbeaf3b502456f52"
     },
     {
       "file": "machines/dragon-race/presentation-contract.js",
@@ -3141,8 +3141,8 @@
     },
     {
       "file": "machines/dragon-race/runtime.js",
-      "bytes": 91402,
-      "sha256": "b44238950d4581d03b96cbb09a81c06b18ed5b41816500bf3cd1aeffd07615a2"
+      "bytes": 92384,
+      "sha256": "ef60dbfd710ee8c9d09cf782148e6e6bbf02104bdc4fadba07f8814688096ee7"
     },
     {
       "file": "machines/dragon-race/spectacle.js",
@@ -3286,8 +3286,8 @@
     },
     {
       "file": "visual.css",
-      "bytes": 492476,
-      "sha256": "4f363f73c58c04f2fc521cbafeb2996984bf3c5dbe5c6724b2fb7d7eb1392afb"
+      "bytes": 503095,
+      "sha256": "1ddacb50e23fcc3039bb1a11db445c3507dbc79164addb335cf6cfcf26b80e76"
     }
   ]
 }

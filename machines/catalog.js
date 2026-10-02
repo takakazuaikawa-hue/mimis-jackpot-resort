@@ -2,11 +2,11 @@
 (function (root) {
   "use strict";
   const entries = [
-    { id: "jackpot", title: "ミミのジャックポットリゾート", description: "仲間との勝負を巡る、物語のスロット。", tag: "物語と勝負", status: "available", image: "./assets/title-v5/mimi-jackpot-resort-original-keyart-v1.png", href: "./index-v5.html?machine=jackpot&view=slot", legacy: true },
-    { id: "dragon-race", title: "ミミのドラゴンレース紀行", description: "島を巡り、竜の疾走と神眼レースへ。", tag: "レースと冒険", status: "available", image: "./dragon-source/images/title_bg2.webp", logo: "./dragon-source/images/title_logo2.webp", href: "./machines/dragon-race/player/index.html?machine=dragon-race&view=slot" },
-    { id: "stadium", title: "ミミのマッドドクター・スタジアム", description: "白衣のミミと、改造球団の大勝負。", tag: "野球と改造", status: "available", image: "./assets/stadium/player_01_batting_drive_v1.png", href: "./index-stadium.html" },
-    { id: "arena", title: "ミミのときめき裏ボス闘技場", description: "仲間と力を重ね、裏ボスへ挑む対決台。", tag: "仲間と対決", status: "available", image: "./assets/arena/mimi-victory-v1.png", href: "./index-arena.html" },
-    { id: "guild", title: "ミミの嘘つきギャンブルギルド", description: "興行を育て、嘘と読み合いの大勝負へ。", tag: "興行と読み合い", status: "available", image: "./assets/guild/mimi-opening-v2.png", href: "./index-guild.html" },
+    { id: "jackpot", title: "ミミのジャックポットリゾート", description: "4人の卓でBET COINを集める。見切りでSTACKを削り、ロイヤルポットへ。", tag: "BET COINと見切り", status: "available", image: "./assets/title-v5/mimi-jackpot-resort-original-keyart-v1.png", href: "./index-v5.html?machine=jackpot&view=slot", legacy: true },
+    { id: "dragon-race", title: "ミミのドラゴンレース紀行", description: "神眼突破から無料10Gへ。応援点とストックを持ち込み、継続レースに挑む。", tag: "応援と継続ストック", status: "available", image: "./dragon-source/images/title_bg2.webp", logo: "./dragon-source/images/title_logo2.webp", href: "./machines/dragon-race/player/index.html?machine=dragon-race&view=slot" },
+    { id: "stadium", title: "ミミのマッドドクター・スタジアム", description: "成立役で走者を進める。4連続不発の改造で、出塁かホームランを狙う。", tag: "出塁とホームラン改造", status: "available", image: "./assets/stadium/player_01_batting_drive_v1.png", href: "./index-stadium.html" },
+    { id: "arena", title: "ミミのときめき裏ボス闘技場", description: "探索6点から3Gの試練へ。12人の仲間と黒星・隔壁の指示で裏ボスに挑む。", tag: "仲間の指示と試練", status: "available", image: "./assets/arena/mimi-victory-v1.png", href: "./index-arena.html" },
+    { id: "guild", title: "ミミの嘘つきギャンブルギルド", description: "客寄せと拍手で興行を育てる。噂とお茶の助けで大物に勝ち、仲間との祝宴へ。", tag: "拍手と仲間の助け", status: "available", image: "./assets/guild/mimi-opening-v2.png", href: "./index-guild.html" },
   ];
   const ids = new Set();
   for (const entry of entries) {

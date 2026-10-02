@@ -87,6 +87,11 @@
     $('Speaker').textContent=speaker;$('Line').textContent=line;
     $('Credit').textContent=state.credit.toLocaleString('ja-JP');$('Win').textContent=state.lastWin.toLocaleString('ja-JP');$('Bet').textContent=(spin?spin.isFree:state.phase==='bonus'||state.replay)?'FREE':BET;
     $('Prepared').textContent=state.order==='rumor'?'大入りの噂 準備完了':state.order==='tea'?'お茶の支度 準備完了':state.replay?'REPLAY · 次は無料':queued?'次のSPINを予約済み':p==='bonus'?'祝宴 · BET不要':'今夜も、一勝負。';
+    const help=$('HelpCharge');
+    help.textContent=state.order?'助け READY':p==='bonus'?`祝宴 残り${state.bonus}G`:p==='boss'?`不発 ${state.dry} / 4`:p==='trial'?`拍手 ${state.applause} / ${flow.goal(state)}`:p==='normal'?`客寄せ ${state.crowd} / 6`:'仲間 3 / 3';
+    const lamps=document.querySelector('.guild-help-lamps');lamps.hidden=p!=='boss';
+    lamps.parentElement.querySelector('span').textContent=p==='boss'?'仲間の助け':p==='trial'?'大入りへの拍手':p==='bonus'?'無料の祝宴':p==='complete'?'旅の仲間':'興行の客寄せ';
+    [...lamps.children].forEach((lamp,i)=>lamp.classList.toggle('is-lit',i<state.dry||!!state.order));
     $('Spin').textContent=feature?'PUSH':cmd?'PUSH':spin?(nextReel()>=0?'STOP':'予約'):'SPIN';$('Spin').disabled=!!cmd&&!cmd.safe;
     $('InputHint').textContent=cmd&&!cmd.safe?'画面の選択肢を選んでください':spin?'順番自由 · 1 / 2 / 3':'SPACEでも操作';
     stops.forEach((b,c)=>{b.disabled=!spin||spin.stopped[c]!==null||spin.pendingStops.includes(c);b.textContent=spin?.pendingStops.includes(c)?'停止予約':`STOP ${c+1}`;});

@@ -2044,6 +2044,30 @@
     els.shell.classList.toggle("reduced-motion", reducedMotion);
     renderOrbGems();
     renderTreasure();
+    renderCabinetMechanisms();
+  }
+
+  function renderCabinetMechanisms() {
+    const panel = els.shell.querySelector(".cabinet-mechanisms");
+    if (!panel) return; // Legacy and the separately exported Dragon player.
+    const snapshot = [currentStageScript().id, state.phase, state.chapter1BetCoins, state.chapter1ReadReady, state.chapter1ReadStreak, state.trialScore, state.trialSpins, state.bonusGames, state.chapter1PreparedAllies.length].join(":");
+    if (panel.dataset.snapshot === snapshot) return;
+    panel.dataset.snapshot = snapshot;
+    panel.hidden = currentStageScript().id !== "treasure";
+    if (panel.hidden) return;
+    const normal = state.phase === "normal";
+    const ready = normal && state.chapter1ReadReady;
+    panel.dataset.ready = String(ready);
+    panel.querySelector("[data-cabinet-coins]").textContent = `${state.chapter1BetCoins} / ${chapter1Flow.BOSS_TABLE.requiredBetCoins}`;
+    panel.querySelector("[data-cabinet-destination]").textContent = state.chapter1BetCoins >= chapter1Flow.BOSS_TABLE.requiredBetCoins ? "ロイヤルポット挑戦権" : "卓を突破して集める";
+    const label = panel.querySelector("[data-cabinet-read-label]");
+    const value = panel.querySelector("[data-cabinet-read]");
+    const rule = panel.querySelector("[data-cabinet-read-rule]");
+    label.textContent = normal ? "見切り" : state.phase === "trial" ? "VIP CHANCE" : state.phase === "bonus" ? "BONUS" : "TEAM LINK";
+    value.textContent = normal ? ready ? "READY" : `${state.chapter1ReadStreak} / ${chapter1Flow.READ_ASSIST.missThreshold}` : state.phase === "trial" ? `${state.trialScore} / ${economyRules.trial.successScore}` : state.phase === "bonus" ? `残り ${state.bonusGames}G` : `${state.chapter1PreparedAllies.length}人 READY`;
+    rule.textContent = normal ? ready ? "次の非REPLAYで STACK −1" : "不発4回 → 次の非REPLAYで−1" : state.phase === "trial" ? `残り ${Math.max(0, economyRules.trial.length - state.trialSpins)}G · 規定ポイントへ` : state.phase === "bonus" ? "小役保証のボーナス区間" : "準備した仲間が対決を強化";
+    panel.querySelector(".cabinet-read-lamps").hidden = !normal;
+    panel.querySelectorAll(".cabinet-read-lamps i").forEach((lamp, i) => lamp.classList.toggle("is-lit", i < state.chapter1ReadStreak || ready));
   }
 
   function updatePresentationHud() {

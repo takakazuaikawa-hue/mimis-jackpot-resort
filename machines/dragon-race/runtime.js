@@ -633,6 +633,16 @@
     text(".dragon-progress", objective);
     if (progress.phase === "boss" && progress.raceKind === "encore") text(".dragon-progress", `継続 ${progress.continuationScore}/4点 · 残り ${3 - progress.bossTurns}G · ストック ${progress.stock}個`);
     const visibleProgress = locked && mode === "photo" ? round.prior : progress;
+    let hardware = document.querySelector('.dragon-hardware');
+    if (!hardware) {
+      hardware = document.createElement('div'); hardware.className = 'dragon-hardware';
+      hardware.innerHTML = '<div><span>応援</span><strong data-dragon-cheers></strong><i></i><i></i></div><div><span>継続ストック</span><strong data-dragon-stock></strong><i></i><i></i></div>';
+      document.querySelector('.machine-metrics').append(hardware);
+    }
+    hardware.querySelector('[data-dragon-cheers]').textContent = `${visibleProgress.cheers} / 2`;
+    hardware.querySelector('[data-dragon-stock]').textContent = `${visibleProgress.stock} / 2`;
+    [...hardware.children].forEach((group, index) => group.querySelectorAll('i').forEach((lamp, i) => lamp.classList.toggle('is-lit', i < (index ? visibleProgress.stock : visibleProgress.cheers))));
+    hardware.title = 'BONUSの成立役で蓄積。応援は継続勝負の初期点、ストックは失敗時に1個消費して復活。';
     const ratio = displayPhase === "boss" ? isEncore() ? visibleProgress.continuationScore / 4 : 1 - visibleProgress.bossHp / 75 : displayPhase === "trial" ? visibleProgress.trialScore / 3
       : displayPhase === "bonus" ? visibleProgress.bonusLeft / 10 : visibleProgress.points / progression.TARGETS[visibleProgress.section];
     el(".dragon-progress-fill").style.transform = `scaleX(${Math.max(0, Math.min(1, ratio))})`;

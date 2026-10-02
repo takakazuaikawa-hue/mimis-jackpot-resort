@@ -222,7 +222,13 @@
     $('Round').textContent=`第${state.round+1}章 / ${state.phase==='normal'?'NORMAL':state.phase==='trial'?'TRIAL':state.phase==='battle'?'BOSS':'BONUS'}`; imageSource($('Boss'),b.image);$('Boss').alt=b.name;imageSource($('Ally'),ally.image);$('Ally').alt=ally.name;
     $('Credit').textContent=state.credit.toLocaleString('ja-JP');$('Bet').textContent=state.replay||state.phase==='bonus'?'FREE':BET;$('Win').textContent=state.lastWin;
     $('Prep').textContent=state.phase==='bonus'?`無料BONUS 残り${state.bonus}G`:state.order ? (state.order==='strike'?'黒星 スタンバイ':'隔壁 スタンバイ'):`ときめき ${state.dry} / 4`;
-    [...$('Charge').children].forEach((n,i)=>n.classList.toggle('is-lit',i<state.dry||!!state.order));
+    const chargeTarget=state.phase==='normal'?6:state.phase==='trial'?flow.trialTarget(state):4;
+    if($('Charge').children.length!==chargeTarget)$('Charge').replaceChildren(...Array.from({length:chargeTarget},()=>document.createElement('i')));
+    $('Charge').setAttribute('role','meter');$('Charge').setAttribute('aria-valuemin','0');$('Charge').setAttribute('aria-valuemax',String(chargeTarget));
+    $('Charge').setAttribute('aria-label',state.phase==='normal'?'探索ポイント':state.phase==='trial'?'試練ポイント':'仲間の指示までの連続不発');
+    const chargeValue=state.phase==='normal'?state.explore:state.phase==='trial'?state.trialScore:state.order?4:state.dry;
+    $('Charge').setAttribute('aria-valuenow',String(Math.min(chargeTarget,chargeValue)));$('Charge').hidden=['bonus','complete'].includes(state.phase);
+    [...$('Charge').children].forEach((n,i)=>n.classList.toggle('is-lit',i<chargeValue));
     $('Games').textContent=state.games+' G';$('Progress').textContent=state.phase==='complete'?'全3戦突破 · 仲間とつかんだ勝利':'成立役で仲間が攻撃。各対決の勝利で無料10G。';
     const journey=['normal','trial'].includes(state.phase);
     $('Journey').hidden=!journey;
@@ -238,7 +244,6 @@
       $('JourneyRule').textContent=trial?`残り${state.trialLeft}G · 配当成立 +2 / REPLAY +1`:'6ポイントで試練 · 通常配当 +2 / BAR・7 +3 / その他 +1';
       $('Prep').textContent=state.pending==='trialWin'?'試練 突破':state.pending==='trialFail'?'再探索へ':trial?`試練 残り${state.trialLeft}G`:`探索 ${points}/6`;
       $('Progress').textContent=trial?'3G以内の規定ポイントでボスへ。失敗後は必要ポイント減少（最低1）。':'探索 → 3Gの試練 → 裏ボス対決 → 無料10Gのときめきモード';
-      [...$('Charge').children].forEach((n,i)=>n.classList.toggle('is-lit',trial?i<state.trialLeft:i<Math.ceil(points/6*4)));
     }
     $('Line').textContent=resultText; $('Speaker').textContent=resultHeadline;
     if(directedBoss&&state.pending==='reward'&&!feature){$('Speaker').textContent=b.name;$('Line').textContent=directedBoss.concession;}
