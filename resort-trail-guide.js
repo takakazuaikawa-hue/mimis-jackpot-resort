@@ -146,7 +146,7 @@
     }
     function showHint() {
       if(host.hidden || !hint || blocked())return;
-      stop(); offer={action:hint.kind==="discover"?{type:"discover",id:hint.id}:{type:"move",to:hint.to},signature};
+      stop(); offer={action:hint.kind==="discover"?{type:"discover",id:hint.id}:hint.kind==="encounter"?{type:"encounter",id:hint.id}:{type:"move",to:hint.to},signature};
       bubble.querySelector("[data-trail-copy]").textContent=hint.copy;
       bubble.querySelector("[data-trail-follow]").textContent=hint.label;
       bubble.showPopover();animal.setAttribute("aria-expanded","true");
@@ -213,7 +213,7 @@
         ground=GROUND[id]?.slice()||null;hint=nextHint;reduced=motion==="reduced";
         host.dataset.place=id;host.dataset.time=time;host.dataset.destination=hint?.to||"";host.dataset.discovery=hint?.id||"";
         for(const button of scene.querySelectorAll("[data-trail-recommended]"))delete button.dataset.trailRecommended;
-        const destination=hint && scene.querySelector(hint.kind==="discover"?'[data-world-discover="'+hint.id+'"]':'[data-world-move="'+hint.to+'"]');
+        const destination=hint && scene.querySelector(hint.kind==="discover"?'[data-world-discover="'+hint.id+'"]':hint.kind==="encounter"?'[data-world-talk="'+hint.id+'"]':'[data-world-move="'+hint.to+'"]');
         if(destination && ground){
           // Wait beside the actual recommended path, leaving its hit region
           // clear. The short rightward hop approaches that waiting point.

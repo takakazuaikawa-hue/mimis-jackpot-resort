@@ -148,6 +148,45 @@
     if(!next.ok)return "今は、この作品を覚えておけません。";
     draft.stay.journey=next.journey;
   }
+  // Optional routes start with something the player actually noticed. Progress
+  // uses existing discoveries/encounters; only the chosen bookmark and the
+  // deliberately kept return memory are stored, never a second quest counter.
+  const PURSUITS = Object.freeze({
+    "museum-boat": {title:"絵の舟は、どこにいる？",place:"harbor",image:"assets/resort-art-v4/harbor-day-v4.png",found:"harbor-view",label:"港の舟を眺める",copy:"青い船首と、岸につなぐロープ。展示室の外で、本当の舟を探してみよう。",memory:"『朝の舟』から港へ。舟をつなぐロープと水面の光を見て戻ると、絵の中の一本の線が、島で暮らす人の一日の続きに見えた。"},
+    "museum-glass": {title:"ガラスの青を、海で探す",place:"cove",image:"assets/resort-art-v4/cove-day-v5.png",found:"cove-view",label:"入り江の色を眺める",copy:"薄い縁の青と、重なった深い青。浅瀬と沖の海では、どう違うだろう。",memory:"『潮のかたち』から入り江へ。浅瀬から沖へ変わる青を眺めて戻った。ガラスの厚みと海の深さ、別々のものに同じ色の変わり方を見つけた。"},
+    "museum-table": {title:"絵の食卓を、町で探す",place:"homekitchen",image:"assets/resort-town-v1/homekitchen-day-v1.png",label:"食卓を迎える人に話す",copy:"絵の中で差し出された一皿。その続きを、町で野菜を届ける人と、食卓を迎える人に聞いてみよう。",memory:"『いつもの食卓』から町へ。野菜を届ける人と、椅子を引いて迎える人の話を聞いた。展示室へ戻ると、絵の空いた席にも、誰かを待つ気持ちが見えた。"}
+  });
+  function pursuits(stay) {
+    const journey=stay.journey;
+    return Object.entries(PURSUITS).map(([id,entry])=>{
+      const steps=id==="museum-table" ? [
+        {place:"town",kind:"encounter",id:"vendor",label:"通りで、野菜を届ける人に聞く",done:journey.encounters.includes("vendor")},
+        {place:"homekitchen",kind:"encounter",id:"homecook",label:"家庭料理店で、迎える人に聞く",done:journey.encounters.includes("homecook")}
+      ] : [{place:entry.place,kind:"discover",id:entry.found,label:entry.label,done:journey.discoveries.includes(entry.found)}];
+      const unlocked=journey.discoveries.includes(id),connected=steps.every(step=>step.done),complete=unlocked&&connected&&journey.reflections.includes(id+"-return");
+      return {...entry,id,steps,unlocked,connected,complete,selected:journey.pursuit===id,next:steps.find(step=>!step.done)||{place:"museum",kind:"discover",id,label:"作品と島の景色を見比べる"}};
+    });
+  }
+  function beginPursuit(draft,id,context) {
+    const work=museumMoment(draft.stay,id);
+    if(!work || work.context!==context)return "作品を見ている場所で、もう一度選んでください。";
+    if(!work.remembered){const error=finishMuseum(draft,id,context);if(error)return error;}
+    draft.stay.journey.pursuit=id;
+  }
+  function finishPursuit(draft,id,context) {
+    const work=museumMoment(draft.stay,id),pursuit=pursuits(draft.stay).find(entry=>entry.id===id);
+    if(!work || work.context!==context || !pursuit?.unlocked || !pursuit.connected)return "島で手がかりを確かめてから、作品へ戻ってきましょう。";
+    if(pursuit.complete)return "このつながりは、すでに旅の記憶に残っています。";
+    draft.stay.journey.reflections.push(id+"-return");
+    if(draft.stay.journey.pursuit===id)draft.stay.journey.pursuit="";
+  }
+  function pursuitHint(stay) {
+    const pursuit=pursuits(stay).find(entry=>entry.selected&&entry.unlocked&&!entry.complete);
+    if(!pursuit)return null;
+    const next=pursuit.next,here=stay.journey.location,to=route(here,next.place)[1];
+    return next.place===here ? {...next,pursuit:pursuit.id,copy:next.label+"。絵の中で気になったものを、ここで確かめてみよう。"}
+      : to ? {kind:"move",to,pursuit:pursuit.id,label:SCENES[to].label+"へ続く道",copy:next.label+"ための道。次は「"+SCENES[to].label+"」へ。"} : null;
+  }
   const REST_PLACES = Object.freeze(["plaza", "lookout", "room", "pool", "pier", "garden", "highland", "cove", "lounge", "town"]);
   // Title continuation resumes a saved room/shop. Cabinet exits and explicit
   // back buttons still enter home through their existing return boundaries.
@@ -206,6 +245,15 @@
     const episode = encounterEpisode(stay, id);
     const planned = meetingDue(stay.journey, id);
     if (planned && !followup) return planned.arrival;
+    if(!followup && stay.journey.pursuit==="museum-table" && stay.journey.discoveries.includes("museum-table")){
+      if(id==="vendor")return "美術館の食卓の絵を見てきたんですか？ あの青い縁の皿、町角の家庭料理店でも使っていますよ。今日はその店へ、この籠の野菜を届けました。食卓を迎える人にも、声をかけてみてください。";
+      if(id==="homecook")return "あの絵の空いた椅子が気になったのね。私も席を整えるとき、椅子を少し引いておきます。まだ誰もいない席にも、迎えたい気持ちがあるから。食事を頼まなくても、ひと息ついていってね。";
+    }
+    if(!followup && id==="curator"){
+      const entries=pursuits(stay),chosen=entries.find(entry=>entry.selected&&entry.connected),last=stay.journey.reflections.filter(key=>key.endsWith("-return")).at(-1);
+      const returned=chosen || entries.find(entry=>entry.complete&&entry.id+"-return"===last);
+      if(returned)return ({"museum-boat":"港まで歩いてきたんですね。あのロープは飾りではなく、舟と島をつなぐもの。絵へ戻ると、小さな線にも役目が見えてきませんか。","museum-glass":"入り江で、浅い青と深い青を見つけてきたんですね。海をそのまま写さなくても、厚みを重ねて同じ変化を生み出せる。作品を見る旅も、島を見る旅も、まだ続きがあります。","museum-table":"町の人に話を聞いてきたんですね。差し出す皿や、少し引いた椅子。人を迎える仕草は、絵の中だけのものではなかったでしょう。もう一度、あの空いた席を見てみてください。"})[returned.id];
+    }
     if (episode?.complete) return episode.again;
     if (followup && id === "curator" && stay.journey.discoveries.includes("museum-table")) return "あの絵が気になったんですね。町角の家庭料理店でも、あんなふうに人が食卓を囲んでいます。鍋の野菜は通りの八百屋さんから。店の人に聞いて、食べてみると、絵の見え方も変わるかもしれません。";
     const mealPlace = ({fishcook:"fishdiner",homecook:"homekitchen",baker:"bakery"})[id];
@@ -457,6 +505,8 @@
     const journey = stay.journey, here = SCENES[journey.location];
     if (!here) return null;
     const plan = meetingPlan(journey);
+    const clue=pursuitHint(stay);
+    if(clue && stay.cruise.active?.stage!=="reserved" && !(plan&&plan.time===journey.time))return clue;
     const nearby = SCENIC_IDS.map(id=>scenicMoment(stay,id)).find(moment=>moment && !moment.remembered);
     if(nearby && stay.cruise.active?.stage!=="reserved" && !(plan && plan.time===journey.time))return {kind:"discover",id:nearby.id,label:nearby.label,copy:"小兎が足を止め、景色の方へ耳を向けた。一緒に、少し眺めていこう。"};
     let aim = stay.cruise.active?.stage === "reserved" && here.id !== "pier" ? "pier"
@@ -584,5 +634,5 @@
     draft.stay.relationships[id]=saved;
   }
 
-  return Object.freeze({ SCENES, OBSERVATIONS, DETAILS, RESIDENTS, NEW_CAST, REST_PLACES, resumeView, route, MEALS, mealAction, CRUISE, cruiseAction, GOODS, purchase, place, presence, MEETING_PLANS, meetingPlan, meetingOffer, encounterText, encounterEpisode, finishEncounter, itemMemory, travelReflections, rememberStay, chapterOne, finishChapterOne, SCENIC_IDS, scenicMoment, finishScenic, MUSEUM_WORKS, museumMoment, finishMuseum, trailHint, luanaTopics, shareLuanaStory, RELATIONSHIPS, relationshipEpisode, relationshipScene, relationshipAction, transition, dialogueContext });
+  return Object.freeze({ SCENES, OBSERVATIONS, DETAILS, RESIDENTS, NEW_CAST, REST_PLACES, resumeView, route, MEALS, mealAction, CRUISE, cruiseAction, GOODS, purchase, place, presence, MEETING_PLANS, meetingPlan, meetingOffer, encounterText, encounterEpisode, finishEncounter, itemMemory, travelReflections, rememberStay, chapterOne, finishChapterOne, SCENIC_IDS, scenicMoment, finishScenic, MUSEUM_WORKS, museumMoment, finishMuseum, PURSUITS, pursuits, beginPursuit, finishPursuit, pursuitHint, trailHint, luanaTopics, shareLuanaStory, RELATIONSHIPS, relationshipEpisode, relationshipScene, relationshipAction, transition, dialogueContext });
 });

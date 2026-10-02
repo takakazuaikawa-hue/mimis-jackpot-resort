@@ -138,7 +138,7 @@
   // A schematic of actual route edges, not an invented geographical scale.
   const MAP_POINTS = { arrival: [8,83], plaza: [22,83], casino: [8,48], galleria: [36,83], shop: [50,83], promenade: [64,83], harbor: [78,83], pier: [92,83], cove: [64,48], pool: [64,13], garden: [50,13], highland: [36,13], lookout: [50,48], hotel: [22,48], room: [8,13], lounge: [36,48], town: [78,48], museum: [78,13], fishdiner: [92,65], homekitchen: [92,36], bakery: [92,13] };
 
-  function create({ read, transact, navigate, onScene = () => {}, spatial = () => {}, lookScene = () => {}, composeScene, onDialogue = () => {}, onPersonal = () => {} }) {
+  function create({ read, transact, navigate, onScene = () => {}, spatial = () => {}, lookScene = () => {}, framePoint = () => {}, composeScene, onDialogue = () => {}, onPersonal = () => {} }) {
     const scene = document.querySelector("[data-world-scene]");
     const plate = document.querySelector("[data-world-plate]");
     const heading = document.querySelector("[data-world-heading]");
@@ -166,6 +166,10 @@
     const mapCanvas = map.querySelector("[data-world-map-canvas]");
     const mapRoute = map.querySelector("[data-world-map-route]");
     const mapWalk = map.querySelector("[data-world-map-walk]");
+    const clue=document.createElement("details");clue.className="stay-pursuit";clue.hidden=true;clue.open=true;
+    clue.innerHTML='<summary><span>絵から島へ</span><b data-pursuit-title></b></summary><p data-pursuit-next></p><button type="button" data-pursuit-frame>手がかりへの道を見渡す</button><button type="button" data-pursuit-pause>今は自由に歩く</button><p data-pursuit-status role="status"></p>';
+    scene.closest('.app-view').append(clue);
+    const mapClues=document.createElement('section');mapClues.className="stay-map-clues";mapCanvas.before(mapClues);
     const mapPlan = document.createElement("section");
     mapPlan.className = "stay-map-plan"; mapPlan.hidden = true;
     mapPlan.innerHTML = '<p data-meeting-note></p><button type="button" data-meeting-route>待ち合わせへの道順</button><button type="button" data-meeting-cancel>約束を取り消す</button><p role="status" data-meeting-status></p>';
@@ -466,11 +470,39 @@
         }
       }
       if(id==="museum")museum.decorate(actions,spatial);
+      renderPursuit();
       trail?.update({id,time:journey.time,nextHint:world.trailHint(read().stay),motion:read().settings.motion});
     }
+    function renderPursuit(){
+      const pursuit=world.pursuits(read().stay).find(entry=>entry.selected&&entry.unlocked&&!entry.complete);
+      clue.hidden=!pursuit;clue.querySelector('[data-pursuit-status]').textContent="";
+      if(!pursuit)return;
+      clue.dataset.pursuit=pursuit.id;clue.querySelector('[data-pursuit-title]').textContent=pursuit.title;
+      clue.querySelector('[data-pursuit-next]').textContent=pursuit.next.label+" · "+world.SCENES[pursuit.next.place].label;
+      clue.querySelector('[data-pursuit-frame]').textContent=pursuit.next.place===read().stay.journey.location?"ここで手がかりを探す":"続く道を見渡す";
+    }
+    clue.querySelector('[data-pursuit-frame]').addEventListener('click',()=>{
+      if(plateRequest || scenic.active || museum.active || document.querySelector('dialog[open]'))return;
+      const hint=world.pursuitHint(read().stay);if(!hint)return;
+      const selector=hint.kind==="move"?'[data-world-move="'+hint.to+'"]':hint.kind==="encounter"?'[data-world-talk="'+hint.id+'"]':'[data-world-discover="'+hint.id+'"]';
+      let target=actions.querySelector(selector);
+      if(hint.kind==="discover"&&world.MUSEUM_WORKS[hint.id]){
+        const room=museum.nextRoomFor(hint.id);if(room)target=actions.querySelector('[data-museum-room="'+room+'"]');
+      }
+      if(target)framePoint(target);
+    });
+    clue.querySelector('[data-pursuit-pause]').addEventListener('click',()=>{
+      if(plateRequest || document.querySelector('dialog[open]'))return;
+      const saved=transact(draft=>{draft.stay.journey.pursuit="";});
+      if(!saved.ok){clue.querySelector('[data-pursuit-status]').textContent=saved.message;return;}
+      render("手がかりは島の案内に残して、今は気の向く方へ歩こう。");
+    });
     function act(action,source=document.activeElement) {
       if (cruise.sailing() || plateRequest || scenic.active || museum.active) return;
-      if(action.type==="discover" && world.museumMoment(read().stay,action.id)){museum.open(action.id,source);return;}
+      if(action.type==="discover" && world.museumMoment(read().stay,action.id)){
+        const room=museum.nextRoomFor(action.id);if(room){museum.move(room);return;}
+        museum.open(action.id,source);return;
+      }
       if(action.type==="discover" && world.scenicMoment(read().stay,action.id)){scenic.open(action.id,source);return;}
       const firstWords = action.type === "encounter" ? world.encounterText(read().stay, action.id) : "";
       const next = world.transition(read().stay.journey, action);
@@ -517,6 +549,20 @@
       mapPlan.dataset.plan = plan?.id || "";
       mapPlan.querySelector("[data-meeting-note]").textContent = plan ? plan.label + "。時間帯は自分で進められます。別の予定を優先しても、次の同じ時間帯に会えます。" : "";
       mapPlan.querySelector("[data-meeting-status]").textContent = "";
+      mapClues.replaceChildren();
+      const pursuits=world.pursuits(read().stay).filter(entry=>entry.unlocked);
+      mapClues.hidden=!pursuits.length;
+      if(pursuits.length){const title=document.createElement('h4');title.textContent="気になった作品の続き";mapClues.append(title);}
+      for(const pursuit of pursuits){
+        const button=document.createElement('button');button.type="button";button.dataset.pursuitSelect=pursuit.id;
+        button.textContent= pursuit.title+(pursuit.complete?" · 思い出に残した":pursuit.selected?" · 探している":" · 続きを探す");
+        button.disabled=pursuit.complete;
+        button.addEventListener('click',()=>{
+          const saved=transact(draft=>{if(!world.pursuits(draft.stay).some(entry=>entry.id===pursuit.id&&entry.unlocked&&!entry.complete))return "この手がかりは今は選べません。";draft.stay.journey.pursuit=pursuit.id;});
+          if(!saved.ok){mapRoute.textContent=saved.message;return;}
+          map.close();render();
+        });mapClues.append(button);
+      }
       mapCanvas.replaceChildren();
       const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
       svg.setAttribute("viewBox", "0 0 1000 480"); svg.setAttribute("preserveAspectRatio", "none"); svg.setAttribute("aria-hidden", "true");

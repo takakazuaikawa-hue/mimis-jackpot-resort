@@ -27,6 +27,20 @@
       hint.innerHTML='<span>ドラッグで見渡す · 光る道へ</span><button type="button" aria-label="視点を正面に戻す">正面へ</button>';
       if (shell.matches("dialog")) hint.querySelector("span").textContent="ドラッグで見渡す";
       shell.append(hint); hint.querySelector("button").addEventListener("click",()=>{reset(camera);node.focus({preventScroll:true});});
+      if(node.matches(".stay-world-scene")) {
+        camera.edges=[-1,1].map(direction=>{
+          const button=document.createElement("button");button.type="button";button.className="stay-look-edge";button.hidden=true;
+          button.dataset.lookEdge=direction<0?"left":"right";
+          button.innerHTML='<b aria-hidden="true">'+(direction<0?'‹':'›')+'</b><span></span>';
+          shell.append(button);
+          button.addEventListener("click",()=>{
+            const candidates=offscreen(camera,direction);
+            if(candidates.length)framePoint(candidates[0]);
+          });
+          return button;
+        });
+        new MutationObserver(()=>paint(camera)).observe(node,{childList:true,subtree:true});
+      }
       // World/modal controls remain accessible above the camera. Pointer
       // capture is delayed until movement, so a normal region click is intact.
       node.addEventListener("pointerdown",event=>{
@@ -82,6 +96,28 @@
       camera.x=Math.max(-maxX,Math.min(maxX,camera.x));camera.y=Math.max(-maxY,Math.min(maxY,camera.y));
       node.style.setProperty("--look-x",camera.x.toFixed(2)+"px");node.style.setProperty("--look-y",camera.y.toFixed(2)+"px");
       node.style.setProperty("--look-scale",camera.scale);
+      camera.edges?.forEach((button,index)=>{
+        const count=offscreen(camera,index===0?-1:1).length;
+        button.hidden=count===0 || node.hasAttribute("aria-busy");
+        button.querySelector("span").textContent=(index===0?"左":"右")+"にも道";
+        button.setAttribute("aria-label",(index===0?"左":"右")+"を見渡す。画面の外に道が"+count+"つ");
+      });
+    }
+    function offscreen(camera,direction) {
+      const bounds=camera.shell.getBoundingClientRect();
+      return [...camera.node.querySelectorAll('[data-point-kind="exit"]')].filter(node=>{
+        if(!node.getClientRects().length || node.disabled || node.hidden)return false;
+        const rect=node.getBoundingClientRect(),center=rect.left+rect.width/2;
+        return direction<0 ? center<bounds.left+32 : center>bounds.right-32;
+      }).sort((a,b)=>direction*(a.getBoundingClientRect().left-b.getBoundingClientRect().left));
+    }
+    function framePoint(target) {
+      const camera=cameras.get(target?.closest(".stay-look-scene"));
+      if(!camera || camera.node.hasAttribute("aria-busy"))return false;
+      const rect=target.getBoundingClientRect(),bounds=camera.shell.getBoundingClientRect();
+      camera.x+=bounds.left+bounds.width/2-rect.left-rect.width/2;
+      camera.y+=bounds.top+bounds.height/2-rect.top-rect.height/2;
+      paint(camera);target.focus({preventScroll:true});return true;
     }
     function scene(node,signature) {
       if(!node)return;
@@ -125,7 +161,7 @@
         release(){stop();camera.x=previous.x;camera.y=previous.y;paint(camera);}
       };
     }
-    return {scene,spatial,compose};
+    return {scene,spatial,compose,framePoint};
   }
   root.MimiResortLook=Object.freeze({create});
 })(window);

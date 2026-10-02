@@ -2135,7 +2135,20 @@
       if (state.chapter1ReadReady) forecasts.push("見切り READY");
       else if (state.chapter1ReadStreak > 0) forecasts.push(`観察 ${state.chapter1ReadStreak}/${chapter1Flow.READ_ASSIST.missThreshold}`);
       const forecast = forecasts.length > 0 ? ` · ${forecasts.join(" · ")}` : "";
-      els.casinoTableHud.innerHTML = `<strong>${displayTable.name}</strong><span>STACK ${displayStack}</span><i>BET COIN ${state.chapter1BetCoins}/${chapter1Flow.BOSS_TABLE.requiredBetCoins}${forecast}</i>`;
+      const clearedTables = Math.min(chapter1Flow.TABLE_ORDER.length, state.chapter1BetCoins);
+      const route = chapter1Flow.TABLE_ORDER.map((table, index) => {
+        const status = index < clearedTables ? "clear" : table.id === displayTable.id ? "current" : "next";
+        return `<li data-table-route="${status}" ${status === "current" ? 'aria-current="step"' : ""}><b>${status === "clear" ? "✓" : index + 1}</b><span>${table.name.replace("先輩", "")}</span><small>${status === "clear" ? "突破" : status === "current" ? "対戦中" : "次の卓"}</small></li>`;
+      }).join("");
+      const stackMeter = Array.from({length:displayTable.stack}, (_, index) => `<b data-stack-filled="${index < displayStack}" aria-hidden="true"></b>`).join("");
+      const nextConsequence = displayStack === 0 ? "BET COINを獲得 · 次の卓へ"
+        : state.chapter1ReadReady ? "見切り READY · 次の非REPLAYで STACK −1"
+        : `STACKを0にして、次の卓へ${forecast}`;
+      const runRoute=els.shell.querySelector("#casinoRunRoute");
+      if(runRoute){runRoute.hidden=state.phase!=="normal";runRoute.innerHTML=`<p>4人の卓を突破して、ロイヤルポットへ</p><ol class="casino-table-route" aria-label="4人の卓の進行">${route}</ol>`;}
+      els.casinoTableHud.innerHTML = document.body.dataset.cabinetLayout === "desktop-v5"
+        ? `<div class="casino-table-status"><strong>${displayTable.name}</strong><span>STACK ${displayStack}</span></div><div class="casino-stack-meter" aria-label="相手の残りSTACK ${displayStack} / ${displayTable.stack}">${stackMeter}</div><i>BET COIN ${state.chapter1BetCoins}/${chapter1Flow.BOSS_TABLE.requiredBetCoins}</i><p class="casino-table-next">${nextConsequence}</p>`
+        : `<strong>${displayTable.name}</strong><span>STACK ${displayStack}</span><i>BET COIN ${state.chapter1BetCoins}/${chapter1Flow.BOSS_TABLE.requiredBetCoins}${forecast}</i>`;
       els.casinoTableHud.hidden = false;
     } else {
       delete els.shell.dataset.chapter1Opponent;
@@ -2150,6 +2163,7 @@
       delete els.shell.dataset.chapter1TableStack;
       els.casinoOpponent.hidden = true;
       els.casinoTableHud.hidden = true;
+      const runRoute=els.shell.querySelector("#casinoRunRoute");if(runRoute)runRoute.hidden=true;
     }
     els.shell.dataset.step = String(state.adventureStep);
     const treasureOwnsChapterCopy = script.id === "treasure";

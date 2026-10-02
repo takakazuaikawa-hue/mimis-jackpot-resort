@@ -234,7 +234,7 @@
       ambience.reveal(node, signature);
       look.scene(node,signature);
     }
-    const worldView = root.MimiResortWorldView.create({ read, transact, navigate, onScene: scene, spatial:look.spatial, lookScene:look.scene, composeScene:look.compose, onDialogue:rememberWords, onPersonal:openPersonal });
+    const worldView = root.MimiResortWorldView.create({ read, transact, navigate, onScene: scene, spatial:look.spatial, lookScene:look.scene, framePoint:look.framePoint, composeScene:look.compose, onDialogue:rememberWords, onPersonal:openPersonal });
     let currentView = "title", confirming = false, selected = "postcard", selectedRoom = "postcard";
     const itemFor = id => goods.find(entry => entry.id === id);
     function pose(name) {
@@ -370,6 +370,7 @@
       if (stay.metLuana) lines.push("ガレリアで、ルアナと話した。");
       for (const [id, relation] of Object.entries(stay.relationships)) if (relation.stage === "complete") lines.push(world.RELATIONSHIPS[id].memory);
       for (const id of journey.appointmentsKept) lines.push(world.MEETING_PLANS[id].memory);
+      for (const pursuit of world.pursuits(stay)) if(pursuit.complete)lines.push(pursuit.memory);
       const plan = world.meetingPlan(journey);
       if (plan) lines.push("これからの予定 — " + plan.label + "。");
       const displayed = goods.filter(item => stay.placements[item.id]).map(item => item.name);

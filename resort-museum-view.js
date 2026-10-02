@@ -16,6 +16,14 @@
     dialog.innerHTML='<header><div><p data-museum-medium></p><h2 id="museumWorkName"></h2></div><button type="button" data-museum-close>展示室に戻る ×</button></header><div class="stay-museum-art-window"><div class="stay-museum-art"><img alt=""><div data-museum-details></div></div><div class="stay-museum-art-loading" role="status"><p></p><button type="button" data-museum-retry hidden>作品を再読み込み</button></div></div><section class="stay-museum-reading"><p class="stay-museum-eyebrow">気になるところから</p><h3 data-museum-detail-name>作品に近づいて</h3><p data-museum-copy aria-live="polite"></p><button type="button" data-museum-whole hidden>作品全体へ</button><div data-museum-found></div><p data-museum-connection></p><p data-museum-status role="status"></p><button type="button" data-museum-remember></button></section>';
     app.append(dialog);
     const art=dialog.querySelector(".stay-museum-art"),image=art.querySelector("img"),points=dialog.querySelector("[data-museum-details]"),loading=dialog.querySelector(".stay-museum-art-loading"),remember=dialog.querySelector("[data-museum-remember]"),whole=dialog.querySelector("[data-museum-whole]"),found=dialog.querySelector("[data-museum-found]");
+    const pair=document.createElement("div");pair.className="stay-museum-pair";pair.hidden=true;
+    pair.innerHTML='<figure><img alt=""><figcaption>展示室で見た作品</figcaption></figure><figure><img alt=""><figcaption data-pair-place></figcaption></figure><p data-pair-status role="status"></p><button type="button" data-pair-retry hidden>景色を再読み込み</button>';
+    dialog.querySelector(".stay-museum-art-window").append(pair);
+    const follow=document.createElement("button");follow.type="button";follow.dataset.museumFollow="true";
+    const keep=document.createElement("button");keep.type="button";keep.dataset.museumKeepConnection="true";keep.hidden=true;
+    const back=document.createElement("button");back.type="button";back.dataset.museumCompareBack="true";back.textContent="作品の細部へ戻る";back.hidden=true;
+    remember.before(follow,keep,back);
+    let pairSequence=0,pairTimer=0;
     const media=matchMedia("(prefers-reduced-motion: reduce)");
     let timer=0;
     function stop(){art.getAnimations().forEach(a=>a.cancel());}
@@ -38,15 +46,16 @@
     function all(){stop();art.style.transform="none";delete art.dataset.detailFocus;whole.hidden=true;if(work){dialog.querySelector("[data-museum-detail-name]").textContent="作品に近づいて";dialog.querySelector("[data-museum-copy]").textContent=work.opening;}}
     function load(){
       clearTimeout(timer);const token=++sequence;
-      loading.hidden=false;points.hidden=true;remember.disabled=true;
+      loading.hidden=false;points.hidden=true;remember.disabled=true;follow.disabled=true;
       loading.querySelector("p").textContent="作品を準備しています…";loading.querySelector("button").hidden=true;
       const fail=()=>{if(token!==sequence || !dialog.open)return;clearTimeout(timer);loading.querySelector("p").textContent="作品を読み込めませんでした。再読み込みできます。";loading.querySelector("button").hidden=false;};
-      image.onerror=fail;image.onload=async()=>{try{await image.decode();}catch(_){fail();return;}if(token!==sequence || !dialog.open)return;clearTimeout(timer);loading.hidden=true;points.hidden=false;remember.disabled=false;};
+      image.onerror=fail;image.onload=async()=>{try{await image.decode();}catch(_){fail();return;}if(token!==sequence || !dialog.open)return;clearTimeout(timer);loading.hidden=true;points.hidden=false;remember.disabled=false;follow.disabled=false;};
       timer=setTimeout(fail,15000);image.src=work.image;
     }
     function cleanup(){
       if(!work)return;
-      sequence++;clearTimeout(timer);stop();image.onload=image.onerror=null;
+      sequence++;pairSequence++;clearTimeout(timer);clearTimeout(pairTimer);stop();image.onload=image.onerror=null;
+      pair.hidden=true;keep.hidden=true;back.hidden=true;
       work=null;delete app.dataset.museumArt;const target=invoker;invoker=null;refresh();
       if(target?.isConnected)target.focus({preventScroll:true});
       else scene.querySelector('[data-world-discover="'+dialog.dataset.work+'"]')?.focus({preventScroll:true});
@@ -57,6 +66,36 @@
     dialog.addEventListener("close",()=>{if(!dialog.open)cleanup();});
     dialog.addEventListener("keydown",e=>{if(["Escape","Enter"," ","ArrowLeft","ArrowRight","ArrowUp","ArrowDown"].includes(e.key))e.stopPropagation();});
     whole.addEventListener("click",all);dialog.querySelector("[data-museum-retry]").addEventListener("click",load);
+    async function compare(){
+      const pursuit=world.pursuits(read().stay).find(entry=>entry.id===work?.id);
+      if(!pursuit?.connected || loading.hidden===false)return;
+      const token=++pairSequence;clearTimeout(pairTimer);stop();pair.hidden=false;pair.dataset.ready="false";keep.hidden=false;keep.disabled=true;back.hidden=false;follow.hidden=true;whole.hidden=true;
+      keep.textContent=pursuit.complete?"客室の旅の記録に残っています":"このつながりを旅の記憶に残す";
+      const status=pair.querySelector('[data-pair-status]');status.textContent="島の景色を準備しています…";pair.querySelector('[data-pair-retry]').hidden=true;
+      dialog.querySelector('[data-museum-detail-name]').textContent=pursuit.title;dialog.querySelector('[data-museum-copy]').textContent=pursuit.memory;
+      pair.querySelector('[data-pair-place]').textContent="島にある場所 · "+world.SCENES[pursuit.place].label+"（昼）";
+      const images=pair.querySelectorAll('img');images[0].alt='『'+work.title+'』';images[1].alt=world.SCENES[pursuit.place].label;
+      try{
+        await Promise.race([Promise.all([...images].map(async(img,index)=>{img.src=index===0?work.image:pursuit.image;await img.decode();})),new Promise((_,reject)=>{pairTimer=setTimeout(()=>reject(Error('timeout')),15000);})]);
+        if(token!==pairSequence || !dialog.open)return;clearTimeout(pairTimer);pair.dataset.ready="true";status.textContent="絵の中と、歩いた島。気になったところを見比べよう。";keep.disabled=pursuit.complete;
+      }catch(_){if(token!==pairSequence || !dialog.open)return;clearTimeout(pairTimer);status.textContent="見比べる景色を読み込めませんでした。記憶を残す前に再読み込みできます。";pair.querySelector('[data-pair-retry]').hidden=false;}
+    }
+    pair.querySelector('[data-pair-retry]').addEventListener('click',compare);
+    back.addEventListener('click',()=>{pairSequence++;clearTimeout(pairTimer);pair.hidden=true;keep.hidden=true;back.hidden=true;follow.hidden=false;all();});
+    follow.addEventListener('click',event=>{
+      if(event.detail>1 || !work || follow.disabled)return;
+      if(world.pursuits(read().stay).find(entry=>entry.id===work.id)?.connected){compare();return;}
+      const saved=transact(draft=>world.beginPursuit(draft,work.id,work.context));
+      if(!saved.ok){dialog.querySelector('[data-museum-status]').textContent=saved.message;return;}
+      close();caption.textContent="作品の外で、手がかりを探そう。小兎も道を気にしている。";
+    });
+    keep.addEventListener('click',event=>{
+      if(event.detail>1 || !work || keep.disabled || pair.dataset.ready!=="true")return;
+      const id=work.id,context=work.context,pursuit=world.pursuits(read().stay).find(entry=>entry.id===id);
+      const saved=transact(draft=>{if(!world.museumMoment(draft.stay,id)?.remembered){const error=world.beginPursuit(draft,id,context);if(error)return error;}return world.finishPursuit(draft,id,context);});
+      if(!saved.ok){dialog.querySelector('[data-museum-status]').textContent=saved.message;return;}
+      onDialogue?.("絵から島へ",pursuit.memory);close();caption.textContent="絵と島のつながりを旅の記憶に残した。客室でも、振り返れる。";
+    });
     remember.addEventListener("click",event=>{
       if(event.detail>1 || !work)return;
       const current=world.museumMoment(read().stay,work.id),status=dialog.querySelector("[data-museum-status]");
@@ -77,6 +116,7 @@
     return {
       sync(location){if(location!=="museum"){close();room="hall";delete scene.dataset.museumRoom;}else scene.dataset.museumRoom=room;},
       get room(){return room;},get label(){return ROOMS[room].label;},get plate(){return ROOMS[room].image;},get copy(){return ROOMS[room].copy;},get active(){return dialog.open;},
+      nextRoomFor(id){const to=id==="museum-boat"?"sea":id==="museum-table"?"table":"hall";return room===to?"":ROOMS[room].exits.includes(to)?to:"sea";},
       move(to){if(dialog.open || scene.hasAttribute("aria-busy") || read().stay.journey.location!=="museum" || !ROOMS[room].exits.includes(to))return;room=to;refresh();},
       decorate(actions,spatial){
         if(room==="hall"){point(actions,spatial,"海の展示室へ",{museumRoom:"sea"},[39,55,15,30],"exit");return;}
@@ -96,6 +136,9 @@
         if(dialog.open || document.querySelector("dialog[open]") || scene.hasAttribute("aria-busy"))return false;
         const data=world.museumMoment(read().stay,id);if(!data)return false;
         work=data;invoker=source;seen=new Set();dialog.dataset.work=id;app.dataset.museumArt="true";
+        pair.hidden=true;keep.hidden=true;back.hidden=true;follow.hidden=false;
+        const pursuit=world.pursuits(read().stay).find(entry=>entry.id===id);
+        follow.textContent=pursuit.connected?"歩いた島と、作品を見比べる":"この絵の続きを、島で探す";
         dialog.querySelector("h2").textContent="『"+work.title+"』";dialog.querySelector("[data-museum-medium]").textContent=work.medium;
         dialog.querySelector("[data-museum-connection]").textContent=work.connection;dialog.querySelector("[data-museum-status]").textContent="";
         remember.textContent=work.remembered?"展示室に戻る":"この作品を旅の記憶に残す";image.alt="『"+work.title+"』の作品全体";

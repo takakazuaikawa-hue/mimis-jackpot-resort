@@ -1,8 +1,8 @@
 {
   "status": "PC PLAYTEST / PRODUCTION QUALITY UNAPPROVED",
-  "createdAt": "2026-10-01T23:16:54.374Z",
+  "createdAt": "2026-10-02T00:37:34.564Z",
   "entry": "index.html",
-  "bytes": 903788415,
+  "bytes": 903813099,
   "files": [
     {
       "file": "arena-flow.js",
@@ -2841,8 +2841,8 @@
     },
     {
       "file": "game.js",
-      "bytes": 217416,
-      "sha256": "e1352d1f0f7acb5c3339b3bc891825d562454514252df556258fe5a767879c58"
+      "bytes": 219234,
+      "sha256": "544e1c4eb067c4326a93323e4130fbba491ca11c4be0c96e95675dd983a95f6c"
     },
     {
       "file": "guild-flow.js",
@@ -2881,8 +2881,8 @@
     },
     {
       "file": "index-v5.html",
-      "bytes": 39460,
-      "sha256": "8a8bd3d665537542ed9a52c1be610deb630ec481fb67e2e7d6a60140d52d466a"
+      "bytes": 39536,
+      "sha256": "402ff3c73e3e3d7071537d82328937a48f862ad9a43fd720f3327e638c911599"
     },
     {
       "file": "machine-presentation-blueprint.js",
@@ -3186,8 +3186,8 @@
     },
     {
       "file": "profile-store.js",
-      "bytes": 13135,
-      "sha256": "0a7321c3ec24174cfb1500a0f18e2d0cc45cc634a8d1dfbc3873d300df9cdcd2"
+      "bytes": 13393,
+      "sha256": "84d6f521313b7f46d8bdf524e86d67b3801ad26c9d5960e41cee9118f4b16acf"
     },
     {
       "file": "resort-ambience.js",
@@ -3206,13 +3206,13 @@
     },
     {
       "file": "resort-look.js",
-      "bytes": 7629,
-      "sha256": "e3738bf8758d6d366914a9dd9855776b6f799fc8b0f8f48f5a6b0556f2c3fecf"
+      "bytes": 9773,
+      "sha256": "34d22e2ee0b4f0199fba198eee0388c33320dbe58f6e2c5ffa91c4bbc3cf5c95"
     },
     {
       "file": "resort-museum-view.js",
-      "bytes": 11134,
-      "sha256": "c99e167c58e3529cecfade4f719363ee5301f5a475d24cc72e6eaf74de7c14bc"
+      "bytes": 15966,
+      "sha256": "705b853bce5ff9a7f90a1cbfcd6b3cde04d82ef9bebf2cd40cd2be46175d3b2e"
     },
     {
       "file": "resort-rewards.js",
@@ -3226,23 +3226,23 @@
     },
     {
       "file": "resort-stay.js",
-      "bytes": 42771,
-      "sha256": "abf99aead0d465c8041d105d097044cf110bb0a74449eb85897b13a98e23d9d8"
+      "bytes": 42897,
+      "sha256": "9bbb9ccc37284afda72385a09abc6c949ff81d0c4f835f370818bce2f7effba4"
     },
     {
       "file": "resort-trail-guide.js",
-      "bytes": 18494,
-      "sha256": "6068e5133b835b0c6f8af3cbf83e8e0777c36ae7c5149ac6f24628cad398a34f"
+      "bytes": 18606,
+      "sha256": "83a6b753617da49b7d8981b8e822660cfe5bdad43224461c44f715dd18589ad8"
     },
     {
       "file": "resort-world-view.js",
-      "bytes": 41988,
-      "sha256": "ead56acd3e09a8be52d924b60fcdb43fb6817930997b1028975a9fb81f1c0715"
+      "bytes": 45581,
+      "sha256": "e894a8cd092831db3204135d34307571daf1853ccf3006439125b6a24109310f"
     },
     {
       "file": "resort-world.js",
-      "bytes": 82149,
-      "sha256": "4e9a90547c28750794aaa8920c460f9e9a10c327255cc03c6fd9975da0ed77a5"
+      "bytes": 88309,
+      "sha256": "36fba933cacae74775379b70727b1c59a220a129ec9ab4ca800535fdee327ae4"
     },
     {
       "file": "runtime/dom-contract.js",
@@ -3276,8 +3276,8 @@
     },
     {
       "file": "visual.css",
-      "bytes": 472348,
-      "sha256": "6a93013452aad853fbbc5790032d0fc1c168903bd969702e1a0125409524eb59"
+      "bytes": 477913,
+      "sha256": "634024c7d701c87f7ce12f3c0ff1ff0c3709b97a6c235bd33e315f413ce97730"
     }
   ]
 }

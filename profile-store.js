@@ -170,7 +170,8 @@
       meetings: unique(value.meetings, ["guide:promenade", "guide:harbor", "guide:lounge", "traveler:highland", "traveler:lookout"]),
       appointment: meetingPlans.includes(value.appointment) && !appointmentsKept.includes(value.appointment) ? value.appointment : "",
       appointmentsKept,
-      reflections: unique(value.reflections, ["first-walk", "familiar-island", "my-stay", "chapter-one"])
+      pursuit: ["museum-boat", "museum-glass", "museum-table"].includes(value.pursuit) && Array.isArray(value.discoveries) && value.discoveries.includes(value.pursuit) ? value.pursuit : "",
+      reflections: unique(value.reflections, ["first-walk", "familiar-island", "my-stay", "chapter-one", "museum-boat-return", "museum-glass-return", "museum-table-return"])
     };
   }
 
