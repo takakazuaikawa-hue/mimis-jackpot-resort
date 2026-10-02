@@ -426,7 +426,7 @@
       $("VictoryWin").animate([{ color: "#ffffff", transform: "translateY(-5px)" }, { color: "#ffdb87", transform: "translateY(0)" }], { duration: turbo ? 200 : 500, easing: "ease-out" });
     }
     if (settled.hit && state.phase !== "bonus" && !state.pending) $("Cinema").animate(reduced.matches ? [] : [{ opacity: 0, transform: "translateX(35px)" }, { opacity: 1, transform: "translateX(0)" }], { duration: reduced.matches ? 0 : 400, easing: "ease-out" });
-    window.dispatchEvent(new CustomEvent('mimi:cabinet-result', {detail:{machineId:'stadium',type:'revealed',transactionId,payout:result.payout,replay:Boolean(result.replayHit)}}));
+    window.dispatchEvent(new CustomEvent('mimi:cabinet-result', {detail:{machineId:'stadium',type:'revealed',transactionId,payout:result.payout,replay:Boolean(result.replayHit),lineIds:result.litLines.map(l=>l.id)}}));
     window.dispatchEvent(new CustomEvent("mimi:stadium-settled", { detail: { games: state.games, payout: result.payout } }));
   }
   function tick(now) {

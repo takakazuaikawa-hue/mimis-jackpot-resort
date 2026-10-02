@@ -2668,7 +2668,7 @@
     syncChapter1SpinHeat(currentSpin.presentation);
     syncChapter1PokerTable(0, "pending");
     clearHighlights();
-    els.paylineLayer.innerHTML = "";
+    if(window.MimiReelLines)window.MimiReelLines.clear(els.paylineLayer);else els.paylineLayer.innerHTML='';
     els.reelFlare.classList.remove("show");
     els.reelFrame.classList.remove("anticipation");
     els.shell.querySelector?.(".casino-table-playfield")?.classList.remove("is-tenpai", "is-tenpai-hot");
@@ -4400,6 +4400,7 @@
   }
 
   function drawPayline(line) {
+    if(window.MimiReelLines){window.MimiReelLines.draw(els.paylineLayer,els.reels,line,state.grid[line.cells[0][0]][line.cells[0][1]].id==='replay');return;}
     const el = document.createElement("div");
     el.className = `payline ${line.className}`;
     els.paylineLayer.appendChild(el);

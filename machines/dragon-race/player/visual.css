@@ -8216,6 +8216,9 @@ body[data-cabinet-layout="desktop-v5"] .casino-table-hud { bottom: 4.5%; width: 
 
 /* Desktop scene hierarchy: one voice, one receipt, unobstructed scene center. */
 .dragon-travel-face { display:none; }
+.reel-award-lines { position:absolute; z-index:5; top:0; left:0; right:0; height:142px; pointer-events:none; }
+.guild-reel-block .reel-award-lines { height:146px; }
+.reel-award-canvas { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
 @media (min-width:880px) and (min-height:600px) {
   .guild-stage { height:392px; }
   .guild-cabinet .guild-scene { width:100%; object-fit:cover; object-position:center; }
@@ -8278,6 +8281,168 @@ body[data-cabinet-layout="desktop-v5"] .casino-table-hud { bottom: 4.5%; width: 
   .dragon-stage[data-travel-talk="true"] .dragon-line { grid-column:2/4; margin:0; font-size:15px; line-height:1.5; }
   .dragon-stage[data-travel-talk="true"] .dragon-next { display:none; }
   .dragon-stage[data-surface="town"] .dragon-result:empty { display:none; }
+}
+
+/* Four physical PC cabinets. Nine-slice chassis keeps the live LCD large;
+   the reel windows and every control remain real runtime elements. */
+@media (min-width:880px) and (min-height:600px) {
+  .stadium-page .stadium-cabinet { --physical-chassis:url('../../../assets/cabinet-v5-candidates/final/stadium-physical-chassis-v1.png'); --hardware-gold:#d5a270; --hardware-face:#fcbd69; --hardware-deep:#673717; }
+  .arena-page .arena-cabinet { --physical-chassis:url('../../../assets/cabinet-v5-candidates/final/arena-physical-chassis-v1.png'); --hardware-gold:#e3cdd0; --hardware-face:#f29aba; --hardware-deep:#61234f; --response-light:#db9cff; }
+  .guild-page .guild-cabinet { --physical-chassis:url('../../../assets/cabinet-v5-candidates/final/guild-physical-chassis-v1.png'); --hardware-gold:#c9a25d; --hardware-face:#f6d298; --hardware-deep:#5b3b1d; }
+  :is(.stadium-page .stadium-cabinet,.arena-page .arena-cabinet,.guild-page .guild-cabinet) {
+    box-sizing:border-box; padding:0; border-style:solid; border-width:0;
+    border-image:var(--physical-chassis) 150 220 380 220 fill / 90px 108px 250px / 0 stretch;
+    border-radius:0; background:#050608; box-shadow:0 14px 45px #000c; overflow:visible;
+  }
+  :is(.stadium-cabinet .stadium-header,.arena-cabinet .arena-header,.guild-cabinet .guild-header) {
+    position:absolute; z-index:45; inset:10px 18px auto; height:66px; margin:0; padding:0 12px; border:0;
+    background:none; box-shadow:none; align-items:flex-start; gap:8px;
+  }
+  :is(.stadium-header,.arena-header,.guild-header) h1 {
+    position:absolute; left:290px; right:290px; top:57px; text-align:center; font:700 20px/1.2 'Yu Mincho',serif;
+    letter-spacing:.06em; margin:0; color:#fff0cc; text-shadow:0 2px 5px #000,0 0 8px #000;
+  }
+  .stadium-header h1 span { font-size:17px; }
+  :is(.stadium-header,.arena-header,.guild-header) .cabinet-return-links { margin-right:auto; }
+  :is(.stadium-header,.arena-header,.guild-header)>a { margin-right:auto; }
+  :is(.stadium-header,.arena-header,.guild-header) :is(a,button) {
+    min-width:0; min-height:30px; padding:7px 10px; font-size:12px; border:1px solid #d5b98388; border-radius:5px;
+    color:#fbeed1; background:linear-gradient(#252327e8,#0d1016e8); box-shadow:inset 0 1px #fff2cc30,0 2px 4px #0008;
+  }
+  :is(.stadium-cabinet .stadium-theater,.arena-cabinet .arena-theater,.guild-cabinet .guild-stage) {
+    position:absolute; left:112px; top:97px; width:1056px; height:370px; margin:0; border:0; border-radius:7px;
+    overflow:hidden; box-shadow:0 0 0 3px #05070b,0 0 0 5px #bca675,inset 0 3px 12px #000c;
+  }
+  :is(.stadium-cabinet .stadium-deck,.arena-cabinet .arena-deck,.guild-cabinet .guild-deck) {
+    position:absolute; left:116px; right:116px; top:480px; height:211px; margin:0; padding:0;
+    display:grid; grid-template-columns:188px 620px 188px; gap:20px; border:0; border-radius:0; background:none; box-shadow:none;
+  }
+  :is(.stadium-deck,.arena-deck,.guild-deck)::before { display:none; }
+  :is(.stadium-cabinet .stadium-reel-block,.arena-cabinet .arena-reel-block,.guild-cabinet .guild-reel-block) {
+    width:620px; display:grid; grid-template-rows:151px 50px; gap:10px;
+  }
+  :is(.stadium-cabinet .stadium-reels,.arena-cabinet .arena-reels,.guild-cabinet .guild-reels) {
+    height:151px; padding:4px 10px; border:3px ridge var(--hardware-gold); border-radius:6px;
+    box-shadow:0 0 0 4px #11100f,0 0 0 5px var(--hardware-gold),0 6px 10px #0009,inset 0 3px 6px #0008;
+  }
+  .guild-cabinet .guild-reels { padding:4px; }
+  :is(.stadium-cabinet .stadium-stops,.arena-cabinet .arena-stops,.guild-cabinet .guild-stops) { height:50px; align-items:center; }
+  .guild-cabinet .guild-stops { margin-top:0; }
+  .stadium-cabinet[data-surgery="true"] .stadium-command { top:10px; }
+  .stadium-cabinet[data-surgery="true"] .stadium-command>span { font-size:28px; }
+  .stadium-cabinet[data-surgery="true"] .stadium-mod-choice img { height:100px; }
+  .stadium-cabinet[data-surgery="true"] .stadium-mod-choice strong { font-size:22px; padding:4px 2px; }
+  .stadium-cabinet[data-surgery="true"] .stadium-mod-choice small { font-size:13px; padding:5px 2px; }
+  :is(.stadium-cabinet .stadium-stops,.arena-cabinet .arena-stops,.guild-cabinet .guild-stops) button {
+    width:50px; height:50px; min-height:50px; border-radius:50%; border:3px solid var(--hardware-gold);
+    color:#fff4db; font-size:10px; text-shadow:0 1px 2px #000; opacity:1;
+    background:radial-gradient(circle at 40% 25%,var(--hardware-face),var(--hardware-deep) 70%);
+    box-shadow:0 0 0 3px #302522,0 5px 0 #0c0c0d,0 8px 9px #0008,inset 0 2px #fff8edaa,inset 0 -5px 8px #0007;
+  }
+  :is(.stadium-cabinet .stadium-stops,.arena-cabinet .arena-stops,.guild-cabinet .guild-stops) button:disabled {
+    background:radial-gradient(circle at 40% 20%,#727674,#272b2c 70%); color:#d6d3c9; filter:brightness(.72);
+  }
+  :is(.stadium-cabinet .stadium-stops,.arena-cabinet .arena-stops,.guild-cabinet .guild-stops) button:enabled {
+    box-shadow:0 0 0 3px #302522,0 5px 0 #0c0c0d,0 8px 9px #0008,0 0 14px var(--hardware-face),inset 0 2px #fff8edaa,inset 0 -5px 8px #0007;
+  }
+  :is(.stadium-cabinet .stadium-ledger,.arena-cabinet .arena-ledger,.guild-cabinet .guild-ledger) {
+    height:151px; align-self:start; padding:7px 12px; border:2px ridge var(--hardware-gold); border-radius:7px;
+    background:linear-gradient(135deg,#13191dec,#060c12f5); box-shadow:inset 0 2px 7px #000c,0 0 0 3px #121013,0 4px 9px #0009;
+  }
+  :is(.stadium-ledger,.arena-ledger,.guild-ledger)>strong { font-size:30px; padding:1px 5px; }
+  :is(.stadium-ledger,.arena-ledger,.guild-ledger)>span { font-size:10px; }
+  :is(.stadium-ledger,.arena-ledger,.guild-ledger) p { margin:4px 0; font-size:12px; }
+  :is(.stadium-ledger,.arena-ledger,.guild-ledger) nav { gap:6px; }
+  :is(.stadium-ledger,.arena-ledger,.guild-ledger) nav button { min-height:24px; padding:3px 9px; font-size:10px; }
+  :is(.stadium-cabinet .stadium-lever,.arena-cabinet .arena-lever,.guild-cabinet .guild-lever) {
+    position:relative; height:211px; padding:0; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; gap:4px;
+  }
+  :is(.stadium-cabinet .stadium-prep,.guild-cabinet .guild-help-mechanism) { width:180px; min-height:58px; padding:6px 8px; }
+  .stadium-prep strong { font-size:15px; }
+  .arena-cabinet .arena-lever>span { font-size:11px; }
+  .arena-cabinet .arena-lever>strong { font-size:19px; padding:3px 9px; background:#0b1422dd; border:1px solid var(--hardware-gold); border-radius:4px; }
+  :is(.stadium-cabinet .stadium-spin,.arena-cabinet .arena-spin,.guild-cabinet .guild-spin) {
+    position:absolute; top:142px; width:72px; height:72px; min-height:72px; border:3px solid var(--hardware-gold); border-radius:50%;
+    font:800 17px/1.3 Bahnschrift,'Yu Gothic',sans-serif; color:#fff3d3; text-shadow:0 1px 3px #000;
+    background:radial-gradient(circle at 40% 22%,var(--hardware-face),var(--hardware-deep) 73%);
+    box-shadow:0 0 0 4px #262022,0 5px 0 #050709,0 8px 12px #000a,inset 0 2px #fffae5aa,inset 0 -6px 10px #0007;
+  }
+  :is(.stadium-cabinet .stadium-spin,.arena-cabinet .arena-spin,.guild-cabinet .guild-spin):enabled { box-shadow:0 0 0 4px #262022,0 5px 0 #050709,0 8px 12px #000a,0 0 16px var(--hardware-face),inset 0 2px #fffae5aa,inset 0 -6px 10px #0007; }
+  :is(.stadium-cabinet .stadium-spin,.arena-cabinet .arena-spin,.guild-cabinet .guild-spin):disabled { opacity:1; filter:brightness(.65); }
+  :is(.stadium-cabinet .stadium-spin,.arena-cabinet .arena-spin,.guild-cabinet .guild-spin):active:enabled { translate:0 3px; }
+  :is(.stadium-cabinet .stadium-footer,.arena-cabinet .arena-footer,.guild-cabinet .guild-footer) {
+    position:absolute; left:120px; right:260px; bottom:7px; height:19px; margin:0; padding:0; background:none; border:0;
+    font-size:10px; line-height:19px; color:#f4e2bf; text-shadow:0 1px 3px #000;
+  }
+  .arena-cabinet[data-phase='complete'] :is(.arena-reward,.arena-command) { left:auto; right:26px; width:430px; }
+  .arena-cabinet[data-phase='bonus'] .arena-command,.arena-cabinet[data-pending='reward'] .arena-command { left:auto; right:26px; width:350px; }
+  .stadium-reel-block .reel-award-lines,.arena-reel-block .reel-award-lines { height:151px; }
+
+  body .slot-view.is-active .game-shell[data-active-machine="dragon-race"] {
+    --hardware-gold:#d6b674; --hardware-face:#86e8ce; --hardware-deep:#174b43;
+    box-sizing:border-box; padding:0; border-style:solid; border-width:0;
+    border-image:url('../../../assets/cabinet-v5-candidates/final/dragon-physical-chassis-v1.png') 150 220 380 220 fill / 90px 108px 250px / 0 stretch;
+    border-radius:0; background:#050608; box-shadow:0 14px 45px #000c; overflow:visible;
+  }
+  body .slot-view.is-active .game-shell[data-active-machine="dragon-race"] .theater {
+    left:112px; top:97px; width:1056px; height:370px; border:0; border-radius:7px;
+    box-shadow:0 0 0 3px #05070b,0 0 0 5px #bca675,inset 0 3px 12px #000c; overflow:hidden;
+  }
+  body .slot-view.is-active .game-shell[data-active-machine="dragon-race"] .machine {
+    left:116px; right:116px; top:480px; bottom:auto; height:211px; border:0; padding:0; background:none; box-shadow:none; display:block;
+  }
+  body .slot-view.is-active .game-shell[data-active-machine="dragon-race"] .machine-marquee { position:absolute; top:-414px; left:210px; right:210px; height:25px; padding:0; display:flex; justify-content:center; border:0; background:none; box-shadow:none; }
+  body .slot-view.is-active .game-shell[data-active-machine="dragon-race"] .machine-marquee>div:first-child strong { display:block; max-width:none; color:#fff0cc; font:700 20px/1.2 'Yu Mincho',serif; text-shadow:0 2px 5px #000; }
+  body .slot-view.is-active .game-shell[data-active-machine="dragon-race"] .machine-marquee :is(.machine-stage-label,.jackpot) { display:none; }
+  body .slot-view:has(.game-shell[data-active-machine="dragon-race"]) .slot-utility { display:flex; align-items:flex-start; gap:8px; }
+  body .slot-view:has(.game-shell[data-active-machine="dragon-race"]) .slot-utility>button { margin-left:auto; }
+  body .slot-view:has(.game-shell[data-active-machine="dragon-race"]) .dragon-floor-return { padding:7px 10px; border-radius:5px; font-size:12px; background:#0d1016e8; }
+  body .slot-view.is-active .game-shell[data-active-machine="dragon-race"] .machine-playfield {
+    position:absolute; inset:0; height:151px; display:grid; grid-template-columns:188px 620px 188px; gap:20px; padding:0;
+  }
+  body .slot-view.is-active .game-shell[data-active-machine="dragon-race"] .reel-frame {
+    position:relative; inset:auto; width:620px; height:151px; border:3px ridge var(--hardware-gold); border-radius:6px;
+    box-shadow:0 0 0 4px #11100f,0 0 0 5px var(--hardware-gold),0 6px 10px #0009;
+  }
+  body .slot-view.is-active .game-shell[data-active-machine="dragon-race"] .machine-metrics {
+    position:relative; inset:auto; width:auto; height:151px; display:grid; grid-template-columns:1fr 1fr; grid-auto-rows:auto; gap:4px;
+    padding:6px; border:2px ridge var(--hardware-gold); background:#0c181ced; border-radius:7px; box-shadow:inset 0 2px 7px #000c,0 4px 9px #0009;
+  }
+  body .slot-view.is-active .game-shell[data-active-machine="dragon-race"] .machine-metrics .metric { position:static; width:auto; height:auto; min-height:25px; padding:3px; }
+  body .slot-view.is-active .game-shell[data-active-machine="dragon-race"] .machine-metrics .metric strong { font-size:21px; }
+  body .slot-view.is-active .game-shell[data-active-machine="dragon-race"] .machine-status { position:relative; inset:auto; padding:0; width:auto; height:145px; }
+  body .slot-view.is-active .game-shell[data-active-machine="dragon-race"] .machine-status .metric { position:static; width:auto; height:auto; min-height:0; }
+  body .slot-view.is-active .game-shell[data-active-machine="dragon-race"] .machine-status .metric strong { font-size:20px; }
+  body .slot-view.is-active .game-shell[data-active-machine="dragon-race"] .machine-controls {
+    position:absolute; left:0; right:0; top:161px; height:50px; padding:0; display:grid; grid-template-columns:188px 620px 188px; gap:20px;
+  }
+  body .slot-view.is-active .game-shell[data-active-machine="dragon-race"] .machine-controls .stop-row { height:50px; padding-inline:calc(3% + 3px); gap:3%; }
+  body .slot-view.is-active .game-shell[data-active-machine="dragon-race"] .machine-controls .stop-row .stop-button {
+    width:50px; height:50px; min-height:50px; padding:0; border:3px solid var(--hardware-gold); border-radius:50%; font-size:10px;
+    background:radial-gradient(circle at 40% 25%,var(--hardware-face),var(--hardware-deep) 70%);
+    box-shadow:0 0 0 3px #302522,0 5px 0 #0c0c0d,0 8px 9px #0008,inset 0 2px #fff8edaa,inset 0 -5px 8px #0007;
+  }
+  body .slot-view.is-active .game-shell[data-active-machine="dragon-race"] .machine-controls .stop-button:disabled { opacity:1; filter:brightness(.65); }
+  body .slot-view.is-active .game-shell[data-active-machine="dragon-race"] .machine-controls :is(.spin-button,.push-button) {
+    position:absolute; grid-column:auto; grid-row:auto; inset:auto; left:902px; top:-19px; width:72px; min-width:72px; max-width:72px; height:72px; min-height:72px; max-height:72px;
+    border:3px solid var(--hardware-gold); border-radius:50%; font-size:18px;
+    background:radial-gradient(circle at 40% 25%,var(--hardware-face),var(--hardware-deep) 70%);
+    box-shadow:0 0 0 4px #262022,0 5px 0 #050709,0 8px 12px #000a,inset 0 2px #fffae5aa,inset 0 -6px 10px #0007;
+  }
+  body .slot-view.is-active .game-shell[data-active-machine="dragon-race"] .dragon-settings-open { left:126px; top:646px; width:168px; height:44px; padding:5px; font-size:11px; border-radius:7px; }
+  body .slot-view.is-active .game-shell[data-active-machine="dragon-race"] .dragon-settings-open strong { font-size:16px; }
+  body .slot-view.is-active .game-shell[data-active-machine="dragon-race"] .dragon-settings-open span { margin-top:3px; font-size:10px; }
+  body .slot-view.is-active .game-shell[data-active-machine="dragon-race"] .dragon-operation { left:320px; top:702px; width:640px; font-size:10px; }
+  body .slot-view.is-active .game-shell[data-active-machine="dragon-race"] .dragon-drive { left:1040px; top:622px; width:110px; height:86px; }
+  body .slot-view.is-active .game-shell[data-active-machine="dragon-race"] .dragon-drive img { left:0; top:-11px; width:110px; height:110px; }
+  body .slot-view.is-active .game-shell[data-active-machine="dragon-race"] .dragon-drive strong { top:35px; font-size:18px; }
+  body .slot-view.is-active .game-shell[data-active-machine="dragon-race"] .dragon-drive span { top:58px; font-size:9px; }
+  :is(.stadium-cabinet,.arena-cabinet,.guild-cabinet) .cabinet-response-frame,
+  body .slot-view.is-active .game-shell[data-active-machine="dragon-race"] .cabinet-response-frame { inset:0; box-shadow:none; overflow:visible; }
+  .cabinet-response-frame::before,.cabinet-response-frame::after { display:none; }
+  .cabinet-response-frame .cabinet-response-rail { top:134px; bottom:254px; width:12px; }
+  .cabinet-response-frame .cabinet-response-rail.left { left:66px; }
+  .cabinet-response-frame .cabinet-response-rail.right { right:66px; }
 }
 
 /* V5 visual.cssの独立台モジュール。外側1280×720の倍率と下部回胴は共通。 */

@@ -407,7 +407,7 @@
           else api.audio.roleResult(tx.flagId, tx.result.receipt.replay ? "replay" : "result", false);
         }
         render(); animateReveal(); startReward();
-        window.dispatchEvent(new CustomEvent('mimi:cabinet-result', {detail:{machineId:'dragon-race',type:'revealed',transactionId:tx.transactionId,payout:tx.result.receipt.payout,replay:tx.result.receipt.replay}}));
+        window.dispatchEvent(new CustomEvent('mimi:cabinet-result', {detail:{machineId:'dragon-race',type:'revealed',transactionId:tx.transactionId,payout:tx.result.receipt.payout,replay:tx.result.receipt.replay,lineIds:settledGridResult.litLines.map(l=>l.id)}}));
         spectacle.celebrate({ jackpot: Boolean(settledGridResult.jackpot), bossWin: round.events.includes("boss-win"), payout: tx.result.receipt.payout });
         api.redraw();
       }

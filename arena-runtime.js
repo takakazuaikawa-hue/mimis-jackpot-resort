@@ -386,7 +386,7 @@
     if(sound&&!feature?.cinematic){const cue=result.kind==='victory'?'bossDefeat':result.kind==='guard'?'revive':result.damage?'bossHit':result.kind==='miss'?'bossAttack':result.kind==='replay'?'notice':null;if(cue)audio.cue(cue);}
     playResultScene();
     if(document.hidden||modalOpen())freezeScene();
-    window.dispatchEvent(new CustomEvent('mimi:cabinet-result', {detail:{machineId:'arena',type:'revealed',transactionId,payout:out.payout,replay:Boolean(out.replayHit)}}));
+    window.dispatchEvent(new CustomEvent('mimi:cabinet-result', {detail:{machineId:'arena',type:'revealed',transactionId,payout:out.payout,replay:Boolean(out.replayHit),lineIds:out.litLines.map(l=>l.id)}}));
     window.dispatchEvent(new CustomEvent('mimi:arena-settled',{detail:{games:state.games,payout:out.payout,damage:result.damage,kind:result.kind}}));
   }
   function tick(now){frame=0;if(!spin)return;const dt=Math.min((now-last)/1000,.1);last=now;[0,1,2].forEach(c=>{if(spin.stopped[c]===null){positions[c]=core.mod(positions[c]-dt*(turbo?34:24),core.stripLength(c));paintReel(c);}});frame=requestAnimationFrame(tick);}

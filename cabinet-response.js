@@ -1,3 +1,53 @@
+/* The visible settled grid owns these paths; no flags, payout or RNG writes. */
+(() => {
+  'use strict';
+  const records=new WeakMap(), media=matchMedia('(prefers-reduced-motion: reduce)');
+  function record(layer,reels) {
+    let r=records.get(layer);
+    if(r?.canvas.isConnected)return r;
+    if(r)cancelAnimationFrame(r.frame);
+    const canvas=document.createElement('canvas');canvas.className='reel-award-canvas';canvas.setAttribute('aria-hidden','true');layer.append(canvas);
+    const shell=layer.closest('.game-shell,.stadium-cabinet,.arena-cabinet,.guild-cabinet');
+    let blurred=false;
+    r={layer,reels,shell,canvas,lines:new Map(),frame:0,elapsed:0,last:0,points:[]};records.set(layer,r);
+    const quiet=()=>blurred||document.hidden||!document.hasFocus()||!!shell?.querySelector('dialog[open]')||document.getElementById('helpOverlay')?.hidden===false||!!shell?.closest('[data-view="slot"]:not(.is-active)');
+    const reduced=()=>media.matches||shell?.classList.contains('reduced-motion')||shell?.dataset.motion==='reduced'||shell?.querySelector('.dragon-stage')?.dataset.reduced==='true';
+    function paint(now=performance.now()) {
+      r.frame=0;
+      const bounds=layer.getBoundingClientRect(), sx=layer.clientWidth/(bounds.width||1),sy=layer.clientHeight/(bounds.height||1);
+      const width=layer.clientWidth,height=layer.clientHeight;if(!width||!height)return;
+      const ratio=Math.min(2,devicePixelRatio||1);if(canvas.width!==Math.round(width*ratio)||canvas.height!==Math.round(height*ratio)){canvas.width=Math.round(width*ratio);canvas.height=Math.round(height*ratio);}
+      const ctx=canvas.getContext('2d');ctx.setTransform(ratio,0,0,ratio,0,0);ctx.clearRect(0,0,width,height);
+      const paused=quiet(),calm=reduced();
+      if(!paused&&!calm&&r.last)r.elapsed+=Math.min(80,now-r.last);r.last=paused?0:now;
+      layer.dataset.lineMotion=!r.lines.size?'idle':paused?'paused':calm?'reduced':r.elapsed>=1800?'held':'running';
+      r.points=[];
+      for(const [id,line]of r.lines){
+        const points=line.cells.map(([c,row])=>{const col=reels.children[c],cell=col?.querySelectorAll('.reel-cell.symbol')[row]||col?.children[row],b=cell?.getBoundingClientRect();return b?[(b.left+b.width/2-bounds.left)*sx,(b.top+b.height/2-bounds.top)*sy]:null;});if(points.some(p=>!p))continue;
+        r.points.push({id,points});
+        const color=line.replay?'#73d7ff':shell?.classList.contains('stadium-cabinet')?'#ffbc65':shell?.classList.contains('arena-cabinet')?'#ffa0c9':shell?.classList.contains('guild-cabinet')?'#fbe3a1':'#ffe295';
+        ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=2;ctx.lineJoin='round';ctx.shadowColor=color;ctx.shadowBlur=calm||paused?2:7;
+        ctx.setLineDash([7,7]);ctx.lineDashOffset=calm||paused?0:-(r.elapsed/32);ctx.beginPath();ctx.moveTo(8,points[0][1]);points.forEach(p=>ctx.lineTo(...p));ctx.lineTo(width-8,points[2][1]);ctx.stroke();
+        ctx.setLineDash([]);ctx.shadowBlur=3;
+        for(const [x,y]of points){ctx.beginPath();ctx.arc(x,y,Math.min(23,height/8),0,Math.PI*2);ctx.globalAlpha=.5;ctx.stroke();ctx.globalAlpha=1;}
+        for(const [x,y,dir]of[[9,points[0][1],1],[width-9,points[2][1],-1]]){ctx.beginPath();ctx.moveTo(x,y-4);ctx.lineTo(x+dir*5,y);ctx.lineTo(x,y+4);ctx.closePath();ctx.fill();}
+      }
+      if(!paused&&!calm&&r.lines.size&&r.elapsed<1800)r.frame=requestAnimationFrame(paint);
+    }
+    r.paint=paint;
+    const repaint=()=>{cancelAnimationFrame(r.frame);r.frame=0;r.last=0;paint();};
+    new ResizeObserver(repaint).observe(layer);
+    new MutationObserver(repaint).observe(shell,{subtree:true,attributes:true,attributeFilter:['open','hidden','class','data-motion','data-reduced']});
+    media.addEventListener('change',repaint);window.addEventListener('blur',()=>{blurred=true;repaint();});window.addEventListener('focus',()=>{blurred=false;repaint();});document.addEventListener('visibilitychange',repaint);window.addEventListener('pagehide',()=>cancelAnimationFrame(r.frame));
+    return r;
+  }
+  window.MimiReelLines=Object.freeze({
+    draw(layer,reels,line,replay=false){if(!layer||!reels)return;const known=window.SlotCore.PAYLINES.find(l=>l.id===line.id);if(!known)return;const r=record(layer,reels);r.lines.set(known.id,{cells:known.cells,replay});layer.dataset.lineIds=[...r.lines.keys()].join(',');r.elapsed=0;r.last=0;cancelAnimationFrame(r.frame);r.paint();},
+    clear(layer){const r=records.get(layer);if(!r)return;cancelAnimationFrame(r.frame);r.frame=0;r.lines.clear();r.points=[];r.canvas.getContext('2d').clearRect(0,0,r.canvas.width,r.canvas.height);layer.dataset.lineIds='';layer.dataset.lineMotion='idle';},
+    inspect(layer){const r=records.get(layer);return r?{ids:[...r.lines.keys()],replayIds:[...r.lines].filter(([,l])=>l.replay).map(([id])=>id),points:r.points,motion:layer.dataset.lineMotion,frameRunning:!!r.frame}:null;}
+  });
+})();
+
 /* Decorative cabinet feedback for the four independent machines. Only
  * accepted input and publicly revealed receipts can drive a light burst. */
 (() => {
@@ -100,11 +150,14 @@
     for (let i = 0; i < 8; i++) { const lamp = document.createElement("i"); lamp.style.setProperty("--lamp-step", i); rail.append(lamp); }
     frame.append(rail);
   }
-  theater.append(frame);
+  shell.append(frame);
   const trail = document.createElement("div");
   trail.className = "cabinet-response-trail"; trail.setAttribute("aria-hidden", "true");
   const beams = Array.from({ length: 3 }, () => { const beam = document.createElement("i"); trail.append(beam); return beam; });
   reels.append(trail);
+  const lineLayer=dragon?shell.querySelector('.payline-layer'):document.createElement('div');
+  if(!dragon){lineLayer.className='reel-award-lines';lineLayer.setAttribute('aria-hidden','true');reels.append(lineLayer);}
+  const grid=dragon?shell.querySelector('#reels'):shell.querySelector(`.${machine}-reels`);
   const media = matchMedia("(prefers-reduced-motion: reduce)");
   let transaction = 0, timer = 0, burst = "", payout = 0, suspended = document.hidden, spinning = false;
   const stopped = new Set();
@@ -141,7 +194,7 @@
     const d = event.detail || {}, id = Number(d.transactionId);
     if (!dragon && d.machineId !== machine || !Number.isSafeInteger(id) || id < 1) return;
     if (d.type === "spin-start") {
-      transaction = id; spinning = true; payout = 0; stopped.clear(); clearBurst(); return;
+      transaction = id; spinning = true; payout = 0; stopped.clear(); window.MimiReelLines.clear(lineLayer);clearBurst(); return;
     }
     if (d.type !== "stop-accepted") return;
     // A reloaded unfinished transaction starts with no historic light burst.
@@ -154,6 +207,7 @@
     const d = event.detail || {};
     if (d.machineId !== machine || d.type !== "revealed" || Number(d.transactionId) !== transaction || !spinning) return;
     spinning = false; payout = Math.max(0, Number(d.payout) || 0);
+    (d.lineIds||[]).forEach(id=>{const line=window.SlotCore.PAYLINES.find(l=>l.id===id);if(line)window.MimiReelLines.draw(lineLayer,grid,line,d.replay===true);});
     delete shell.dataset.responseStopReel;
     if (payout > 0) showBurst("win", 1800);
     else if (d.replay === true) showBurst("replay", 900);
