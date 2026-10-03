@@ -101,7 +101,15 @@
     return Object.prototype.hasOwnProperty.call(scripts,id)?scripts[id]:[];
   }
   function action(action,s,t){
-    if(action==='trial'||action==='retryShow')return [frame(A+'crowd.jpg',action==='trial'?'興行開幕':'次の演目',action==='trial'?'さあ、今夜の演目を！':'皆さん、そのままお席で！','三回の勝負で、客席の拍手を集めましょう。',`残り3G ／ 拍手${3-s.failures}点で大入り`)];
+    if(action==='trial'||action==='retryShow'){
+      const retry=action==='retryShow',goal=3-s.failures;
+      const text=retry?[
+        `ラッツ、券を買ったお客さんは帰っていません。次は本当の大会にしましょう。`,
+        `ノノ、広場のみんなはまだ待っています。次の演目で屋根の英雄を迎えましょう。`,
+        `マルメラさん、買い手は荷のそばに残っています。次は品を見届けてもらいましょう。`
+      ][s.round]:'三回の勝負で、客席の拍手を集めましょう。';
+      return [frame(A+'crowd.jpg',retry?'次の演目':'興行開幕',retry?'皆さん、そのままお席で！':'さあ、今夜の演目を！',text,`残り3G ／ 拍手${goal}点で大入り`)];
+    }
     if(action==='success'||action==='retry')return [frame(t.art,t.title,t.boss+'、勝負の席へ。',t.demand,`あと${s.remaining}点 ／ 粘り6${action==='retry'?' ／ 得点は持ち越し':''}`,t.boss),frame(A+'mimi-serious-identity-v2.png','ミミの返答','この勝負、引き受けます。',t.reply,`勝てば${t.boss}が仲間に ＋ 無料10G`)];
     if(action==='reward')return [frame(t.feast,'祝宴開幕','相手から、隣の席へ。','お皿をもう一枚。あなたの席も、ここですよ。','10GすべてBET無料','ミミ','bonus'),frame(t.feast,'新しい仲間',t.boss+'と、乾杯。',[
       '……茶代まで証文に入れるな。今夜は、俺が持つ。',
@@ -114,7 +122,15 @@
   function settled(before,r,t,view){
     const s=r.state,pay=`リール配当 ${s.lastWin}`,score=`勝負 ＋${r.points}点 ／ 決着まで${s.remaining}点`;
     if(s.pending==='success')return [frame(A+'crowd.jpg','興行成功','大入り！',r.line,`拍手${s.applause}点 ／ 大物との勝負へ`,'ミミ','orderClear')];
-    if(s.pending==='retryShow')return [frame(A+'mimi-worried-identity-v2.png','興行終了','演目を変えて、もう一度。','まだ、席を立たないでください。次の演目も用意しています！',`拍手${s.applause}点 ／ 次の目標${Math.max(1,2-s.failures)}点`)];
+    if(s.pending==='retryShow'){
+      const nextGoal=Math.max(1,2-s.failures);
+      const text=[
+        `ラッツ、券を買ったお客さんは帰っていません。次は本当の大会にしましょう。`,
+        `ノノ、広場のみんなはまだ待っています。次の演目で屋根の英雄を迎えましょう。`,
+        `マルメラさん、買い手は荷のそばに残っています。次は品を見届けてもらいましょう。`
+      ][s.round];
+      return [frame(A+'mimi-worried-identity-v2.png','興行終了','演目を変えて、もう一度。',text,`拍手${s.applause}点 ／ 次の目標${nextGoal}点`)];
+    }
     if(r.kind==='recruit')return [
       frame(A+'mimi-smile.jpg','最後の一手','この勝負、ミミの勝ち！',score,pay,'ミミ','orderClear'),
       frame(t.art,'決着 · '+t.boss,['証文が、閉じられる。','英雄が、席を譲る。','値札のつかない勝ち。'][s.round],t.concession,'勝負の目標達成',t.boss),
@@ -127,7 +143,23 @@
   }
   function reaction(before,r,t){
     const s=r.state;
-    if (['normal','trial'].includes(before.phase) && !s.pending) {
+    if(before.phase==='trial'&&!s.pending){
+      const points=r.points||0;
+      const lines=[
+        points>0
+          ? [`ラッツ`,`ratts-portrait.jpg`,`おお、拍手が返ってきた！ 今度は本当に、大会らしくなってきましたね。`]
+          : [`ラッツ`,`ratts-portrait.jpg`,`拍手、まだ静かですね。券を買った人たちに、最後まで見てもらいましょう。`],
+        points>0
+          ? [`ノノ`,`nono-portrait.jpg`,`拍手が広場の向こうまで届いたよ！ 屋根の英雄にも聞こえたかな。`]
+          : [`ノノ`,`nono-portrait.jpg`,`広場はまだ静かだね。もう一度、屋根の英雄まで声を届けてくるよ。`],
+        points>0
+          ? [`マルメラ`,`marmela-portrait.jpg`,`品を見届ける拍手が届きましたね。荷も、皆さんの前で開けられます。`]
+          : [`マルメラ`,`marmela-portrait.jpg`,`荷を囲む皆さんは静かですね。もう少し、品を見届けてもらいましょう。`]
+      ][s.round];
+      const [speaker,portrait,text]=lines;
+      return {tone:'town',title:'演目の合間、客席から。',speaker,art:A+portrait,text};
+    }
+    if (before.phase==='normal' && !s.pending) {
       const incidents = [
         [
           ['ラッツ','ratts-portrait.jpg','今度の券には「参加」と書きました。優勝は、勝負の後に！'],

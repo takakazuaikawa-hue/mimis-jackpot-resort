@@ -99,7 +99,11 @@
       const points=out.replay?1:out.payout>0?2:0;
       s.trialLeft--;s.trialScore+=points;
       if(s.trialScore>=trialTarget(s))s.pending='trialWin';else if(!s.trialLeft)s.pending='trialFail';
-      return {...result,kind:s.pending||'trial',headline:s.pending==='trialWin'?'扉が、ひらく。':s.pending==='trialFail'?'もう一度、力を合わせて。':'試練の一手',line:`試練 +${points} · ${s.trialScore}/${trialTarget(s)}ポイント · 残り${s.trialLeft}G。${out.replay?'次ゲーム無料。':''}`};
+      const target=trialTarget(s);
+      const line=s.pending==='trialWin'
+        ? `試練 +${points} · 目標${target}ポイントに対し${s.trialScore}ポイント獲得。対決へ。${out.replay?'次ゲーム無料。':''}`
+        : `試練 +${points} · ${s.trialScore}/${target}ポイント · 残り${s.trialLeft}G。${out.replay?'次ゲーム無料。':''}`;
+      return {...result,kind:s.pending||'trial',headline:s.pending==='trialWin'?'扉が、ひらく。':s.pending==='trialFail'?'もう一度、力を合わせて。':'試練の一手',line};
     }
     if (s.phase === "bonus") { s.bonus--; s.bonusWin += out.payout; if (!s.bonus) s.pending = s.round === BOSSES.length-1 ? "champion" : "next"; return {...result,kind:"bonus",headline:out.payout ? `WIN +${out.payout}` : "配当なし",line:`勝利の祝宴、残り${s.bonus}G。`}; }
     if (out.replay) return {...result,kind:"replay",headline:"回避！ REPLAY",line:"攻撃をかわした！ 次のSPINは無料。指示と準備は持ち越し。"};

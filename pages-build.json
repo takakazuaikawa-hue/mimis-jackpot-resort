@@ -1,18 +1,18 @@
 {
   "status": "PC PLAYTEST / PRODUCTION QUALITY UNAPPROVED",
-  "createdAt": "2026-10-03T15:24:30.775Z",
+  "createdAt": "2026-10-03T17:18:43.612Z",
   "entry": "index.html",
-  "bytes": 938524366,
+  "bytes": 938533378,
   "files": [
     {
       "file": "arena-flow.js",
-      "bytes": 13652,
-      "sha256": "6405b7115b608ce663b8f4df43c45ddbe496bc8d0e567b10d4040cb1ad4f003d"
+      "bytes": 13888,
+      "sha256": "c310548f6277ed330ea0bfbd97e19343c97849c18ac02935eb19f157dc92c988"
     },
     {
       "file": "arena-runtime.js",
-      "bytes": 50739,
-      "sha256": "bcc6a130a928ed0a8ec1b8738b9fc5933b9bd07774b73ca910931dc3924bedd9"
+      "bytes": 51119,
+      "sha256": "88ef05c7609ebd6d3b1fbffa063811191ac468cf18b2a0142d71a409ec565463"
     },
     {
       "file": "assets/Jackpot.mp3",
@@ -2956,8 +2956,8 @@
     },
     {
       "file": "game.js",
-      "bytes": 224654,
-      "sha256": "cf90b61a4d5db0f11338aad9a1864f30be9d5c7383024b7279c4dfcffaf06a54"
+      "bytes": 225695,
+      "sha256": "66f4062ff150ed34d45b647511ae43a520b24ab7f5e3fcceb6588d290dd298be"
     },
     {
       "file": "guild-flow.js",
@@ -2976,8 +2976,8 @@
     },
     {
       "file": "guild-scenes.js",
-      "bytes": 20646,
-      "sha256": "f528bc0ce7b1fbaa165021a0bb1b2a4a9a3ba119308864f4ca3f7331d6c45cc8"
+      "bytes": 22660,
+      "sha256": "d681dc690be2a5b929c5739867851b9c3d897b91ccca36a3d8826ad16e5a6cf7"
     },
     {
       "file": "index-arena.html",
@@ -3246,8 +3246,8 @@
     },
     {
       "file": "machines/dragon-race/runtime.js",
-      "bytes": 95835,
-      "sha256": "7accb3a3fd67f817ea76882faae49fe9664e2aabab2c095ce1c4506a315ff640"
+      "bytes": 97782,
+      "sha256": "0148ec99f3fd4d49066b3166e4767e16b49cae673f9c610dd796444a6c98d878"
     },
     {
       "file": "machines/dragon-race/spectacle.js",
@@ -3311,8 +3311,8 @@
     },
     {
       "file": "resort-cruise-view.js",
-      "bytes": 6419,
-      "sha256": "f03e2c005c85d221146069284669975c45c60d3e70891e38e46640fdc3c2e173"
+      "bytes": 6556,
+      "sha256": "d26312ba8fb52d3945819b202631a43e7d7892f4b4501b714cd750cb99c195c2"
     },
     {
       "file": "resort-environment.js",
@@ -3341,8 +3341,8 @@
     },
     {
       "file": "resort-stay.js",
-      "bytes": 42897,
-      "sha256": "9bbb9ccc37284afda72385a09abc6c949ff81d0c4f835f370818bce2f7effba4"
+      "bytes": 44968,
+      "sha256": "6f84ea5cb79664305098a2a810ad1767a05e2828b88df59ca5b5c75801133d24"
     },
     {
       "file": "resort-trail-guide.js",
@@ -3351,8 +3351,8 @@
     },
     {
       "file": "resort-world-view.js",
-      "bytes": 45581,
-      "sha256": "e894a8cd092831db3204135d34307571daf1853ccf3006439125b6a24109310f"
+      "bytes": 45793,
+      "sha256": "6ecb5900f1d2901333efdcdfb3469d55710c0c9660543d7a287de4c823ca8cd9"
     },
     {
       "file": "resort-world.js",
@@ -3386,8 +3386,8 @@
     },
     {
       "file": "stadium-runtime.js",
-      "bytes": 40486,
-      "sha256": "78bc94b586b005a07588dd542fee84c540ae26dbcb0c6619f9716db91ae160b1"
+      "bytes": 41460,
+      "sha256": "774c8b46becdd18f13d5e418465ce031c04304636398519f897e80486e66c0e7"
     },
     {
       "file": "visual.css",

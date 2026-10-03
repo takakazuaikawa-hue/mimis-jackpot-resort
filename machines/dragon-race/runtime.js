@@ -65,7 +65,32 @@
     const step = (round?.prior.spins ?? progress.spins) + progress.journey;
     const beats = roadConversations[member.id];
     if (!beats) return null;
-    return step % 4 === 3 ? [content.CAST[member.id].name, phrases[member.id][Math.floor(step / 4) % phrases[member.id].length]] : beats[step % 4];
+    const beatIndex = step % 4;
+    const beat = beatIndex === 3
+      ? [content.CAST[member.id].name, phrases[member.id][Math.floor(step / 4) % phrases[member.id].length]]
+      : beats[beatIndex];
+    const preserveMilestone = round?.events?.some(event => [
+      "section-clear", "trial-success", "trial-learned", "boss-enter", "boss-win", "boss-retry",
+      "journey-clear", "order-ready", "order-clear", "stock-earned", "continuation-enter", "continuation-win",
+    ].includes(event));
+    const receipt = tx?.status === "settled" ? tx.result?.receipt : null;
+    // Keep each companion's existing town conversation as the owner. Only its
+    // ordinary observation beat gets the exact course profile and settled result;
+    // course weather is venue data, never a reel prediction.
+    if (mode === "quiet" && beatIndex === 2 && !preserveMilestone
+      && receipt && round?.prior?.section === displaySection) {
+      const course = content.TRACKS[displaySection];
+      const weather = course.weather === "strong_wind" ? "風が強いですね" : "よく晴れていますね";
+      const outcome = receipt.replay ? "次の一戦は無料" : receipt.payout > 0 ? `配当は${receipt.payout}枚` : "配当はありませんでした";
+      const notes = {
+        sake: `${course.name}は${weather}。サケさん、${pickName()}の息づかいも見ておきます。${outcome}。`,
+        mizu: `${course.name}は${weather}。ミズさん、${pickName()}の走りも手帳に残します。${outcome}。`,
+        sumika: `ミミ様、${course.name}は${weather}。${pickName()}の記録も承りました。${outcome}。`,
+        makura: `${course.name}は${course.weather === "strong_wind" ? "風が強いな" : "いい天気だな"}！ ${pickName()}の走りも録ったぞ。${receipt.replay ? "次は無料で、もう一戦だ！" : receipt.payout > 0 ? `${receipt.payout}枚、やったな！` : "配当はなし。次の見せ場も追うぞ！"}`,
+      };
+      return [beat[0], notes[member.id] || `${course.name}は${weather}。${outcome}。`];
+    }
+    return beat;
   }
   function el(selector) { return root.querySelector(selector); }
   function text(selector, value) { const node = el(selector); if (node.textContent !== String(value)) node.textContent = value; }

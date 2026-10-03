@@ -31,19 +31,30 @@
   function battingReply(settled, result, before) {
     const voice = clubVoices[state.team];
     const added = state.runs - before.runs;
-    const runners = state.bases.filter(Boolean).length;
-    // REPLAY・改造・攻撃終了は、汎用台詞より実際の結果を優先する。
-    if (result.replayHit) return 'ファウル！ 走者も打順もそのまま、次の一球は無料だ。';
+    const target = flow.TEAMS[state.team].target;
+    const bases = state.bases.map((occupied, index) => occupied ? ['一塁', '二塁', '三塁'][index] : '').filter(Boolean);
+    const runners = bases.length;
+    const withPower = line => state.augment === 'power' ? `${line} 改造は継続、次のヒットがHR！` : line;
+    // Match the voice to the actual settlement. This machine has no inning counter;
+    // do not infer one from the batter cycle or pitch count.
+    if (before.augment === 'walk' && !state.augment && result.payout === 0) {
+      return withPower(added > 0 ? `改造で一塁へ、押し出し${added}点！ リール配当はなし。` : `改造で一塁へ。${bases.includes('一塁') ? '一塁からつなぐ。' : '走者なし。'}リール配当はなし。`);
+    }
+    if (result.replayHit) return withPower(`ファウル。${runners ? `${bases.join('・')}の走者と` : '走者と'}アウトはそのまま、次の一球は無料だ。`);
+    if (added > 0) {
+      const score = state.runs >= target ? `目標の${target}点に届いた！` : '次の一打につなごう。';
+      return withPower(`${voice.score} ${added}点追加。${score}`);
+    }
+    if (before.outs === 2 && state.outs === 0) return withPower(`3アウト。走者はベンチへ、${state.runs}点はそのまま。次の打順へ。`);
     let line;
-    if (before.augment === 'walk' && !state.augment && result.payout === 0) line = added > 0 ? `改造で一塁へ、押し出し${added}点！ リール配当はなし。` : '改造で一塁へ。リール配当はなし、仲間につなぐぞ。';
-    else if (added > 0) line = `${voice.score} ${added}点、ホームに届いた！`;
-    else if (settled.hit) line = `${Math.floor(state.games / flow.PLAYERS.length) % 2 ? voice.onBase : batterVoices[settled.actor.number][1]} 走者${runners}人、次を頼む。`;
-    else if (before.outs === 2) line = `3アウト。走者はベンチへ、${state.runs}点はそのまま。もう一度つなごう。`;
-    else if (state.dry === 3 && !state.augment) line = 'あと一度不発なら改造チャンス。ミミ、次の準備を頼む。';
-    else if (runners) line = `${voice.out} 走者${runners}人は、まだ塁にいる。`;
-    else line = (Math.floor(state.games / flow.PLAYERS.length) % 2 ? voice.out : batterVoices[settled.actor.number][2]);
-    if (state.augment === 'power') line += ' 改造は継続、次のヒットがHR！';
-    return line;
+    if (settled.hit) {
+      const situation = state.bases[2] ? '三塁まで進んだ。' : state.bases[0] ? '一塁から次の一手へ。' : state.outs === 2 ? '二死で走者を残した。' : '走者が出た。';
+      line = `${voice.onBase} ${situation}`;
+    } else if (state.dry === 3 && !state.augment) line = `${state.outs === 2 ? '二死。' : ''}あと一度不発なら改造チャンス。ミミ、次の準備を頼む。`;
+    else if (state.outs === 2 && runners) line = `${voice.out} 二死、${state.bases[2] ? '三塁の走者を返したい。' : state.bases[0] ? '一塁からつなごう。' : `${runners}人が残っている。`}`;
+    else if (runners) line = `${voice.out} ${state.bases[2] ? '三塁の走者はまだいる。' : state.bases[0] ? '一塁の走者をつなごう。' : `${runners}人の走者を残した。`}`;
+    else line = state.outs === 2 ? `${voice.out} 二死になった。` : batterVoices[settled.actor.number][2];
+    return withPower(line);
   }
   let auto = false, turbo = false, nextQueued = false, controlTimer = 0, controlEpoch = 0;
   let settledAt = 0, commandToken = "", commandSince = 0;

@@ -165,7 +165,7 @@
   if(!spin) {
     if(state.phase==='complete') resultText='みんなでつかんだ、大勝利！ また一緒に挑もうね。';
     else if(state.phase==='normal') resultText=`ミナトと、扉の先へ。探索は${state.explore}/6まで進んでいるよ。`;
-    else if(state.phase==='trial') resultText=`想いをつないで。${state.trialScore}/${flow.trialTarget(state)}ポイント、残り${state.trialLeft}G。`;
+    else if(state.phase==='trial') resultText=state.pending==='trialWin'?`目標${flow.trialTarget(state)}ポイントに対し${state.trialScore}ポイント獲得。対決へ。`:`想いをつないで。${state.trialScore}/${flow.trialTarget(state)}ポイント、残り${state.trialLeft}G。`;
     else if(state.pending==='reward') resultText=flow.BOSSES[state.round].bonus?'裏ボス突破！ 仲間とつかんだ10Gの祝宴だよ。':flow.BOSSES[state.round].concession;
     else if(state.phase==='bonus') resultText=state.bonus?`勝利の祝宴、残り${state.bonus}G。`:'祝宴完走！ 仲間と、次の一歩へ。';
     else if(state.pending==='defeat') resultText='まだ、終わりじゃない。力を合わせて立て直そう。';
@@ -217,7 +217,7 @@
     const b=flow.BOSSES[state.round];
     if(state.pending==='explore') showCommand(`第${state.round+1}戦 / NORMAL`,'仲間と、試練の扉へ。','探索6ポイントで試練へ。配当なし・REPLAYは1、通常配当は2、BAR・7配当は3ポイント。',[['探索を始める','explore']]);
     else if(state.pending==='trial') showCommand('TRIAL / 3G','扉に、想いを届けよう。',`3G以内に${flow.trialTarget(state)}ポイント。配当成立で2、REPLAYで1。通常BET・通常抽選です。`,[['試練に挑む','trial']]);
-    else if(state.pending==='trialWin') showCommand('TRIAL CLEAR','その先に、裏ボスが待つ。',`${state.trialScore}ポイントで突破！ チームHPを保って対決へ。`,[['ボスのもとへ','trialWin']]);
+    else if(state.pending==='trialWin') showCommand('TRIAL CLEAR','その先に、裏ボスが待つ。',`目標${flow.trialTarget(state)}ポイントに対し${state.trialScore}ポイント獲得！ チームHPを保って対決へ。`,[['ボスのもとへ','trialWin']]);
     else if(state.pending==='trialFail') showCommand('TRIAL / 再探索','今の一歩を、次の力に。',`HPは減りません。探索0から再開し、次の試練は${Math.max(1,flow.trialTarget(state)-1)}ポイントで突破。`,[['仲間と再探索','trialFail']]);
     else if(state.pending==='intro') showCommand(`第${state.round+1}戦 / ${flow.BOSSES.length}`,b.name+'が あらわれた！',b.line,[['対決を始める','intro']]);
     else if(state.pending==='orders') showCommand('ミミの監督指示','この一手で、切り返そう。','指示は次の非REPLAYで発動。リール配当は変わりません。',[
@@ -275,7 +275,7 @@
       $('JourneyTitle').textContent=trial?`想いをつなぐ、${target}ポイント。`:'あの扉の先へ、一緒に。';
       $('JourneyValue').textContent=`${points} / ${target}`;
       $('JourneyMeter').max=target;$('JourneyMeter').value=points;
-      $('JourneyRule').textContent=trial?`残り${state.trialLeft}G · 配当成立 +2 / REPLAY +1`:'6ポイントで試練 · 通常配当 +2 / BAR・7 +3 / その他 +1';
+      $('JourneyRule').textContent=trial?(state.pending==='trialWin'?`目標${target}ポイント / 獲得${points}ポイント · 試練突破`:`残り${state.trialLeft}G · 配当成立 +2 / REPLAY +1`):'6ポイントで試練 · 通常配当 +2 / BAR・7 +3 / その他 +1';
       $('Prep').textContent=state.pending==='trialWin'?'試練 突破':state.pending==='trialFail'?'再探索へ':trial?`試練 残り${state.trialLeft}G`:`探索 ${points}/6`;
       $('Progress').textContent=trial?'3G以内の規定ポイントで対決へ。失敗後は必要ポイント減少（最低1）。':state.round<3?'新人杯 · 仲間との探索 → 試練 → '+b.name+'との対決':'裏ボス編 · 探索 → 試練 → 対決 → 無料10G';
     }
@@ -293,7 +293,7 @@
         $('CinemaArt').alt=won?'結晶が応え、ミミとミナトの前で試練の扉が開く':'閉じた扉の前で、ミミがミナトを励ます';
         $('CinemaLabel').textContent=step===2?'TRIAL RESULT / 結果':won?'THE GATE / 開門':'TOGETHER / 再び';
         $('CinemaTitle').textContent=(won?['光が、つながった。','扉が、ひらく。','試練、突破。']:['光が、静まる。','一人で、背負わなくていい。','もう一度、仲間と。'])[step];
-        $('CinemaDetail').textContent=step===2?`${state.trialScore}/${flow.trialTarget(state)}ポイント · ${won?'次は '+b.name:`HP減少なし · 次回は${Math.max(1,flow.trialTarget(state)-1)}ポイントで突破`} · 配当 ${state.lastWin?'+'+state.lastWin:'なし'}`:step===1?(won?'ミミ「ほら、君の一手が届いたよ。」':'ミミ「大丈夫。今の一歩は、次につながるよ。」'):'';
+        $('CinemaDetail').textContent=step===2?`${won?`目標${flow.trialTarget(state)}ポイント / 獲得${state.trialScore}ポイント · 次は ${b.name}`:`${state.trialScore}/${flow.trialTarget(state)}ポイント · HP減少なし · 次回は${Math.max(1,flow.trialTarget(state)-1)}ポイントで突破`} · 配当 ${state.lastWin?'+'+state.lastWin:'なし'}`:step===1?(won?'ミミ「ほら、君の一手が届いたよ。」':'ミミ「大丈夫。今の一歩は、次につながるよ。」'):'';
         $('CinemaContinue').textContent=step<2?'結果を見る':won?'対決の案内へ':'再探索の案内へ';
       }else{
         imageSource($('CinemaArt'),blackstarShots[Math.min(step,2)]);$('CinemaArt').alt=['黒星に力を集めるギドノゼアース','黒星を解放するギドノゼアース','黒星の奔流を受け止めるアマラ'][Math.min(step,2)];$('CinemaLabel').textContent=['GIDONOZEAAS / 黒星','LIBERATION / 解放','IMPACT / 着弾','BATTLE RESULT / 結果'][step];$('CinemaTitle').textContent=['静寂が、ほどける。','黒星、解放。','アマラに、届く。',state.enemy===0?'アマラ、突破。':`${feature.damage} DAMAGE`][step];$('CinemaDetail').textContent=step===3?`${feature.damage}ダメージ · 敵HP ${state.enemy} / ${b.hp} · リール配当 ${state.lastWin?'+'+state.lastWin:'なし'}`:step===2?'星の奔流が、裁定の盾を貫く。':'';$('CinemaContinue').textContent=step<3?'結果を見る':state.enemy===0?'勝利の祝宴へ':'対決に戻る';

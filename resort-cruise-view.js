@@ -42,7 +42,8 @@
         else add("wait", slotName(slot) + "まで桟橋で過ごす");
         add("change", slot === "sunset" ? "夜便に変更する" : "夕方便に変更する", slot === "sunset" ? "night" : "sunset");
         add("cancel", "予約を取り消す");
-        if (profile.coins < world.CRUISE.price) dialog.querySelector("[data-cruise-status]").textContent = "乗船にはCOINSが足りません。予約は残せます。";
+        if (profile.coins < world.CRUISE.price) dialog.querySelector("[data-cruise-status]").textContent =
+          `乗船まで、あと${(world.CRUISE.price - profile.coins).toLocaleString("ja-JP")} COINS。予約を残して台で遊び、島へ戻ると保存した遊技報酬を受け取れます。`;
       }
       if (stage === "aboard") add("look", "岸の景色をゆっくり眺める");
       if (sailing()) add("return", "船旅を終えて桟橋へ戻る");

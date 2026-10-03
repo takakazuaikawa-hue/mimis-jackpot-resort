@@ -268,10 +268,12 @@
       dining.querySelector("h3").textContent = meal.name;
       dining.querySelector("[data-meal-phase]").textContent = ({quote:"注文の確認",served:"料理が届きました",tasted:"食卓で過ごす",finished:"旅の食事を覚えました"})[stage];
       dining.querySelector("[data-meal-copy]").textContent = stage === "quote"
-        ? meal.description + " " + meal.price + " COINS · 所持 " + profile.coins.toLocaleString("ja-JP") + " → " + Math.max(0, profile.coins - meal.price).toLocaleString("ja-JP") + " COINS"
+        ? meal.description + " " + meal.price + " COINS · 所持 " + profile.coins.toLocaleString("ja-JP") + (profile.coins >= meal.price ? " → " + (profile.coins - meal.price).toLocaleString("ja-JP") : "") + " COINS"
         : stage === "served" ? meal.served : stage === "tasted" ? meal.taste : meal.memory;
       const status = dining.querySelector("[data-meal-status]");
-      status.textContent = stage === "quote" && profile.coins < meal.price ? "COINSが足りません。" : "";
+      status.textContent = stage === "quote" && profile.coins < meal.price
+        ? `あと${(meal.price - profile.coins).toLocaleString("ja-JP")} COINS。注文せず戻って、台で遊ぶこともできます。保存した遊技報酬は、島へ戻ると受け取れます。`
+        : "";
       const controls = dining.querySelector("[data-meal-actions]");
       controls.replaceChildren();
       const add = (action, text, disabled = false) => {

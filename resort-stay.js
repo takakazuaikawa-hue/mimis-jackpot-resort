@@ -6,7 +6,7 @@
   const goods = world.GOODS;
   const rewards = root.MimiResortRewards;
   const fmt = value => value.toLocaleString("ja-JP");
-  function create({ read, transact, navigate }) {
+  function create({ read, transact, navigate, onMotionChange = () => {} }) {
     const find = selector => document.querySelector(selector);
     const dialogue = find("[data-stay-dialogue]");
     const status = find("[data-stay-status]");
@@ -21,6 +21,7 @@
     const talkActions = find(".stay-talk-actions");
     const personalOpen = find("[data-stay-personal-open]");
     const personalStep = find("[data-stay-luana-step]");
+    const motionQuery = root.matchMedia?.("(prefers-reduced-motion: reduce)") ?? null;
     // A bounded reading aid, separate from game progress. Session storage keeps
     // the spoken words across reloads/cabinet visits without another profile write.
     const historyKey = "mimi-resort-conversations-v1", historyLimit = 60;
@@ -80,6 +81,10 @@
       history.showModal(); history.scrollTop = 0; history.querySelector("button").focus();
     }
     for (const header of document.querySelectorAll(".stay-spatial-header")) {
+      const motionButton = document.createElement("button");
+      motionButton.type = "button"; motionButton.className = "stay-sound stay-motion";
+      motionButton.dataset.stayMotion = "";
+      header.insertBefore(motionButton, header.querySelector("[data-stay-sound]"));
       const casinoButton = document.createElement("button");
       casinoButton.type = "button"; casinoButton.className = "stay-casino-entry";
       casinoButton.dataset.route = "machines"; casinoButton.textContent = "カジノフロアへ";
@@ -406,6 +411,8 @@
       if (view !== "shop") pendingWords = null;
       ambience.setScene(view, read().stay.journey, read().settings.sound, read().settings.motion);
       renderSound();
+      renderMotion();
+      onMotionChange();
       if (view !== "shop") { archive.close(); product.close(); }
       if (view !== "room") { memory.close(); arrange.close(); journal.close(); }
       if (view === "home") renderReceipt();
@@ -427,6 +434,32 @@
         button.setAttribute("aria-label", read().settings.sound ? "音を消す" : "音を入れる");
       });
     }
+    function renderMotion() {
+      const systemReduced = Boolean(motionQuery?.matches);
+      document.querySelectorAll("[data-stay-motion]").forEach(button => {
+        const reduced = systemReduced || read().settings.motion === "reduced";
+        button.textContent = systemReduced ? "動き 控えめ（端末）" : reduced ? "動き 控えめ" : "動き 標準";
+        button.setAttribute("aria-pressed", String(reduced));
+        button.disabled = systemReduced;
+        const label = systemReduced ? "動きは端末設定で控えめです" : reduced ? "動きを標準に戻す" : "動きを控えめにする";
+        button.setAttribute("aria-label", label);
+        button.title = systemReduced ? "端末の視差効果を減らす設定が優先されています" : label;
+      });
+    }
+    document.querySelectorAll("[data-stay-motion]").forEach(button => button.addEventListener("click", () => {
+      if (motionQuery?.matches) { renderMotion(); return; }
+      const next = read().settings.motion === "reduced" ? "full" : "reduced";
+      const result = transact(draft => { draft.settings.motion = next; });
+      if (!result.ok) { button.textContent = "保存できません"; button.title = result.message; return; }
+      button.title = ""; renderMotion();
+      ambience.setScene(currentView, read().stay.journey, read().settings.sound, read().settings.motion);
+      onMotionChange();
+    }));
+    motionQuery?.addEventListener?.("change", () => {
+      renderMotion();
+      ambience.setScene(currentView, read().stay.journey, read().settings.sound, read().settings.motion);
+      onMotionChange();
+    });
     document.querySelectorAll("[data-stay-sound]").forEach(button => button.addEventListener("click", () => {
       const result = transact(draft => { draft.settings.sound = !draft.settings.sound; });
       if (!result.ok) { button.textContent = "保存できません"; button.title = result.message; return; }

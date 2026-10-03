@@ -615,12 +615,26 @@
     selina: ['盤面は同じ。でも、見ている場所は違う。','守りに入る瞬間を、見つけたのね。','罠を読む相手との勝負は、退屈しない。'],
     grano: ['一枚ずつ数えましょう。急ぐ取引は高くつきます。','勘定の間まで、お見通しですかな。','見切った上で席に残る。いい判断ですな。'],
   });
+  const CHAPTER1_RIVAL_HIT_REMARKS = Object.freeze({
+    rico: ['今の一手は、あなたの勝ち。落ち着いて揃えたわね。','残る守りは一枚。最後まで、私の目を見て。'],
+    polka: ['そこを押さえる？ ……やるじゃん！','あと一枚でも、ブラフは降りないよ！'],
+    selina: ['今の一手で、守りを崩されたね。','残る守りは一枚。次は、どこを見る？'],
+    grano: ['その一手は計算に入れませんでしたな。','最後の一枚です。高い取引になりますぞ。'],
+  });
   function showChapter1RivalRemark(opponent, turn, readAssist) {
     const lines = CHAPTER1_RIVAL_REMARKS[opponent.id];
     if (!lines || turn.fullScene) return;
+    // READ READY owns Mimi's promise, including when the last quiet reply
+    // is still on the cabinet at this settlement boundary.
+    if (turn.result === 'miss' && readAssist.ready) {
+      clearChapter1ReelReaction();
+      return;
+    }
     const beat = Math.min(2, Math.max(0, (readAssist.streak || 1) - 1));
     const quote = turn.result === 'replay'
-      ? ({rico:'同じ席で、もう一手。',polka:'もう一回？ いいよ、付き合う！',selina:'決着を急がず、盤面を覚えて。',grano:'次のお代は不要ですな。'}[opponent.id]) : lines[beat];
+      ? ({rico:'同じ席で、もう一手。',polka:'もう一回？ いいよ、付き合う！',selina:'決着を急がず、盤面を覚えて。',grano:'次のお代は不要ですな。'}[opponent.id])
+      : turn.damage > 0 ? CHAPTER1_RIVAL_HIT_REMARKS[opponent.id][state.chapter1OpponentStack === 1 ? 1 : 0]
+      : lines[beat];
     const status = state.chapter1ReadReady ? 'READ READY · 次の非REPLAYで見切る'
       : turn.result === 'miss' ? `観察 ${readAssist.streak}/${chapter1Flow.READ_ASSIST.missThreshold} · ${CHAPTER1_READ_TELL_COPY[opponent.id][Math.max(0,beat)]}`
       : turn.result === 'replay' ? 'REPLAY · 次回BET 0' : `相手STACK −${turn.damage}`;
@@ -1328,7 +1342,10 @@
       staySessionStart = { games: profile.stats.spins, coins: profile.coins, credit: state.credit };
     }
     if (staySurface) {
-      stayUi ||= window.MimiResortStay.create({ read: () => profile, transact: transactStay, navigate: showView });
+      stayUi ||= window.MimiResortStay.create({
+        read: () => profile, transact: transactStay, navigate: showView,
+        onMotionChange: () => { audio.setReduced(isMotionReduced()); updateHud(); },
+      });
       const entry = stayUi.enter(view);
       if (!entry.ok) { toast(entry.message); return; }
     }
@@ -1664,7 +1681,7 @@
       button.addEventListener("click", () => {
         // Start decoding on the first explicit player gesture so a SOUND ON
         // profile reaches its first command window with recorded foley ready.
-        if (button.classList.contains("title-start") && profile.settings.sound) audio.unlock();
+        if (button.matches(".title-start, .title-route") && profile.settings.sound) audio.unlock();
         showView(button.dataset.route, { resumeStay: button.hasAttribute("data-resume-stay") });
       });
     });
