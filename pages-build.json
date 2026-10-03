@@ -1,8 +1,8 @@
 {
   "status": "PC PLAYTEST / PRODUCTION QUALITY UNAPPROVED",
-  "createdAt": "2026-10-03T12:03:50.079Z",
+  "createdAt": "2026-10-03T14:05:25.308Z",
   "entry": "index.html",
-  "bytes": 937467743,
+  "bytes": 938519106,
   "files": [
     {
       "file": "arena-flow.js",
@@ -328,6 +328,36 @@
       "file": "assets/arena/wolf-nine-v1.png",
       "bytes": 1317263,
       "sha256": "c97ec0808aa6d4384f0922d6bb80ca888a40127026023414bd67a49e69f73201"
+    },
+    {
+      "file": "assets/audio/coin-payout-v1/ATTRIBUTION.md",
+      "bytes": 1720,
+      "sha256": "3761100b6353f1b2445dacbbfc700f1e6b28ac66bde3cd9966a6a8d1212a97f2"
+    },
+    {
+      "file": "assets/audio/coin-payout-v1/payout-large.wav",
+      "bytes": 198304,
+      "sha256": "2ee8324896f3a3e5400ab8d757f72472ac71e9d5031bf1bd131ffe34341cfdea"
+    },
+    {
+      "file": "assets/audio/coin-payout-v1/payout-medium.wav",
+      "bytes": 147244,
+      "sha256": "63cebc0e4b655389afaa4b78f02dfdc3d679f119a88ddde6d8b08d970409aff0"
+    },
+    {
+      "file": "assets/audio/coin-payout-v1/payout-shower.wav",
+      "bytes": 397918,
+      "sha256": "3974f1e9c3054db899aa8bea9003a11b2717e202980b88a45d114c90149b7066"
+    },
+    {
+      "file": "assets/audio/coin-payout-v1/payout-small.wav",
+      "bytes": 84012,
+      "sha256": "32b02e25a32da305ff59e8d7aac9584edad37c78cd348d6691972ceecdda7554"
+    },
+    {
+      "file": "assets/audio/coin-payout-v1/win-rise03.wav",
+      "bytes": 219660,
+      "sha256": "8e3f76a89262a3187b2cde8e486094117742984aad758ae41a9353a600727f5e"
     },
     {
       "file": "assets/audio/kenney-casino/ATTRIBUTION.md",
@@ -3336,8 +3366,8 @@
     },
     {
       "file": "sfx.js",
-      "bytes": 45677,
-      "sha256": "b2e2df87e1e4eee4fb3e725f4c4051a71c658698bae1f0924d6ef64f56f711f1"
+      "bytes": 48182,
+      "sha256": "081a498ff7a093e7c6c3f5aca7368c8f3f1bddf795c22e15bdf527e52256c057"
     },
     {
       "file": "slot-core.js",

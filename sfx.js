@@ -3,7 +3,7 @@
  *
  * Short physical sounds are decoded only after the first user gesture.  A
  * restrained procedural layer supplies the reel motor and offline fallback;
- * the recorded CC0 samples remain the primary impact layer. User-supplied
+ * licensed recorded samples remain the primary impact layer. User-supplied
  * normal-play music streams separately through the same master limiter.
  */
 (function (root) {
@@ -41,6 +41,16 @@
     ...numberedFiles("diceShake", "dice-shake", 3),
     ...numberedFiles("diceThrow", "dice-throw", 3),
     ...numberedFiles("dieThrow", "die-throw", 4)
+  });
+
+  // Coin recordings: Little Robot Sound Factory, CC-BY 3.0. Rise03:
+  // WobbleBoxx Workshop, CC0. Edits/credits: assets/audio/coin-payout-v1/ATTRIBUTION.md
+  const PAYOUT_FILES = Object.freeze({
+    payoutSmall: "assets/audio/coin-payout-v1/payout-small.wav",
+    payoutMedium: "assets/audio/coin-payout-v1/payout-medium.wav",
+    payoutLarge: "assets/audio/coin-payout-v1/payout-large.wav",
+    payoutShower: "assets/audio/coin-payout-v1/payout-shower.wav",
+    winRise03: "assets/audio/coin-payout-v1/win-rise03.wav"
   });
 
   const SAMPLE_FAMILIES = Object.freeze({
@@ -205,16 +215,29 @@
   const sampleFamilyCounts = new Map();
   let reelVoices = [];
   const effectVoices = new Set();
+  const payoutVoices = new Map();
   function trackEffect(source) {
     effectVoices.add(source);
-    source.onended = () => { effectVoices.delete(source); source.disconnect(); };
+    source.onended = () => { effectVoices.delete(source); payoutVoices.delete(source); source.disconnect(); };
     return source;
+  }
+  function stopPayoutEffects() {
+    payoutVoices.forEach((gain, source) => {
+      if (context) {
+        const now = context.currentTime;
+        gain.gain.cancelScheduledValues(now);
+        gain.gain.setTargetAtTime(0.0001, now, 0.008);
+        try { source.stop(now + 0.035); } catch (_) { /* already ended */ }
+      }
+    });
+    payoutVoices.clear();
   }
   // Opt-in cancellation for a cabinet scene boundary; does not stop its music
   // or reel motors. Other cabinets keep their existing cue lifetimes.
   function stopEffects() {
     effectVoices.forEach(source => { try { source.stop(); } catch (_) {} source.disconnect(); });
     effectVoices.clear();
+    payoutVoices.clear();
   }
 
   // A one-hour session can trigger the same short physical recording hundreds
@@ -224,6 +247,8 @@
   const SAMPLE_RATE_VARIATION = Object.freeze([0.992, 1.008, 0.997, 1.013, 0.986, 1.004]);
 
   function variedSampleRate(id, playbackRate) {
+    // Keep the selected musical interval and the natural coin tails intact.
+    if (Object.hasOwn(PAYOUT_FILES, id)) return playbackRate;
     const count = samplePlayCounts.get(id) || 0;
     samplePlayCounts.set(id, count + 1);
     return playbackRate * SAMPLE_RATE_VARIATION[count % SAMPLE_RATE_VARIATION.length];
@@ -293,8 +318,8 @@
     }
     if (sampleLoadPromise) return sampleLoadPromise;
     sampleState = "loading";
-    sampleLoadPromise = Promise.allSettled(Object.entries(SAMPLE_FILES).map(async ([id, file]) => {
-      const response = await root.fetch(`${SAMPLE_BASE}${file}`, { credentials: "same-origin" });
+    sampleLoadPromise = Promise.allSettled(Object.entries({ ...SAMPLE_FILES, ...PAYOUT_FILES }).map(async ([id, file]) => {
+      const response = await root.fetch(Object.hasOwn(PAYOUT_FILES, id) ? file : `${SAMPLE_BASE}${file}`, { credentials: "same-origin" });
       if (!response.ok) throw new Error(`Audio ${response.status}: ${file}`);
       const buffer = await decodeAudio(ctx, await response.arrayBuffer());
       sampleBuffers.set(id, buffer);
@@ -334,6 +359,7 @@
     const ctx = ensure();
     if (ctx && master) master.gain.setTargetAtTime(enabled ? 0.72 : 0.0001, ctx.currentTime, 0.025);
     if (!enabled) stopReelLoop();
+    if (!enabled) stopPayoutEffects();
     if (!enabled) stopMusic();
     else if (!music && !recordedMusic && mood !== "silent") setMood(mood);
     return enabled;
@@ -351,6 +377,7 @@
   function setReduced(value) {
     reduced = Boolean(value);
     if (reduced) stopReelLoop();
+    if (reduced) stopPayoutEffects();
     if (context && music) music.gain.setTargetAtTime(musicLevel(), context.currentTime, 0.06);
     if (context && recordedMusic) recordedMusic.gain.gain.setTargetAtTime(reduced ? 0.36 : 1, context.currentTime, 0.06);
     return reduced;
@@ -376,6 +403,7 @@
     } else {
       gain.connect(sampleBus);
     }
+    if (Object.hasOwn(PAYOUT_FILES, sampleId)) payoutVoices.set(source, gain);
     trackEffect(source).start(ctx.currentTime + Math.max(0, delay));
     return true;
   }
@@ -644,6 +672,7 @@
 
   function spinStart() {
     unlock();
+    stopPayoutEffects();
     startReelLoop();
     if (!playSampleCue("spin")) fallbackCue("spin");
     return reelVoices.length;
@@ -681,9 +710,24 @@
 
   function win(payout = 0, bet = 1) {
     unlock();
-    const safeBet = Math.max(1, Number(bet) || 1);
-    const ratio = Math.max(0, Number(payout) || 0) / safeBet;
+    const safeBet = Number.isFinite(Number(bet)) ? Math.max(1, Number(bet) || 1) : 1;
+    const ratio = Number.isFinite(Number(payout)) ? Math.max(0, Number(payout) || 0) / safeBet : 0;
     const tier = ratio >= 50 ? 3 : ratio >= 15 ? 2 : ratio >= 4 ? 1 : 0;
+    const receipt = Object.freeze({ ratio, tier });
+    if (ratio <= 0 || !enabled) return receipt;
+    stopPayoutEffects();
+    // Preserve the recorded clinks and natural settling tail at their original
+    // pitch. Larger wins get a real pour, not a loop of one identical coin.
+    const coin = reduced ? "payoutSmall" : ["payoutSmall", "payoutMedium", "payoutLarge", "payoutShower"][tier];
+    if (playSample(coin, [0.48, 0.52, 0.55, 0.56][tier], 1, tier && !reduced ? 0.28 : 0.09)) {
+      if (!reduced && tier >= 1) {
+        if (!playSample("winRise03", 0.62, 1, 0.035)) semanticAccent("premium");
+      } else if (!reduced) {
+        [659.25, 783.99].forEach((note, index) => tone(note, 0.22 + index * 0.06, "sine", 0.055, 0.09 + index * 0.11));
+      }
+      return receipt;
+    }
+    // Keep the existing reward intact if the new recording cannot be loaded.
     const layers = [
       ["chipsStack2", 0.42, 0.96 + tier * 0.04, 0.04],
       ["chipsStack6", 0.36 + tier * 0.03, 1.04 + tier * 0.055, 0.14],
@@ -699,7 +743,7 @@
       const notes = tier === 0 ? [659.25, 783.99] : [523.25, 659.25, 1046.5];
       notes.forEach((note, index) => tone(note, 0.22 + index * 0.06, "sine", 0.055, 0.09 + index * 0.11));
     }
-    return Object.freeze({ ratio, tier });
+    return receipt;
   }
 
   function jackpot() {
@@ -866,6 +910,9 @@
   }
 
   function setMood(next) {
+    // Cabinets with their own music (Guild) reaffirm "silent" during render.
+    // Only a real shared-music scene exit should cut off a payout here.
+    if (next === "silent" && mood !== "silent") stopPayoutEffects();
     // If a view changed while SOUND was off, the mood key may already match
     // even though its bed was never created. Re-enabling must rebuild it.
     if (mood === next && (next === "silent" || music || recordedMusic)) return;
