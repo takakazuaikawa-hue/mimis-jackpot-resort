@@ -21,6 +21,30 @@
     7: ['無理をした顔は、客席に見せたくないんだ。','今の一手なら、笑ってベンチへ戻れるね。','少しだけ間を。次は、いつもの顔で行くよ。'],
     4: ['腰のベルト、よし。ここで引いたら四番じゃない！','見たか！ 最後まで、この腰で振り切ったぞ！','立ち直す時間はくれ。次の一振りまで逃げない。'],
   };
+  // 原作の球団・投手設定に沿う会話。判定や抽選には使わない。
+  const clubVoices = [
+    { pitcher: 'ケンジ・佐藤', intro: '堅い守りを、一人ずつつないで崩そう。', ready: '守りの隙を探そう。最初の走者からだよ。', score: '堅い守りを抜けた。', onBase: '城の守りに、足がかりができた。', out: '佐藤の一球、簡単には崩せないな。', victory: '堅守を越えた一打を、ナインでつないだ。' },
+    { pitcher: 'マコト・伊藤', intro: '投げても打っても手強い二刀流。私たちは九人で挑もう。', ready: '相手は二刀流。こっちは九人でつないでいくよ。', score: '二刀流の相手から、もぎ取ったぞ。', onBase: '伊藤の球を越えた。次の仲間につなごう。', out: '伊藤に取られた。次の仲間に、球筋を伝える。', victory: '相手の二刀流を、九人の一打で越えた。' },
+    { pitcher: 'ダイキ・小林', intro: '最後まで投げ抜く先発。私たちも一打ずつ積み重ねよう。', ready: '小林は最後まで投げてくる。一打ずつ、焦らずに。', score: '投げ抜く相手に、一点ずつ返そう。', onBase: '小林から出塁だ。ここで攻撃を切らさない。', out: '小林、まだ崩れないか。次の一球を見よう。', victory: '投げ抜く相手に、最後まで打席で応えた。' },
+    { pitcher: 'タケル・山本', intro: '王者の二刀流へ。今のナインで、最後の球場を越えよう。', ready: 'ここまで来た九人だよ。王者にも、一打ずつ。', score: '王者から取った、俺たちの得点だ。', onBase: '山本から出塁した。王者にも、手は届く。', out: '山本に止められた。でも、ここで下は向かない。', victory: '王者を越えた。今の九人で、頂点へ。' }
+  ];
+  function battingReply(settled, result, before) {
+    const voice = clubVoices[state.team];
+    const added = state.runs - before.runs;
+    const runners = state.bases.filter(Boolean).length;
+    // REPLAY・改造・攻撃終了は、汎用台詞より実際の結果を優先する。
+    if (result.replayHit) return 'ファウル！ 走者も打順もそのまま、次の一球は無料だ。';
+    let line;
+    if (before.augment === 'walk' && !state.augment && result.payout === 0) line = added > 0 ? `改造で一塁へ、押し出し${added}点！ リール配当はなし。` : '改造で一塁へ。リール配当はなし、仲間につなぐぞ。';
+    else if (added > 0) line = `${voice.score} ${added}点、ホームに届いた！`;
+    else if (settled.hit) line = `${Math.floor(state.games / flow.PLAYERS.length) % 2 ? voice.onBase : batterVoices[settled.actor.number][1]} 走者${runners}人、次を頼む。`;
+    else if (before.outs === 2) line = `3アウト。走者はベンチへ、${state.runs}点はそのまま。もう一度つなごう。`;
+    else if (state.dry === 3 && !state.augment) line = 'あと一度不発なら改造チャンス。ミミ、次の準備を頼む。';
+    else if (runners) line = `${voice.out} 走者${runners}人は、まだ塁にいる。`;
+    else line = (Math.floor(state.games / flow.PLAYERS.length) % 2 ? voice.out : batterVoices[settled.actor.number][2]);
+    if (state.augment === 'power') line += ' 改造は継続、次のヒットがHR！';
+    return line;
+  }
   let auto = false, turbo = false, nextQueued = false, controlTimer = 0, controlEpoch = 0;
   let settledAt = 0, commandToken = "", commandSince = 0;
   const ART = "./assets/stadium/generated-v1/";
@@ -112,8 +136,8 @@
     $("Command").hidden = true;
     if (spin) return;
     const team = flow.TEAMS[state.team];
-    if (state.pending === "intro") showCommand(`第${state.team + 1}戦 / 4`, team.name,
-      `目標${team.target}点。成立役で走者を進めて、勝利の10Gをつかもう。`, [["PLAY BALL", () => { state.pending = ""; resultText = "さあ、一球目。打ち抜こう！"; }]]);
+    if (state.pending === "intro") showCommand(`第${state.team + 1}戦 / 4 · ${team.style}`, team.name,
+      `投手 ${clubVoices[state.team].pitcher}。${clubVoices[state.team].intro} 目標${team.target}点で10G。`, [["PLAY BALL", () => { state.pending = ""; resultText = clubVoices[state.team].ready; }]]);
     else if (state.pending === "surgery") showCommand("ミミの改造チャンス", "次の打席、どう変える？",
       `あと${Math.max(0, team.target - state.runs)}点で勝利 · 次の打者：${flow.PLAYERS[state.batter].name} · リール配当は変わりません`, [
         ["確実な出塁", () => augment("walk"), "walk"], ["一発の改造", () => augment("power"), "power"]
@@ -199,7 +223,7 @@
       pip.classList.toggle("is-complete", index < consumed);
       pip.classList.toggle("is-current", running && index === consumed);
     });
-    $("BonusMessage").textContent = reward ? "ナインの一打で、勝利をつかんだ。" : mode === "complete" ? '通算優勝 ' + state.championships + '回 · 私たちの野球を、証明した。' : mode === "champion" ? "全試合、完走。ナインとつかんだ優勝を記録しよう。" : mode === "next" ? '次戦：' + flow.TEAMS[state.team + 1].name : spin ? '第' + (consumed + 1) + 'G · リールを止めよう！' : consumed === 0 ? "さあ、勝利の一周へ。" : state.lastWin > 0 ? '+' + state.lastWin.toLocaleString("ja-JP") + ' CREDIT 獲得！' : '第' + consumed + 'G 終了 · 今回の配当なし';
+    $("BonusMessage").textContent = reward ? clubVoices[state.team].victory : mode === "complete" ? '通算優勝 ' + state.championships + '回 · 私たちの野球を、証明した。' : mode === "champion" ? "全試合、完走。ナインとつかんだ優勝を記録しよう。" : mode === "next" ? '次戦：' + flow.TEAMS[state.team + 1].name : spin ? '第' + (consumed + 1) + 'G · リールを止めよう！' : consumed === 0 ? "さあ、勝利の一周へ。" : state.lastWin > 0 ? '+' + state.lastWin.toLocaleString("ja-JP") + ' CREDIT 獲得！' : '第' + consumed + 'G 終了 · 今回の配当なし';
     $("Victory").dataset.paid = String(running && !spin && consumed > 0 && state.lastWin > 0);
   }
   function renderMusic() {
@@ -404,13 +428,9 @@
     resultActor = settled.hit ? settled.actor : null;
     resultText = settled.line; resultHeadline = settled.headline;
     resultDetail = state.phase === "normal" ? { runs: state.runs - previousRuns, payout: result.payout, symbol, replay: result.replayHit } : null;
-    if (state.phase === "normal" && state.augment && !settled.hit && !result.replayHit) {
-      resultText = (previousOuts === 2 ? "3アウトで走者をリセット。" : "この打席は不発。") + " 改造は継続、次のヒットがホームラン！";
-    }
     resultVoiceActor = previousPhase === 'normal' ? settled.actor : null;
     if (resultVoiceActor) {
-      resultText = batterVoices[resultVoiceActor.number][settled.hit?1:2];
-      if (state.augment && !settled.hit && !result.replayHit) resultText += ' 改造は継続、次のヒットがホームラン！';
+      resultText = battingReply(settled, result, { augment: armed, outs: previousOuts, runs: previousRuns });
     }
     if (armed && !state.augment && settled.hit) {
       presentFeature("activate", armed, settled.actor, result.payout);

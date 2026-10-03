@@ -1,8 +1,8 @@
 {
   "status": "PC PLAYTEST / PRODUCTION QUALITY UNAPPROVED",
-  "createdAt": "2026-10-02T23:08:33.190Z",
+  "createdAt": "2026-10-03T12:03:50.079Z",
   "entry": "index.html",
-  "bytes": 937464642,
+  "bytes": 937467743,
   "files": [
     {
       "file": "arena-flow.js",
@@ -3356,8 +3356,8 @@
     },
     {
       "file": "stadium-runtime.js",
-      "bytes": 37254,
-      "sha256": "9ff2031edda674ed0f91459a22c313a5510c1cd7e3cba8cb1a761d8fb3cba850"
+      "bytes": 40355,
+      "sha256": "4d15e9d78d508e70f3c08d0ed94810a133793e702b742e76e329e65a5b18fbac"
     },
     {
       "file": "visual.css",
