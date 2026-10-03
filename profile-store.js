@@ -171,7 +171,7 @@
       appointment: meetingPlans.includes(value.appointment) && !appointmentsKept.includes(value.appointment) ? value.appointment : "",
       appointmentsKept,
       pursuit: ["museum-boat", "museum-glass", "museum-table"].includes(value.pursuit) && Array.isArray(value.discoveries) && value.discoveries.includes(value.pursuit) ? value.pursuit : "",
-      reflections: unique(value.reflections, ["first-walk", "familiar-island", "my-stay", "chapter-one", "museum-boat-return", "museum-glass-return", "museum-table-return"])
+      reflections: unique(value.reflections, ["first-walk", "familiar-island", "my-stay", "chapter-one", "museum-boat-return", "museum-glass-return", "museum-table-return", "noel-walk-return", "marea-walk-return"])
     };
   }
 

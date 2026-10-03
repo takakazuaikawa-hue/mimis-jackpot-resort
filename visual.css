@@ -8075,6 +8075,10 @@ body[data-cabinet-layout="desktop-v5"] .casino-table-hud { bottom: 4.5%; width: 
   .stay-map-clues { padding: 8px 0 14px; border-bottom: 1px solid #6c867533; }
   .stay-map-clues h4 { margin: 0 0 8px; font-size: 15px; }
   .stay-map-clues button { padding: 8px 10px; margin: 0 6px 6px 0; border: 1px solid #47635855; background: #e9f0e7; color: #214738; border-radius: 3px; }
+  .stay-map-clues .stay-walk-choice { display: inline-grid; gap: 4px; width: calc(50% - 8px); vertical-align: top; text-align: left; }
+  .stay-walk-choice strong { font-size: 14px; }
+  .stay-walk-choice span { font-size: 12px; line-height: 1.6; }
+  .stay-map-clues .stay-walk-choice[aria-pressed="true"] { border-color: #234f43; background: #dbe8dc; }
   .stay-museum-reading [data-museum-follow], .stay-museum-reading [data-museum-keep-connection] { width: 100%; background: #6b5833; margin-bottom: 10px; border-color: #d9c18a; }
   .stay-museum-reading [data-museum-compare-back] { margin-bottom: 10px; }
   .stay-museum-pair { position: absolute; inset: 0; z-index: 3; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: minmax(0,1fr) auto; gap: 16px; padding: 16px; background: #11171a; }

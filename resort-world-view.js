@@ -161,6 +161,9 @@
     const personalCue = document.createElement("p"); personalCue.className = "stay-personal-cue";
     conversation.insertBefore(personalCue, personalReply);
     personalReply.addEventListener("click", () => onPersonal(speaker, personalReply));
+    const outingReply=document.createElement("button");outingReply.type="button";outingReply.dataset.worldOuting="true";outingReply.hidden=true;
+    conversation.insertBefore(outingReply,conversation.querySelector("[data-world-farewell]"));
+    outingReply.addEventListener("click",()=>{if(!world.outings(read().stay).some(walk=>walk.id===speaker&&!walk.complete))return;selectedOuting=speaker;showMap();});
     const map = document.querySelector("[data-world-map]");
     const mapOpen = document.querySelector("[data-world-map-open]");
     const mapCanvas = map.querySelector("[data-world-map-canvas]");
@@ -174,7 +177,11 @@
     mapPlan.className = "stay-map-plan"; mapPlan.hidden = true;
     mapPlan.innerHTML = '<p data-meeting-note></p><button type="button" data-meeting-route>待ち合わせへの道順</button><button type="button" data-meeting-cancel>約束を取り消す</button><p role="status" data-meeting-status></p>';
     mapCanvas.before(mapPlan);
+    // Keep the chosen direction and first walking action above the map,
+    // including when optional artwork clues make the guide scrollable.
+    mapCanvas.before(mapRoute,mapWalk);
     let speaker = "";
+    let selectedOuting = "";
     let currentView = "title";
     let plateRequest = null, readyPlate = null, plateSequence = 0, waitingMessage = "";
     const trail = root.MimiResortTrailGuide?.create({scene,read,onFollow:(action,source)=>act(action,source)});
@@ -191,8 +198,9 @@
         : {label:"夜にまた会いたい",cue:"次は夜に会えば、ふたりの話を続けられそうだ。"};
       if (world.NEW_CAST[speaker]) {
         if (episode.phase === "talk") {
-          state.label = ["この人のことをもっと知る","ふたりで話の続きをする","今の気持ちを伝え合う"][episode.count];
-          state.cue = world.NEW_CAST[speaker].age + "歳 · " + world.NEW_CAST[speaker].occupation + "。仕事の外の話も聞いてみよう。";
+          const talk=world.NEW_CAST[speaker].talks[episode.count];
+          state.label = "「"+talk.title+"」を聞く";
+          state.cue = talk.question;
         } else if (episode.phase === "later") state.cue = "次は"+episode.nextMeeting+"で、話の続きを。時間は自分のペースで進められる。";
       }
       personalReply.hidden = false; personalCue.hidden = false; personalReply.textContent = state.label; personalCue.textContent = state.cue;
@@ -473,7 +481,7 @@
       }
       if(id==="museum")museum.decorate(actions,spatial);
       renderPursuit();
-      trail?.update({id,time:journey.time,nextHint:world.trailHint(read().stay),motion:read().settings.motion});
+      trail?.update({id,time:journey.time,nextHint:world.outingHint(read().stay,selectedOuting)||world.trailHint(read().stay),motion:read().settings.motion});
     }
     function renderPursuit(){
       const pursuit=world.pursuits(read().stay).find(entry=>entry.selected&&entry.unlocked&&!entry.complete);
@@ -511,6 +519,7 @@
       if (!next.ok) return;
       const saved = commit(next.journey);
       if (!saved.ok) { caption.textContent = saved.message; return; }
+      if(action.type==="encounter" && action.id===selectedOuting && world.outings(read().stay).some(walk=>walk.id===action.id&&walk.complete))selectedOuting="";
       if (action.type === "move" && VIEW_GATEWAYS[action.to]) {
         navigate(VIEW_GATEWAYS[action.to]);
         return;
@@ -535,6 +544,9 @@
         meetingReply.hidden = !offer;
         meetingReply.textContent = offer?.choice || "";
         refreshPersonal();
+        outingReply.hidden=!world.outings(read().stay).some(walk=>walk.id===speaker&&!walk.complete);
+        outingReply.textContent=speaker==="noel"?"二つの青を見に行く":"庭と高台を歩いてみる";
+        conversation.querySelector("[data-world-reply]").hidden=!outingReply.hidden;
         conversation.hidden = false; caption.hidden = true;
         document.querySelector("[data-world-speaker]").textContent = world.NEW_CAST[speaker]?.name || world.RESIDENTS[speaker]?.name || (speaker === "guide" ? (read().stay.journey.location === "lounge" ? "仕事を終えた案内係" : "巡回中の案内係") : "島を歩く旅人");
         say(firstWords);
@@ -552,8 +564,17 @@
       mapPlan.querySelector("[data-meeting-note]").textContent = plan ? plan.label + "。時間帯は自分で進められます。別の予定を優先しても、次の同じ時間帯に会えます。" : "";
       mapPlan.querySelector("[data-meeting-status]").textContent = "";
       mapClues.replaceChildren();
+      const walks=world.outings(read().stay);
+      if(walks.some(walk=>walk.id===selectedOuting&&walk.complete))selectedOuting="";
       const pursuits=world.pursuits(read().stay).filter(entry=>entry.unlocked);
-      mapClues.hidden=!pursuits.length;
+      mapClues.hidden=false;
+      const walkTitle=document.createElement("h4");walkTitle.textContent="島の人が教える寄り道 · 無料の散歩";mapClues.append(walkTitle);
+      for(const walk of walks){
+        const button=document.createElement("button");button.type="button";button.dataset.walkSelect=walk.id;button.className="stay-walk-choice";
+        const title=document.createElement("strong"),copy=document.createElement("span");title.textContent=walk.title+(walk.complete?" · 旅の記憶に残した":"");copy.textContent=walk.copy;button.append(title,copy);button.disabled=walk.complete;
+        button.setAttribute("aria-pressed",String(selectedOuting===walk.id));
+        button.addEventListener("click",()=>{selectedOuting=walk.id;showOuting(walk.id);for(const choice of mapClues.querySelectorAll('[data-walk-select]'))choice.setAttribute("aria-pressed",String(choice.dataset.walkSelect===walk.id));});mapClues.append(button);
+      }
       if(pursuits.length){const title=document.createElement('h4');title.textContent="気になった作品の続き";mapClues.append(title);}
       for(const pursuit of pursuits){
         const button=document.createElement('button');button.type="button";button.dataset.pursuitSelect=pursuit.id;
@@ -562,6 +583,7 @@
         button.addEventListener('click',()=>{
           const saved=transact(draft=>{if(!world.pursuits(draft.stay).some(entry=>entry.id===pursuit.id&&entry.unlocked&&!entry.complete))return "この手がかりは今は選べません。";draft.stay.journey.pursuit=pursuit.id;});
           if(!saved.ok){mapRoute.textContent=saved.message;return;}
+          selectedOuting="";
           map.close();render();
         });mapClues.append(button);
       }
@@ -584,20 +606,33 @@
         button.dataset.visited = String(journey.visited.includes(id));
         if (id === journey.location) button.setAttribute("aria-current", "location");
         button.addEventListener("click", () => {
+          selectedOuting="";
+          for(const choice of mapClues.querySelectorAll('[data-walk-select]'))choice.setAttribute("aria-pressed","false");
           showRoute(id);
         });
         mapCanvas.append(button);
       }
       mapRoute.textContent = "現在地：" + world.SCENES[journey.location].label + "。行きたい場所を選ぶと、ここからの道順が分かります。";
       mapWalk.hidden = true;
+      if(selectedOuting)showOuting(selectedOuting);
       map.showModal();
     }
     function showRoute(id) {
+      delete mapWalk.dataset.action;delete mapWalk.dataset.target;
       const path = world.route(read().stay.journey.location, id);
       mapRoute.textContent = path.length === 1 ? "今、ここにいます。" : path.map(step => world.SCENES[step].label).join(" → ");
       mapWalk.hidden = path.length < 2;
       mapWalk.dataset.next = path[1] || "";
       mapWalk.textContent = path.length > 1 ? "まず「" + world.SCENES[path[1]].label + "」へ" : "";
+    }
+    function showOuting(id){
+      const walk=world.outings(read().stay).find(entry=>entry.id===id);if(!walk || walk.complete)return;
+      showRoute(walk.next.place);
+      mapRoute.textContent=walk.next.label+" · "+mapRoute.textContent;
+      if(walk.next.place===read().stay.journey.location){
+        mapWalk.hidden=false;mapWalk.dataset.action=walk.next.kind;mapWalk.dataset.target=walk.next.id;
+        mapWalk.textContent=walk.next.kind==="discover"&&world.MUSEUM_WORKS[walk.next.id]&&museum.nextRoomFor(walk.next.id)?"作品のある展示室へ":walk.next.label;
+      }
     }
     mapPlan.querySelector("[data-meeting-route]").addEventListener("click", () => {
       const plan = world.meetingPlan(read().stay.journey);
@@ -614,11 +649,17 @@
     });
     mapOpen.addEventListener("click", showMap);
     map.querySelector("[data-world-map-close]").addEventListener("click", () => map.close());
-    map.addEventListener("close", () => mapOpen.focus());
+    map.addEventListener("close", () => {
+      mapOpen.focus();
+      const journey=read().stay.journey;
+      trail?.update({id:journey.location,time:journey.time,nextHint:world.outingHint(read().stay,selectedOuting)||world.trailHint(read().stay),motion:read().settings.motion});
+    });
     mapWalk.addEventListener("click", () => {
       const next = mapWalk.dataset.next;
+      const action=mapWalk.dataset.action,target=mapWalk.dataset.target;
       map.close();
-      if (next) act({ type: "move", to: next });
+      if(action)act({type:action,id:target});
+      else if (next) act({ type: "move", to: next });
     });
     actions.addEventListener("click", event => {
       if (event.detail > 1) return;

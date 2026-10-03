@@ -104,13 +104,18 @@
     const journey=stay.journey;
     if(!Object.hasOwn(SCENIC,id) || DISCOVERIES[id]!==journey.location)return null;
     const scene=SCENIC[id], observation=OBSERVATIONS[journey.location];
-    const main=journey.time==="sunset" ? scene.sunset : id==="sea-light"
+    let main=journey.time==="sunset" ? scene.sunset : id==="sea-light"
       ? journey.time==="night" ? "遠くの船の灯りが、海の上で揺れている。昼の青は見えないけれど、波の輪郭には月の光が残る。" : "ガラスのような海の青。近い波と、遠い水平線は、同じ色でも違って見える。"
       : id==="town-view" ? DETAILS[id][journey.time==="night"?"night":"day"]
       : observation[journey.time==="night"?2:1];
     let ending=scene.ending;
     if(id==="sea-light" && journey.visited.includes("shop"))ending="売場で見た小さな品にも、この色があった。戻ったら、ルアナにこの海の話をしてみよう。";
     if(id==="highland-view" && !["galleria","harbor"].every(place=>journey.visited.includes(place)))ending="まだ歩いていない道も、屋根の間に続いている。下りたら、あの景色の中へ行ってみよう。";
+    if(id==="cove-view" && journey.discoveries.includes("museum-glass")){
+      main=journey.time==="night" ? "月の光が届く浅瀬と、光の届かない沖。『潮のかたち』の薄い縁と重なった青を思い出す。同じ海でも、光の通る場所で色が違った。" : journey.time==="sunset" ? "浅瀬には夕空の桃色、沖には深い青。『潮のかたち』を透かしたときのように、光の通る場所で、同じ水が違う色になる。" : "足元の浅瀬は砂まで透け、沖へ目を移すと青が濃くなる。『潮のかたち』の薄い縁と、厚く重なった青。ガラスの前で見た違いが、海にもあった。";
+      if(journey.encounters.includes("noel"))ending="ノエルは、正しい見方を教えるより、どこで足を止めたか聞きたそうだった。この二つの青を、戻って話してみよう。";
+    }
+    if(id==="highland-view" && journey.discoveries.includes("garden-view") && journey.encounters.includes("marea"))ending="木陰を抜けてきた道が、あの屋根まで続いている。マレアが守っているのは、遠くから見る景色だけじゃない。下りたら、彼女自身が行きたい場所も聞いてみよう。";
     return {id,place:journey.location,time:journey.time,context:journey.location+":"+journey.time,title:scene.title,label:OBSERVATIONS[journey.location]?.[0] || (id==="sea-light"?"海を一緒に眺める":DETAILS[id].label),remembered:journey.discoveries.includes(id),frames:[scene.opening,main,ending].map((copy,index)=>({copy,point:scene.points[index]}))};
   }
   function finishScenic(draft,id,context) {
@@ -238,6 +243,11 @@
       const person=NEW_CAST[id];
       if (followup) return person.more;
       if (stay.relationships?.[id]?.stage === "complete") return person.relation.after;
+      const noticed = stay.journey.discoveries;
+      if(id==="noel" && stay.journey.reflections.includes("noel-walk-return"))return "おかえり。二つの青を見比べた話、覚えてる。今日は君が来ると、光を測る手も止まるね。次は作品の話じゃなくても、少し座っていって。";
+      if(id==="marea" && stay.journey.reflections.includes("marea-walk-return"))return "あ、来たね。庭から高台まで歩いた日、覚えてるよ。今日は点検の話ばかりにしないつもり。あなたが次に行ってみたい場所も、私に教えて。";
+      if (id === "noel" && noticed.includes("museum-glass") && noticed.includes("cove-view")) return seen ? "ガラスも入り江も見てきたんだね。海の青は深さで、ガラスの青は厚みで変わる。……僕、説明が長くなると、人の顔を見なくなるんだ。今日は、君が戻ってくる方を見てた。どちらの青が残った？" : "ノエルです。ガラスも入り江も見てきたんだね。『潮のかたち』の灯りを手伝ってるんだ。海の青は深さで、ガラスの青は厚みで変わる。でも、正解の見方は決めたくない。君にはどちらの青が残った？";
+      if (id === "marea" && noticed.includes("garden-view") && noticed.includes("highland-view")) return (seen?"":"初めまして、マレアです。")+"庭も高台も見てきたんだね。あの道、私が手入れしてるの。遠くから見ると、港の屋根まで小さかったでしょう。……私も、ときどきあの港から旅に出たい。島を守るのが好きなのと、外を見たいのは、両方あっていいよね。";
       return (seen ? person.again + " " : "") + person.ordinary[stay.journey.time];
     }
     const elsewhere = (stay.journey.meetings || []).some(key => key.startsWith(id + ":") && key !== id + ":" + location);
@@ -275,6 +285,21 @@
       ? "昼は高台や店、台を巡っていたけれど、今はここでひと休み。帰る前に、さっきとは違う景色を一つ見ておくのが好きなんだ。君も、よかったら。"
       : elsewhere ? "高台でも会ったね。ここまでの道、どうだった？ 僕はガレリアをのぞいてから来たところ。同じ島を歩いていても、それぞれの一日ができるんだね。"
       : seen ? "やあ、また来たんだね。ここ、何度見ても少し違う。今の海は、どんな色に見える？" : "こんにちは。風が気持ちいいね。昼に歩いた道なのに、光が変わるだけで知らない場所みたいだ。";
+  }
+  // Optional free walks connect an adult's interests to two existing sights.
+  // Their next stop comes from real observations, not a new quest/save counter.
+  function outings(stay) {
+    const noticed=stay.journey.discoveries;
+    return [
+      {id:"noel",title:"ノエルと見比べる、二つの青",copy:"美術館のガラスから、入り江の海へ。同じ青が変わる理由を見つけて、ノエルに話そう。",stops:[{place:"museum",kind:"discover",id:"museum-glass",label:"『潮のかたち』を見る"},{place:"cove",kind:"discover",id:"cove-view",label:"入り江の浅瀬を眺める"}]},
+      {id:"marea",title:"マレアの島、足元から高台へ",copy:"庭の木陰から、島を望む高台へ。手入れされた道と、その先の景色をマレアに聞いてみよう。",stops:[{place:"garden",kind:"discover",id:"garden-view",label:"庭の木陰で立ち止まる"},{place:"highland",kind:"discover",id:"highland-view",label:"高台から島を見渡す"}]}
+    ].map(walk=>({...walk,complete:stay.journey.reflections.includes(walk.id+"-walk-return"),next:walk.stops.find(stop=>!noticed.includes(stop.id)) || {place:NEW_CAST[walk.id].schedule[stay.journey.time],kind:"encounter",id:walk.id,label:NEW_CAST[walk.id].name+"に、見つけた景色を話す"}}));
+  }
+  function outingHint(stay,id) {
+    const walk=outings(stay).find(entry=>entry.id===id);if(!walk || walk.complete)return null;
+    const next=walk.next,to=route(stay.journey.location,next.place)[1];
+    return next.place===stay.journey.location ? {...next,copy:walk.title+"。"+next.label+"。"}
+      : to ? {kind:"move",to,label:SCENES[to].label+"へ",copy:walk.title+"。"+next.label+"ために、ここから道をたどろう。"} : null;
   }
   // Reviewable first-stay prices. They do not convert any cabinet CREDIT.
   const MEALS = Object.freeze({
@@ -384,6 +409,8 @@
     } else if (action.type === "encounter") {
       if (presence(state) !== action.id || !action.id) return fail("not-present");
       if (!state.encounters.includes(action.id)) state.encounters.push(action.id);
+      const walk=outings({journey:state}).find(entry=>entry.id===action.id);
+      if(walk && !walk.complete && walk.next.kind==="encounter")state.reflections.push(walk.id+"-walk-return");
       if (["guide", "traveler"].includes(action.id)) {
         const meeting = action.id + ":" + state.location;
         if (!state.meetings.includes(meeting)) state.meetings.push(meeting);
@@ -458,10 +485,12 @@
     const discovered = journey.discoveries.length > 0;
     const chosen = journey.visited.includes("town") || Object.keys(stay.placements).length > 0 || Object.keys(stay.dining.memories).length > 0 || stay.cruise.trips > 0;
     return [
+      { id: "noel-walk-return", ready: journey.reflections.includes("noel-walk-return"), title: "ノエルと見比べた、二つの青", text: "『潮のかたち』のガラスと入り江の浅瀬。同じ青の違いを見つけてノエルに話した。正解を決めつけずに見てほしいという、作り手の気持ちも知った。" },
+      { id: "marea-walk-return", ready: journey.reflections.includes("marea-walk-return"), title: "マレアの庭から、高台へ", text: "木陰の庭と、島を望む高台を歩いた。道を守るマレアにも、あの港から旅に出たい日がある。島の景色と一緒に、その人の望みも聞いた。" },
       { id: "first-walk", ready: discovered || stay.metLuana, title: "はじめて歩いた道", text: "知らなかった道の先で、足を止める場所を見つけた。部屋へ帰ってきても、その景色は自分の中に残っている。" },
       { id: "familiar-island", ready: familiar, title: "見知った顔のある島", text: "別の場所で、知っている人に会った。道をたどるだけだった島に、あの人が過ごしている時間が重なった。" },
       { id: "my-stay", ready: familiar && discovered && chosen, title: "自分で選んだ一日", text: "気になった道を選び、人に会い、好きな景色を持って帰ってきた。ひとつの旅として、この部屋でひと息つこう。次の散歩も、台に戻る時間も、自分で選べる。" }
-    ].map(entry => ({ ...entry, saved: (journey.reflections || []).includes(entry.id) }));
+    ].filter(entry=>!entry.id.endsWith("-walk-return")||entry.ready).map(entry => ({ ...entry, saved: (journey.reflections || []).includes(entry.id) }));
   }
   function rememberStay(draft) {
     if (draft.stay.journey.location !== "room") return "客室で、旅を振り返りましょう。";
@@ -634,5 +663,5 @@
     draft.stay.relationships[id]=saved;
   }
 
-  return Object.freeze({ SCENES, OBSERVATIONS, DETAILS, RESIDENTS, NEW_CAST, REST_PLACES, resumeView, route, MEALS, mealAction, CRUISE, cruiseAction, GOODS, purchase, place, presence, MEETING_PLANS, meetingPlan, meetingOffer, encounterText, encounterEpisode, finishEncounter, itemMemory, travelReflections, rememberStay, chapterOne, finishChapterOne, SCENIC_IDS, scenicMoment, finishScenic, MUSEUM_WORKS, museumMoment, finishMuseum, PURSUITS, pursuits, beginPursuit, finishPursuit, pursuitHint, trailHint, luanaTopics, shareLuanaStory, RELATIONSHIPS, relationshipEpisode, relationshipScene, relationshipAction, transition, dialogueContext });
+  return Object.freeze({ SCENES, OBSERVATIONS, DETAILS, RESIDENTS, NEW_CAST, REST_PLACES, resumeView, route, MEALS, mealAction, CRUISE, cruiseAction, GOODS, purchase, place, presence, MEETING_PLANS, meetingPlan, meetingOffer, encounterText, encounterEpisode, finishEncounter, itemMemory, travelReflections, rememberStay, chapterOne, finishChapterOne, SCENIC_IDS, scenicMoment, finishScenic, MUSEUM_WORKS, museumMoment, finishMuseum, PURSUITS, pursuits, beginPursuit, finishPursuit, pursuitHint, outings, outingHint, trailHint, luanaTopics, shareLuanaStory, RELATIONSHIPS, relationshipEpisode, relationshipScene, relationshipAction, transition, dialogueContext });
 });
