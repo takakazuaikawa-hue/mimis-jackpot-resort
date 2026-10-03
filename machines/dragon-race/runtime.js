@@ -399,17 +399,25 @@
           : root.dataset.scene === "boss-enter" ? ["神眼レースへ", "神眼の圧力を削れ · 突破でBONUS"]
           : [progress.phase === "trial" ? "CHANCEへ" : "次の会場へ", progress.phase === "trial" ? "3Gで予想3点を集めよう" : content.JOURNEY[progress.section].theme];
         text(".dragon-milestone strong", milestone[0]); text(".dragon-milestone span", milestone[1]);
-        if (api.audio.enabled) {
-          if (settledGridResult.jackpot) api.audio.jackpot();
-          else if (round.prior.phase === "boss" && round.events.includes("boss-win")) api.audio.roleBoss(tx.flagId, "victory");
-          else if (round.prior.phase === "boss" && progress.bossHp < round.prior.bossHp) api.audio.roleBoss(tx.flagId, "hit");
-          else if (tx.result.receipt.payout > 0) api.audio.win(tx.result.receipt.payout, api.state.bet);
-          else api.audio.roleResult(tx.flagId, tx.result.receipt.replay ? "replay" : "result", false);
-        }
         render(); animateReveal(); startReward();
         window.dispatchEvent(new CustomEvent('mimi:cabinet-result', {detail:{machineId:'dragon-race',type:'revealed',transactionId:tx.transactionId,payout:tx.result.receipt.payout,replay:tx.result.receipt.replay,lineIds:settledGridResult.litLines.map(l=>l.id)}}));
         spectacle.celebrate({ jackpot: Boolean(settledGridResult.jackpot), bossWin: round.events.includes("boss-win"), payout: tx.result.receipt.payout });
         api.redraw();
+        // Finish the visible verdict before scheduling sound: DOM/layout work
+        // can exceed the short coin's lead-in on a busy desktop.
+        if (api.audio.enabled) {
+          if (settledGridResult.jackpot) {
+            api.audio.jackpot();
+            api.audio.payout(tx.result.receipt.payout, api.state.bet);
+          } else if (round.prior.phase === "boss" && round.events.includes("boss-win")) {
+            api.audio.roleBoss(tx.flagId, "victory");
+            api.audio.payout(tx.result.receipt.payout, api.state.bet);
+          } else if (round.prior.phase === "boss" && progress.bossHp < round.prior.bossHp) {
+            api.audio.roleBoss(tx.flagId, "hit");
+            api.audio.payout(tx.result.receipt.payout, api.state.bet);
+          } else if (tx.result.receipt.payout > 0) api.audio.win(tx.result.receipt.payout, api.state.bet);
+          else api.audio.roleResult(tx.flagId, tx.result.receipt.replay ? "replay" : "result", false);
+        }
       }
     }
   }

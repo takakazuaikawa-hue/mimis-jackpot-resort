@@ -3152,7 +3152,10 @@
     burst(28 + (effect === "sparkle" ? 16 : 0), result.premium ? "#ffd36a" : "#63e3ff");
     coinBurst(result.premium ? 32 : 14);
     slashBurst(result.premium ? 5 : 2);
-    if (result.jackpot) audio.jackpot();
+    if (result.jackpot) {
+      audio.jackpot();
+      audio.payout(result.payout, currentSpin?.bet || state.bet);
+    }
     // The boss transaction keeps its physical STOP sounds, then roleBoss() and
     // one authored boss-result cue own the resolution. The generic payout
     // jingle belongs to normal/BONUS play and otherwise stacked as many as four

@@ -708,7 +708,7 @@
     return amount;
   }
 
-  function win(payout = 0, bet = 1) {
+  function playPayout(payout = 0, bet = 1, withAccent = true) {
     unlock();
     const safeBet = Number.isFinite(Number(bet)) ? Math.max(1, Number(bet) || 1) : 1;
     const ratio = Number.isFinite(Number(payout)) ? Math.max(0, Number(payout) || 0) / safeBet : 0;
@@ -720,6 +720,7 @@
     // pitch. Larger wins get a real pour, not a loop of one identical coin.
     const coin = reduced ? "payoutSmall" : ["payoutSmall", "payoutMedium", "payoutLarge", "payoutShower"][tier];
     if (playSample(coin, [0.48, 0.52, 0.55, 0.56][tier], 1, tier && !reduced ? 0.28 : 0.09)) {
+      if (!withAccent) return receipt;
       if (!reduced && tier >= 1) {
         if (!playSample("winRise03", 0.62, 1, 0.035)) semanticAccent("premium");
       } else if (!reduced) {
@@ -735,6 +736,9 @@
       ["cardFan", 0.27, 1.05 + tier * 0.05, 0.28]
     ].slice(0, reduced ? 1 : tier + 1);
     const played = layers.reduce((didPlay, layer) => playSample(...layer) || didPlay, false);
+    // Authored jackpot/boss fanfares already own the musical resolution.
+    // If recordings fail, retain that cue without synthesizing another one.
+    if (!withAccent) return receipt;
     if (!played) fallbackCue(tier >= 2 ? "premium" : "win");
     else if (tier >= 2) semanticAccent("premium");
     else if (ratio > 0) {
@@ -744,6 +748,14 @@
       notes.forEach((note, index) => tone(note, 0.22 + index * 0.06, "sine", 0.055, 0.09 + index * 0.11));
     }
     return receipt;
+  }
+
+  function win(amount = 0, bet = 1) {
+    return playPayout(amount, bet, true);
+  }
+
+  function payout(amount = 0, bet = 1) {
+    return playPayout(amount, bet, false);
   }
 
   function jackpot() {
@@ -996,6 +1008,7 @@
     reelStop,
     tenpai,
     win,
+    payout,
     jackpot,
     revive,
     reelLoop: Object.freeze({ start: startReelLoop, stop: stopReelLoop, stopOne: stopOneReel }),
