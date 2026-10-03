@@ -160,6 +160,77 @@
   let master = null;
   let sampleBus = null;
   let synthBus = null;
+  let musicDuckBus = null;
+  let synthMusicDuckBus = null;
+  let payoutMix = null;
+  let payoutMixTimer = null;
+  const payoutMixListeners = new Set();
+
+  function payoutMusicGain() {
+    if (!payoutMix || !context) return 1;
+    const now = context.currentTime, mix = payoutMix;
+    if (now >= mix.end) return 1;
+    if (now < mix.attackEnd) return mix.from + (mix.low - mix.from) * Math.max(0, (now - mix.start) / (mix.attackEnd - mix.start));
+    if (now < mix.holdEnd) return mix.low;
+    return mix.low + (1 - mix.low) * (now - mix.holdEnd) / (mix.end - mix.holdEnd);
+  }
+
+  function notifyPayoutMix() {
+    const value = payoutMusicGain();
+    payoutMixListeners.forEach(listener => { try { listener(value); } catch (_) { /* music owner may be leaving */ } });
+    if (value === 1 && (!payoutMix || context.currentTime >= payoutMix.end)) {
+      if (payoutMixTimer !== null) root.clearInterval(payoutMixTimer);
+      payoutMixTimer = null;
+      payoutMix = null;
+    }
+  }
+
+  function schedulePayoutMix(low, hold, release, attack = 0.03) {
+    if (!context) return;
+    const now = context.currentTime, from = payoutMusicGain();
+    payoutMix = { from, low, start: now, attackEnd: now + attack, holdEnd: now + Math.max(attack, hold), end: now + Math.max(attack, hold) + release };
+    for (const bus of [musicDuckBus, synthMusicDuckBus]) {
+      if (!bus) continue;
+      bus.gain.cancelScheduledValues(now);
+      bus.gain.setValueAtTime(from, now);
+      if (attack > 0) bus.gain.linearRampToValueAtTime(low, payoutMix.attackEnd);
+      bus.gain.setValueAtTime(low, payoutMix.holdEnd);
+      bus.gain.linearRampToValueAtTime(1, payoutMix.end);
+    }
+    // HTML music owners share the envelope, without restarting their songs.
+    if (payoutMixListeners.size && payoutMixTimer === null) payoutMixTimer = root.setInterval(notifyPayoutMix, 40);
+    notifyPayoutMix();
+  }
+
+  function restorePayoutMix() {
+    if (payoutMix && !payoutMix.releasing) {
+      schedulePayoutMix(payoutMusicGain(), 0, 0.12, 0);
+      if (payoutMix) payoutMix.releasing = true;
+    }
+  }
+
+  function resetSuspendedPayoutMix() {
+    if (!payoutMix || context?.state === "running") return;
+    // HTML music does not share the AudioContext clock. Do not leave it
+    // attenuated behind a frozen Web Audio release curve.
+    payoutMix = null;
+    for (const bus of [musicDuckBus, synthMusicDuckBus]) {
+      bus?.gain.cancelScheduledValues(context.currentTime);
+      bus?.gain.setValueAtTime(1, context.currentTime);
+    }
+    notifyPayoutMix();
+  }
+
+  function onPayoutMix(listener) {
+    if (typeof listener !== "function") return () => {};
+    payoutMixListeners.add(listener);
+    if (payoutMix && payoutMixTimer === null) payoutMixTimer = root.setInterval(notifyPayoutMix, 40);
+    notifyPayoutMix();
+    return () => {
+      payoutMixListeners.delete(listener);
+      if (!payoutMixListeners.size && payoutMixTimer !== null) { root.clearInterval(payoutMixTimer); payoutMixTimer = null; }
+    };
+  }
   let music = null;
   let musicVolume = 0.075;
   let renderedMusic = null;
@@ -222,6 +293,7 @@
     return source;
   }
   function stopPayoutEffects() {
+    restorePayoutMix();
     payoutVoices.forEach((gain, source) => {
       if (context) {
         const now = context.currentTime;
@@ -235,6 +307,7 @@
   // Opt-in cancellation for a cabinet scene boundary; does not stop its music
   // or reel motors. Other cabinets keep their existing cue lifetimes.
   function stopEffects() {
+    restorePayoutMix();
     effectVoices.forEach(source => { try { source.stop(); } catch (_) {} source.disconnect(); });
     effectVoices.clear();
     payoutVoices.clear();
@@ -282,6 +355,11 @@
       synthBus.gain.value = 0.72;
       sampleBus.connect(master);
       synthBus.connect(master);
+      musicDuckBus = context.createGain();
+      synthMusicDuckBus = context.createGain();
+      musicDuckBus.connect(master);
+      synthMusicDuckBus.connect(synthBus);
+      context.addEventListener?.("statechange", resetSuspendedPayoutMix);
       master.connect(limiter);
       limiter.connect(context.destination);
     }
@@ -719,7 +797,11 @@
     // Preserve the recorded clinks and natural settling tail at their original
     // pitch. Larger wins get a real pour, not a loop of one identical coin.
     const coin = reduced ? "payoutSmall" : ["payoutSmall", "payoutMedium", "payoutLarge", "payoutShower"][tier];
-    if (playSample(coin, [0.48, 0.52, 0.55, 0.56][tier], 1, tier && !reduced ? 0.28 : 0.09)) {
+    const coinDelay = tier && !reduced ? 0.28 : 0.09;
+    if (playSample(coin, [0.48, 0.52, 0.55, 0.56][tier], 1, coinDelay)) {
+      const duration = sampleBuffers.get(coin)?.duration;
+      const accentEnd = withAccent && tier && !reduced ? 0.035 + (sampleBuffers.get("winRise03")?.duration || 0) : 0;
+      if (Number.isFinite(duration) && duration > 0) schedulePayoutMix(tier && !reduced ? 0.5 : 0.71, Math.max(coinDelay + duration, accentEnd), 0.55);
       if (!withAccent) return receipt;
       if (!reduced && tier >= 1) {
         if (!playSample("winRise03", 0.62, 1, 0.035)) semanticAccent("premium");
@@ -814,7 +896,7 @@
     try {
       if (!recordedDecks) {
         const bus = ctx.createGain();
-        bus.connect(master);
+        bus.connect(musicDuckBus);
         recordedDecks = RESORT_TRACKS.map(track => {
           const media = new root.Audio(`assets/${encodeURIComponent(track.file)}`);
           media.preload = "none";
@@ -914,7 +996,7 @@
     music = gain;
     gain.gain.setValueAtTime(0.0001, ctx.currentTime);
     gain.gain.setTargetAtTime(musicLevel(), ctx.currentTime, 0.08);
-    source.connect(gain); gain.connect(master);
+    source.connect(gain); gain.connect(musicDuckBus);
     source.onended = () => { source.disconnect(); gain.disconnect(); };
     padNodes.push(source);
     source.start(0, offset);
@@ -942,7 +1024,7 @@
     filter.frequency.value = { resort: 1600, chance: 1800, bonus: 2200, boss: 1100, arenaBoss: 1100 }[next] || 1600;
     filter.Q.value = 0.65;
     music.connect(filter);
-    filter.connect(synthBus || master);
+    filter.connect(synthMusicDuckBus);
     const score = MUSIC_SCORES[next] || MUSIC_SCORES[next === 'arenaBoss' ? 'boss' : 'resort'];
     const beat = 60 / score.bpm;
     const voices = Array.from({ length: 4 }, (_, index) => {
@@ -996,6 +1078,7 @@
     setReduced,
     setMood,
     setMusicVolume,
+    onPayoutMix,
     stopEffects,
     tone,
     cue,
@@ -1014,6 +1097,7 @@
     reelLoop: Object.freeze({ start: startReelLoop, stop: stopReelLoop, stopOne: stopOneReel }),
     get enabled() { return enabled; },
     get reduced() { return reduced; },
+    get payoutMusicGain() { return payoutMusicGain(); },
     get sampleState() { return sampleState; },
     get loadedSampleCount() { return sampleBuffers.size; },
     get reelVoiceCount() { return reelVoices.length; },

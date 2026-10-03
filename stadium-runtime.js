@@ -232,9 +232,11 @@
     if (track !== musicTrack) { pauseMusic(); musicTrack = track; }
     let player = musicPlayers.get(track);
     if (!player) { player = document.createElement("audio"); player.preload = "none"; player.dataset.stadiumMusic = track; music.after(player); musicPlayers.set(track, player); }
-    if (!player.getAttribute("src")) { player.src = `./assets/stadium/audio/${track}.mp3`; player.loop = true; player.volume = .22; }
+    if (!player.getAttribute("src")) { player.src = `./assets/stadium/audio/${track}.mp3`; player.loop = true; }
+    player.volume = .22 * (audio.payoutMusicGain ?? 1);
     if (player.paused) player.play().catch(() => { /* Playback failure must not interrupt the reel game. */ });
   }
+  audio.onPayoutMix?.(gain => musicPlayers.forEach(player => { player.volume = .22 * gain; }));
   function canAdvanceCommand() { return ["intro", "reward", "next", "champion"].includes(state.pending); }
   function nextReel() { return spin ? spin.stopped.findIndex((n, c) => n === null && !spin.pendingStops.includes(c)) : -1; }
   function pause() { auto = false; nextQueued = false; clearTimeout(controlTimer); controlEpoch++; }

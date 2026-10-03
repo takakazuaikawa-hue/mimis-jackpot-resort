@@ -381,7 +381,10 @@
     if(['liberation','guard'].includes(result.kind)&&!state.pending)feature={...result,until:performance.now()+(reduced.matches?600:turbo?1500:2800)};
     if(blackstar)feature={...result,actor:0,kind:'liberation',cinematic:true,step:reduced.matches?3:0,speed:turbo?.6:1,until:performance.now()+650};
     if(['trialWin','trialFail'].includes(result.kind))feature={...result,actor:1,cinematic:true,trialOutcome:result.kind,step:reduced.matches?2:0,speed:turbo?.6:1,until:performance.now()+450};
-    $('Cabinet').dataset.heat='normal';audio.reelLoop.stop();if(sound&&out.payout)audio.win(out.payout,BET);save();render();
+    $('Cabinet').dataset.heat='normal';audio.reelLoop.stop();save();render();
+    // Result rendering can end the battle music. Schedule paid audio after
+    // that transition so its scene cleanup cannot cut the new coin tail.
+    if(sound&&out.payout)audio.win(out.payout,BET);
     out.winCells.forEach(key=>{const[c,r]=key.split('-').map(Number);$('Reels').children[c].children[r].classList.add('is-win');});
     if(sound&&!feature?.cinematic){const cue=result.kind==='victory'?'bossDefeat':result.kind==='guard'?'revive':result.damage?'bossHit':result.kind==='miss'?'bossAttack':result.kind==='replay'?'notice':null;if(cue)audio.cue(cue);}
     playResultScene();

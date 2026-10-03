@@ -95,13 +95,16 @@
       music.pause(); musicTrack = track; musicEpoch++; musicPending = false; musicFailed = false;
       music.src = source + `bgm/${track}.mp3`; music.load();
     }
-    music.volume = preferences.musicVolume * (mode === "photo" ? .18 : modalOpen() ? .45 : 1);
+    syncMusicVolume();
     if (music.paused && !musicPending && !musicFailed) {
       const epoch = musicEpoch; musicPending = true;
       music.play().then(() => { if (epoch === musicEpoch) musicBlocked = false; })
         .catch(() => { if (epoch === musicEpoch) musicBlocked = true; })
         .finally(() => { if (epoch === musicEpoch) musicPending = false; });
     }
+  }
+  function syncMusicVolume() {
+    if (music) music.volume = preferences.musicVolume * Math.min(mode === "photo" ? .18 : modalOpen() ? .45 : 1, api.audio.payoutMusicGain ?? 1);
   }
   function finishReward() {
     rewardRun?.kill(); rewardRun = null;
@@ -1176,6 +1179,7 @@
     mountDrive();
     mountSettings();
     music = new Audio(); music.loop = true; music.preload = "none";
+    api.audio.onPayoutMix?.(syncMusicVolume);
     music.addEventListener("error", () => { musicFailed = true; });
     document.addEventListener("pointerup", () => { if (musicBlocked) syncSound(); });
     document.addEventListener("keydown", () => { if (musicBlocked) syncSound(); });

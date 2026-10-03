@@ -1,8 +1,8 @@
 {
   "status": "PC PLAYTEST / PRODUCTION QUALITY UNAPPROVED",
-  "createdAt": "2026-10-03T14:47:36.934Z",
+  "createdAt": "2026-10-03T15:24:30.775Z",
   "entry": "index.html",
-  "bytes": 938520111,
+  "bytes": 938524366,
   "files": [
     {
       "file": "arena-flow.js",
@@ -11,8 +11,8 @@
     },
     {
       "file": "arena-runtime.js",
-      "bytes": 50584,
-      "sha256": "502c4bc8c43ea4e9c5e7f53783233fb3c3590fea818903e2096eb84e0de33983"
+      "bytes": 50739,
+      "sha256": "bcc6a130a928ed0a8ec1b8738b9fc5933b9bd07774b73ca910931dc3924bedd9"
     },
     {
       "file": "assets/Jackpot.mp3",
@@ -2971,8 +2971,8 @@
     },
     {
       "file": "guild-runtime.js",
-      "bytes": 27984,
-      "sha256": "80fe8a31590d6457edc7dc104fe15d159922ba502748642eae2f9ee7f03b5c01"
+      "bytes": 28071,
+      "sha256": "ccbe18b54b5d7fa72aedfb170d968c7805daeedd53597393f6c68b23eebdcebd"
     },
     {
       "file": "guild-scenes.js",
@@ -3246,8 +3246,8 @@
     },
     {
       "file": "machines/dragon-race/runtime.js",
-      "bytes": 95680,
-      "sha256": "3b947582b295afdae7c37cc34c2fa303fc6a859b505bbc6eeba614abf81238dd"
+      "bytes": 95835,
+      "sha256": "7accb3a3fd67f817ea76882faae49fe9664e2aabab2c095ce1c4506a315ff640"
     },
     {
       "file": "machines/dragon-race/spectacle.js",
@@ -3366,8 +3366,8 @@
     },
     {
       "file": "sfx.js",
-      "bytes": 48621,
-      "sha256": "de1f157aa5fda08ab784e401da78e3bc675c49432328a81a3e1715eca219bed2"
+      "bytes": 52348,
+      "sha256": "fd5f157df0d7fb47936c0504525639075ca67d13d9aa39d4a4254bf166dfbf41"
     },
     {
       "file": "slot-core.js",
@@ -3386,8 +3386,8 @@
     },
     {
       "file": "stadium-runtime.js",
-      "bytes": 40355,
-      "sha256": "4d15e9d78d508e70f3c08d0ed94810a133793e702b742e76e329e65a5b18fbac"
+      "bytes": 40486,
+      "sha256": "78bc94b586b005a07588dd542fee84c540ae26dbcb0c6619f9716db91ae160b1"
     },
     {
       "file": "visual.css",

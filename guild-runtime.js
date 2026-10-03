@@ -37,10 +37,12 @@
     audio.setMood('silent');
     if(!active){musicEpoch++;music.pause();return;}
     const celebrating=state.phase==='bonus'||state.phase==='complete'||state.pending==='reward'&&(!feature||feature.frames[feature.step].label==='仲間入り');const key=celebrating?'feast':flow.TOWNS[state.round].music;
-    if(key!==musicKey){musicEpoch++;music.pause();musicKey=key;musicError=false;music.src=A+'audio/'+tracks[key];music.volume=.19;}
+    if(key!==musicKey){musicEpoch++;music.pause();musicKey=key;musicError=false;music.src=A+'audio/'+tracks[key];}
+    music.volume=.19*(audio.payoutMusicGain??1);
     if(music.paused&&!musicError){const ticket=++musicEpoch;music.play().then(()=>{if(ticket!==musicEpoch&&(!sound||paused()))music.pause();}).catch(e=>{if(ticket===musicEpoch&&e.name!=='AbortError'){musicError=true;$('Sound').textContent='SOUND ON・曲を再試行';}});}
   }
   music.addEventListener('error',()=>{musicError=true;if(sound)$('Sound').textContent='SOUND ON・曲を再試行';});
+  audio.onPayoutMix?.(gain=>{music.volume=.19*gain;});
   function command(){
     if(spin||feature)return null;
     const t=flow.TOWNS[state.round],p=state.pending;
