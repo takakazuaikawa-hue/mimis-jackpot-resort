@@ -8290,10 +8290,14 @@ body[data-cabinet-layout="desktop-v5"] .casino-table-hud { bottom: 4.5%; width: 
   .arena-page .arena-cabinet { --physical-chassis:url('../../../assets/cabinet-v5-candidates/final/arena-physical-chassis-v2.png'); --hardware-gold:#b8c4cd; --hardware-face:#e9b8c6; --hardware-deep:#523144; --hardware-ink:#293c50; --response-light:#efc5d5; --response-metal:#b4c0c7; --response-dim:#3a3e4b; }
   .guild-page .guild-cabinet { --physical-chassis:url('../../../assets/cabinet-v5-candidates/final/guild-physical-chassis-v2.png'); --hardware-gold:#b8ab8d; --hardware-face:#d4c3a0; --hardware-deep:#3c4637; --hardware-ink:#19352e; --response-light:#e3d5b4; --response-metal:#aea386; --response-dim:#333b30; }
   :is(.stadium-page .stadium-cabinet,.arena-page .arena-cabinet,.guild-page .guild-cabinet) {
+    --lcd-x:161px; --lcd-y:70px; --lcd-w:958px; --lcd-h:358px;
+    --deck-x:123px; --deck-y:468px; --ledger-w:184px; --deck-gap:43px; --reel-w:580px; --reel-h:148px;
     box-sizing:border-box; padding:0; border-style:solid; border-width:0;
     border-image:var(--physical-chassis) 150 220 380 220 fill / 90px 108px 250px / 0 stretch;
     border-radius:0; background:#050608; box-shadow:0 14px 45px #000c; overflow:visible;
   }
+  .guild-page .guild-cabinet { --lcd-x:163px; --lcd-y:100px; --lcd-w:952px; --lcd-h:335px; --deck-x:134px; --deck-y:480px; --ledger-w:176px; --deck-gap:23px; --reel-w:612px; --reel-h:146px; }
+  .stadium-page .stadium-cabinet { --lcd-x:135px; --lcd-y:91px; --lcd-w:1008px; --lcd-h:365px; --deck-x:137px; --deck-y:480px; --ledger-w:188px; --deck-gap:43px; --reel-w:542px; --reel-h:149px; }
   :is(.stadium-cabinet .stadium-header,.arena-cabinet .arena-header,.guild-cabinet .guild-header) {
     position:absolute; z-index:45; inset:10px 18px auto; height:66px; margin:0; padding:0 12px; border:0;
     background:none; box-shadow:none; align-items:flex-start; gap:8px;
@@ -8303,6 +8307,7 @@ body[data-cabinet-layout="desktop-v5"] .casino-table-hud { bottom: 4.5%; width: 
     letter-spacing:.06em; margin:0; color:#eef3f4; text-shadow:0 1px 2px #000;
   }
   .stadium-header h1 span { font-size:17px; color:inherit; }
+  .arena-header h1 { top:35px; font-size:17px; }
   :is(.stadium-header,.arena-header,.guild-header) .cabinet-return-links { margin-right:auto; }
   :is(.stadium-header,.arena-header,.guild-header)>a { margin-right:auto; }
   :is(.stadium-header,.arena-header,.guild-header) :is(a,button) {
@@ -8310,22 +8315,25 @@ body[data-cabinet-layout="desktop-v5"] .casino-table-hud { bottom: 4.5%; width: 
     color:#eef3f4; background:linear-gradient(#243643e8,#0d1a23ed); box-shadow:inset 0 1px #ffffff30,0 2px 3px #0005;
   }
   :is(.stadium-cabinet .stadium-theater,.arena-cabinet .arena-theater,.guild-cabinet .guild-stage) {
-    position:absolute; left:112px; top:97px; width:1056px; height:370px; margin:0; border:0; border-radius:7px;
-    overflow:hidden; box-shadow:0 0 0 2px #101b23,0 0 0 4px var(--hardware-gold),inset 0 3px 9px #0008;
+    position:absolute; left:var(--lcd-x); top:var(--lcd-y); width:var(--lcd-w); height:var(--lcd-h); margin:0; border:0; border-radius:7px;
+    overflow:hidden; box-shadow:inset 0 3px 9px #0008;
   }
   :is(.stadium-cabinet .stadium-deck,.arena-cabinet .arena-deck,.guild-cabinet .guild-deck) {
-    position:absolute; left:116px; right:116px; top:480px; height:211px; margin:0; padding:0;
-    display:grid; grid-template-columns:188px 620px 188px; gap:20px; border:0; border-radius:0; background:none; box-shadow:none;
+    position:absolute; left:var(--deck-x); right:auto; top:var(--deck-y); height:211px; margin:0; padding:0;
+    display:grid; grid-template-columns:var(--ledger-w) var(--reel-w) var(--ledger-w); gap:var(--deck-gap); border:0; border-radius:0; background:none; box-shadow:none;
   }
   :is(.stadium-deck,.arena-deck,.guild-deck)::before { display:none; }
   :is(.stadium-cabinet .stadium-reel-block,.arena-cabinet .arena-reel-block,.guild-cabinet .guild-reel-block) {
-    width:620px; display:grid; grid-template-rows:151px 50px; gap:10px;
+    width:var(--reel-w); display:grid; grid-template-rows:var(--reel-h) 50px; gap:10px;
   }
   :is(.stadium-cabinet .stadium-reels,.arena-cabinet .arena-reels,.guild-cabinet .guild-reels) {
-    height:151px; padding:4px 10px; border:3px solid var(--hardware-gold); border-radius:6px;
-    box-shadow:0 0 0 2px #14202a,0 0 0 3px var(--hardware-gold),0 3px 5px #0005,inset 0 3px 6px #0008;
+    height:var(--reel-h); padding:4px 10px; border:3px solid var(--hardware-gold); border-radius:6px;
+    box-shadow:inset 0 3px 6px #0008;
   }
   .guild-cabinet .guild-reels { padding:4px; }
+  .guild-cabinet .guild-dialogue { width:calc(100% - 360px); }
+  .arena-cabinet :is(.arena-ledger,.arena-lever) { top:12px; }
+  .arena-cabinet .arena-stops { translate:0 12px; }
   :is(.stadium-cabinet .stadium-stops,.arena-cabinet .arena-stops,.guild-cabinet .guild-stops) { height:50px; align-items:center; }
   .guild-cabinet .guild-stops { margin-top:0; }
   .stadium-cabinet[data-surgery="true"] .stadium-command { top:10px; }
@@ -8381,7 +8389,7 @@ body[data-cabinet-layout="desktop-v5"] .casino-table-hud { bottom: 4.5%; width: 
   .stadium-cabinet .stadium-footer .stadium-next-batter { color:inherit; }
   .arena-cabinet[data-phase='complete'] :is(.arena-reward,.arena-command) { left:auto; right:26px; width:430px; }
   .arena-cabinet[data-phase='bonus'] .arena-command,.arena-cabinet[data-pending='reward'] .arena-command { left:auto; right:26px; width:350px; }
-  .stadium-reel-block .reel-award-lines,.arena-reel-block .reel-award-lines { height:151px; }
+  .stadium-reel-block .reel-award-lines,.arena-reel-block .reel-award-lines { height:var(--reel-h); }
 
   body .slot-view.is-active .game-shell[data-active-machine="dragon-race"] {
     --hardware-gold:#aebbbd; --hardware-face:#a2d0c5; --hardware-deep:#19423d; --hardware-ink:#253d43; --response-light:#b4ded3; --response-metal:#a4b6b6; --response-dim:#213b3a;
@@ -8390,11 +8398,11 @@ body[data-cabinet-layout="desktop-v5"] .casino-table-hud { bottom: 4.5%; width: 
     border-radius:0; background:#050608; box-shadow:0 14px 45px #000c; overflow:visible;
   }
   body .slot-view.is-active .game-shell[data-active-machine="dragon-race"] .theater {
-    left:112px; top:97px; width:1056px; height:370px; border:0; border-radius:7px;
-    box-shadow:0 0 0 2px #101b23,0 0 0 4px var(--hardware-gold),inset 0 3px 9px #0008; overflow:hidden;
+    left:148px; top:92px; width:984px; height:338px; border:0; border-radius:7px;
+    box-shadow:inset 0 3px 9px #0008; overflow:hidden;
   }
   body .slot-view.is-active .game-shell[data-active-machine="dragon-race"] .machine {
-    left:116px; right:116px; top:480px; bottom:auto; height:211px; border:0; padding:0; background:none; box-shadow:none; display:block;
+    left:116px; right:116px; top:473px; bottom:auto; height:218px; border:0; padding:0; background:none; box-shadow:none; display:block;
   }
   body .slot-view.is-active .game-shell[data-active-machine="dragon-race"] .machine-marquee { position:absolute; top:-414px; left:210px; right:210px; height:25px; padding:0; display:flex; justify-content:center; border:0; background:none; box-shadow:none; }
   body .slot-view.is-active .game-shell[data-active-machine="dragon-race"] .machine-marquee>div:first-child strong { display:block; max-width:none; color:#fff0cc; font:700 20px/1.2 'Yu Mincho',serif; text-shadow:0 2px 5px #000; }
@@ -8403,11 +8411,11 @@ body[data-cabinet-layout="desktop-v5"] .casino-table-hud { bottom: 4.5%; width: 
   body .slot-view:has(.game-shell[data-active-machine="dragon-race"]) .slot-utility>button { margin-left:auto; }
   body .slot-view:has(.game-shell[data-active-machine="dragon-race"]) .dragon-floor-return { padding:7px 10px; border-radius:5px; font-size:12px; background:#0d1016e8; }
   body .slot-view.is-active .game-shell[data-active-machine="dragon-race"] .machine-playfield {
-    position:absolute; inset:0; height:151px; display:grid; grid-template-columns:188px 620px 188px; gap:20px; padding:0;
+    position:absolute; inset:0; height:134px; display:grid; grid-template-columns:188px 600px 188px; gap:36px; padding:0;
   }
   body .slot-view.is-active .game-shell[data-active-machine="dragon-race"] .reel-frame {
-    position:relative; inset:auto; width:620px; height:151px; border:3px solid var(--hardware-gold); border-radius:6px;
-    box-shadow:0 0 0 2px #14202a,0 0 0 3px var(--hardware-gold),0 3px 5px #0005;
+    position:relative; inset:auto; width:600px; height:134px; border:3px solid var(--hardware-gold); border-radius:6px;
+    box-shadow:inset 0 3px 6px #0008;
   }
   body .slot-view.is-active .game-shell[data-active-machine="dragon-race"] .machine-metrics {
     position:relative; inset:auto; width:auto; height:151px; display:grid; grid-template-columns:1fr 1fr; grid-auto-rows:auto; gap:4px;
@@ -8419,7 +8427,7 @@ body[data-cabinet-layout="desktop-v5"] .casino-table-hud { bottom: 4.5%; width: 
   body .slot-view.is-active .game-shell[data-active-machine="dragon-race"] .machine-status .metric { position:static; width:auto; height:auto; min-height:0; }
   body .slot-view.is-active .game-shell[data-active-machine="dragon-race"] .machine-status .metric strong { font-size:20px; }
   body .slot-view.is-active .game-shell[data-active-machine="dragon-race"] .machine-controls {
-    position:absolute; left:0; right:0; top:161px; height:50px; padding:0; display:grid; grid-template-columns:188px 620px 188px; gap:20px;
+    position:absolute; left:0; right:0; top:161px; height:50px; padding:0; display:grid; grid-template-columns:188px 600px 188px; gap:36px; background:none; box-shadow:none;
   }
   body .slot-view.is-active .game-shell[data-active-machine="dragon-race"] .machine-controls .stop-row { height:50px; padding-inline:calc(3% + 3px); gap:3%; }
   body .slot-view.is-active .game-shell[data-active-machine="dragon-race"] .machine-controls .stop-row .stop-button {
@@ -8429,7 +8437,7 @@ body[data-cabinet-layout="desktop-v5"] .casino-table-hud { bottom: 4.5%; width: 
   }
   body .slot-view.is-active .game-shell[data-active-machine="dragon-race"] .machine-controls .stop-button:disabled { opacity:1; filter:brightness(.65); }
   body .slot-view.is-active .game-shell[data-active-machine="dragon-race"] .machine-controls :is(.spin-button,.push-button) {
-    position:absolute; grid-column:auto; grid-row:auto; inset:auto; left:902px; top:-19px; width:72px; min-width:72px; max-width:72px; height:72px; min-height:72px; max-height:72px;
+    position:absolute; grid-column:auto; grid-row:auto; inset:auto; left:918px; top:-19px; width:72px; min-width:72px; max-width:72px; height:72px; min-height:72px; max-height:72px;
     border:3px solid var(--hardware-gold); border-radius:50%; font-size:18px;
     background:radial-gradient(circle at 40% 25%,var(--hardware-face),var(--hardware-deep) 70%);
     box-shadow:0 0 0 2px #263440,0 4px 0 #111820,0 6px 7px #0005,inset 0 2px #ffffff80,inset 0 -4px 7px #0005;
