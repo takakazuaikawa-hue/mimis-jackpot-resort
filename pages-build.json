@@ -1,8 +1,8 @@
 {
   "status": "PC PLAYTEST / PRODUCTION QUALITY UNAPPROVED",
-  "createdAt": "2026-10-03T22:07:08.616Z",
+  "createdAt": "2026-10-04T10:33:15.128Z",
   "entry": "index.html",
-  "bytes": 938542838,
+  "bytes": 938546141,
   "files": [
     {
       "file": "arena-flow.js",
@@ -2556,8 +2556,8 @@
     },
     {
       "file": "casino-loop.js",
-      "bytes": 9172,
-      "sha256": "0250bdb6b5c84608e11a23b8aedef7fd7b2d7fadec78a2c5b9cb827239582850"
+      "bytes": 11423,
+      "sha256": "eaddd854043a118e6166a65a8b4ca1ebc307c8d0c99e82615f91bb7c225f666b"
     },
     {
       "file": "chapter1-flow.js",
@@ -2956,8 +2956,8 @@
     },
     {
       "file": "game.js",
-      "bytes": 225695,
-      "sha256": "66f4062ff150ed34d45b647511ae43a520b24ab7f5e3fcceb6588d290dd298be"
+      "bytes": 226747,
+      "sha256": "a7e1dc31168b4f0034376e4c04ea0d2d04a390f9505ccfadafd1aca853a2d63d"
     },
     {
       "file": "guild-flow.js",

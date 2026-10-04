@@ -32,9 +32,19 @@
   let lastNormalRunId = null;
   let manualPaused = false;
   let destroyed = false;
+  let travelEpoch = 0;
+  let travelLastProgress = 0;
+  let travelLastProgressAt = 0;
+  let travelVideoUnavailable = false;
+  const motionPreference = windowRef.matchMedia("(prefers-reduced-motion: reduce)");
 
   function zoneStep() {
     return root.clientWidth * (1 - OVERLAP_RATIO);
+  }
+
+  function placeTrack(x) {
+    if (gsap) gsap.set(track, { x, force3D: true });
+    else track.style.transform = `translateX(${x}px)`;
   }
 
   function setZone(index) {
@@ -58,13 +68,18 @@
 
   function playMimiWalk() {
     if (destroyed) return;
+    const epoch = travelEpoch;
     mimi.pause();
     mimi.playbackRate = 1;
     mimi.currentTime = 0;
     mimi.classList.remove("is-idle");
     mimi.classList.add("is-walking");
-    const playback = mimi.play();
-    if (playback && typeof playback.catch === "function") playback.catch(function () {});
+    try {
+      const playback = mimi.play();
+      if (playback && typeof playback.catch === "function") playback.catch(function () {
+        if (travelActive && travelEpoch === epoch) travelVideoUnavailable = true;
+      });
+    } catch (_error) { travelVideoUnavailable = true; }
     tickTravel();
   }
 
@@ -73,12 +88,18 @@
     return shell.dataset.presentationScene !== "treasure.normal.event";
   }
 
-  function shouldPause() {
+  function reducedMotion() {
+    return shell.classList.contains("reduced-motion") || motionPreference.matches;
+  }
+
+  function blocksTravel() {
     return manualPaused
       || shell.dataset.episode !== "treasure"
-      || blocksAmbientForPresentation()
-      || shell.classList.contains("reduced-motion")
-      || windowRef.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      || blocksAmbientForPresentation();
+  }
+
+  function shouldPause() {
+    return blocksTravel() || reducedMotion();
   }
 
   function syncPlayback() {
@@ -93,6 +114,15 @@
       if (playback && typeof playback.catch === "function") playback.catch(function () {});
     }
     root.classList.toggle("is-suspended", paused);
+    // Motion preference may suppress the walk, never the next opponent's
+    // command. Retry requests made while the clear scene still owned the LCD.
+    if (!blocksTravel()) {
+      if (travelActive && reducedMotion()) finishTravel(travelNextZone);
+      else if (queuedAdvance && !travelActive && !timeline) {
+        queuedAdvance = false;
+        advanceOneZone();
+      }
+    }
   }
 
   function travelProgress() {
@@ -104,6 +134,17 @@
     if (!travelActive || destroyed) return;
     windowRef.cancelAnimationFrame(travelFrame);
     const progress = travelProgress();
+    const now = windowRef.performance.now();
+    if (shouldPause() || progress > travelLastProgress + 0.001) {
+      travelLastProgress = progress;
+      travelLastProgressAt = now;
+    }
+    // A rejected/stalled decorative video must not strand the paid result.
+    if (!blocksTravel() && (travelVideoUnavailable || mimi.error
+      || now - travelLastProgressAt > (WALK_SECONDS + 1) * 1000)) {
+      finishTravel(travelNextZone);
+      return;
+    }
     const eased = progress * progress * (3 - (2 * progress));
     const startX = -zoneStep() * currentZone;
     const endX = -zoneStep() * travelTrackIndex;
@@ -117,31 +158,35 @@
 
   function finishTravel(nextZone) {
     travelActive = false;
+    travelEpoch += 1;
     windowRef.cancelAnimationFrame(travelFrame);
     travelFrame = 0;
     mimi.pause();
     mimi.classList.remove("is-walking");
     mimi.classList.add("is-idle");
+    mimi.style.opacity = "1";
     if (currentZone === ZONES.length - 1) {
-      gsap.set(track, { x: 0, force3D: true });
+      placeTrack(0);
       setZone(0);
     } else {
+      placeTrack(-zoneStep() * nextZone);
       setZone(nextZone);
     }
+    if (timeline) timeline.kill();
     timeline = null;
-    if (queuedAdvance) {
-      queuedAdvance = false;
-      windowRef.requestAnimationFrame(advanceOneZone);
-      return;
-    }
-    windowRef.dispatchEvent(new windowRef.CustomEvent("mimi:casino-arrival", {
-      detail: Object.freeze({ zone: ZONES[currentZone].id, zoneIndex: currentZone })
-    }));
+    const epoch = travelEpoch;
+    windowRef.requestAnimationFrame(function () {
+      if (destroyed || epoch !== travelEpoch || shell.dataset.episode !== "treasure") return;
+      windowRef.dispatchEvent(new windowRef.CustomEvent("mimi:casino-arrival", {
+        detail: Object.freeze({ zone: ZONES[currentZone].id, zoneIndex: currentZone })
+      }));
+      syncPlayback();
+    });
   }
 
   function advanceOneZone() {
-    if (destroyed || manualPaused) return false;
-    if (!gsap || shouldPause()) {
+    if (destroyed) return false;
+    if (blocksTravel()) {
       queuedAdvance = true;
       return false;
     }
@@ -151,8 +196,17 @@
     }
 
     const nextZone = (currentZone + 1) % ZONES.length;
+    if (!gsap || reducedMotion()) {
+      finishTravel(nextZone);
+      setMimiIdleFrame();
+      return true;
+    }
     const trackIndex = currentZone + 1;
     travelActive = true;
+    travelEpoch += 1;
+    travelLastProgress = 0;
+    travelLastProgressAt = windowRef.performance.now();
+    travelVideoUnavailable = false;
     travelTrackIndex = trackIndex;
     travelNextZone = nextZone;
     root.classList.add("is-travelling");
@@ -178,7 +232,11 @@
   function onPresentationLifecycle(event) {
     const detail = event && event.detail || {};
     const normalStart = detail.sceneId === "treasure.normal.event" && detail.type === "start";
-    const tableClearComplete = detail.sceneId === "treasure.table.clear" && detail.type === "complete";
+    const clearCancelledAfterCommit = detail.type === "cancel"
+      && shell.dataset.chapter1ArrivalPending === "true"
+      && shell.dataset.gamePhase === "normal";
+    const tableClearComplete = detail.sceneId === "treasure.table.clear"
+      && (detail.type === "complete" || clearCancelledAfterCommit);
     if (!normalStart && !tableClearComplete) return;
     // Four BET COINs open Velvet's table immediately. The fourth clear must
     // not wrap the ambient casino track behind the boss transition.
@@ -224,6 +282,7 @@
   shellObserver.observe(shell, { attributes: true, attributeFilter: ["class", "data-episode"] });
   windowRef.addEventListener("mimi:presentation-lifecycle", onPresentationLifecycle);
   windowRef.addEventListener("resize", onResize, { passive: true });
+  motionPreference.addEventListener?.("change", syncPlayback);
 
   windowRef.MimiCasinoLoop = Object.freeze({
     pause: function () { manualPaused = true; syncPlayback(); },
@@ -234,6 +293,7 @@
       windowRef.cancelAnimationFrame(travelFrame);
       travelFrame = 0;
       travelActive = false;
+      travelEpoch += 1;
       timeline = null;
       queuedAdvance = false;
       gsap && gsap.set(track, { x: -zoneStep() * safeIndex, force3D: true });
@@ -257,11 +317,13 @@
       windowRef.cancelAnimationFrame(travelFrame);
       travelFrame = 0;
       travelActive = false;
+      travelEpoch += 1;
       if (timeline) timeline.kill();
       timeline = null;
       shellObserver.disconnect();
       windowRef.removeEventListener("mimi:presentation-lifecycle", onPresentationLifecycle);
       windowRef.removeEventListener("resize", onResize);
+      motionPreference.removeEventListener?.("change", syncPlayback);
       shell.classList.remove("casino-loop-ready");
     }
   });

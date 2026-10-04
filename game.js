@@ -2426,9 +2426,11 @@
     els.spin.classList.toggle("is-resolving", resolving);
     const chapterCommandCanSpin = Boolean(chapter1Command && chapter1Command.index === chapter1Command.steps.length - 1);
     const spinDisabled = resolving || (state.transitioning && !chapterCommandCanSpin) || state.chapter1ArrivalPending || state.bossResolutionPending || currentView !== "slot";
-    els.spin.classList.toggle("is-disabled", spinDisabled);
-    els.spin.disabled = spinDisabled;
-    els.spin.setAttribute("aria-disabled", String(spinDisabled));
+    const tactileControls = usesChapter1CommandSurface() && currentView === "slot";
+    els.spin.dataset.inputReady = String(!spinDisabled);
+    els.spin.classList.toggle("is-disabled", spinDisabled && !tactileControls);
+    els.spin.disabled = spinDisabled && !tactileControls;
+    els.spin.setAttribute("aria-disabled", String(spinDisabled && !tactileControls));
     const wagerDisabled = state.spinning || state.transitioning || state.bossResolutionPending;
     els.betDown.classList.toggle("is-disabled", wagerDisabled);
     els.betUp.classList.toggle("is-disabled", wagerDisabled);
@@ -2440,9 +2442,10 @@
       const pending = Boolean(reels[index]?.pendingStop);
       const active = state.spinning && !state.reelsStopped[index] && !pending;
       button.classList.toggle("is-pending", pending);
-      button.classList.toggle("is-disabled", !active);
-      button.disabled = !active;
-      button.setAttribute("aria-disabled", String(!active));
+      button.dataset.inputReady = String(active);
+      button.classList.toggle("is-disabled", !active && !tactileControls);
+      button.disabled = !active && !tactileControls;
+      button.setAttribute("aria-disabled", String(!active && !tactileControls));
       button.setAttribute("aria-label", pending
         ? `${index + 1}番リール停止予約済み`
         : active ? `${index + 1}番リールを止める` : `${index + 1}番リール停止`);
@@ -2612,6 +2615,7 @@
 
   function startSpin() {
     if (currentView !== "slot" || state.chapter1ArrivalPending || state.bossResolutionPending) return;
+    if (state.spinning && state.reelsStopped.every(Boolean)) return;
     if (els.helpOverlay.hidden === false || els.creditRescue.hidden === false) return;
     if (chapter1Command) {
       if (chapter1Command.index < chapter1Command.steps.length - 1) return;
@@ -4626,7 +4630,24 @@
       });
     };
 
-    onPress(els.spin, startSpin);
+    let lastContactSoundAt = -Infinity;
+    const cabinetPress = (button, action) => {
+      if (button.dataset.inputReady === "false") {
+        // A physical press still answers while the result/arrival owns play.
+        // No queued bet, stop, or presentation skip is created by this touch.
+        if (currentView === "slot" && profile.settings.sound) {
+          const now = performance.now();
+          if (now - lastContactSoundAt >= 55) {
+            lastContactSoundAt = now;
+            audio.unlock();
+            audio.cue("press");
+          }
+        }
+        return;
+      }
+      action();
+    };
+    onPress(els.spin, () => cabinetPress(els.spin, startSpin));
     onPress(els.push, () => {
       if (advanceChapter1Command()) return;
       if (!state.spinning) {
@@ -4682,7 +4703,7 @@
       startSpin();
     });
     els.stopButtons.forEach(button => {
-      onPress(button, () => stopReel(Number(button.dataset.stop)));
+      onPress(button, () => cabinetPress(button, () => stopReel(Number(button.dataset.stop))));
     });
     window.addEventListener("keydown", event => {
       if (!els.helpOverlay.hidden) {
