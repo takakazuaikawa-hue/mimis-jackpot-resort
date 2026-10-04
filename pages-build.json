@@ -1,8 +1,8 @@
 {
   "status": "PC PLAYTEST / PRODUCTION QUALITY UNAPPROVED",
-  "createdAt": "2026-10-04T12:56:29.439Z",
+  "createdAt": "2026-10-04T13:08:06.612Z",
   "entry": "index.html",
-  "bytes": 938576948,
+  "bytes": 938577288,
   "files": [
     {
       "file": "arena-flow.js",
@@ -3231,8 +3231,8 @@
     },
     {
       "file": "machines/dragon-race/player/visual.css",
-      "bytes": 598786,
-      "sha256": "bb29d3c491093a3b68d901e1102d3d8e29bca3339545f1fdc32930bc938df419"
+      "bytes": 598956,
+      "sha256": "74f7d530e1302fcd7da3743389c1231ea6f3fd313bfaa394f43ef24bd4f45371"
     },
     {
       "file": "machines/dragon-race/presentation-contract.js",
@@ -3391,8 +3391,8 @@
     },
     {
       "file": "visual.css",
-      "bytes": 543116,
-      "sha256": "39766f4d2ea9b9ae0444e5dac40515060df84c75bf44ff132f2c25f1ff37f94e"
+      "bytes": 543286,
+      "sha256": "fd950bc687869279cd064181409c5b42c134a296db9f18a92b865b339365647f"
     }
   ]
 }

@@ -8511,6 +8511,8 @@ body[data-cabinet-layout="desktop-v5"] .casino-table-hud { bottom: 4.5%; width: 
   :is([data-hardware="arena"],[data-hardware="guild"],[data-hardware="stadium"]) :is([data-arena-stop],[data-guild-stop],[data-stadium-stop]) { --press-offset:-12px; }
   [data-hardware="jackpot"] .stop-button { --press-offset:-22px; }
   [data-hardware="jackpot"] :is(.spin-button,.push-button) { --press-offset:-24px; }
+  [data-hardware="dragon-race"] .stop-button { --press-offset:-24px; }
+  [data-hardware="dragon-race"] :is(.spin-button,.push-button) { --press-offset:-16px; }
   [data-hardware] .stop-button:is(.is-hot-ready,.is-hot-aim,.is-hot-hit) { --hardware-face:#84f3db; --hardware-deep:#155b60; --hardware-light:#9dffe9; }
   [data-hardware] :is(.arena-charge,.stadium-prep,.guild-help-mechanism) { border:2px ridge var(--hardware-gold); box-shadow:inset 0 2px 9px #000b,0 2px 3px #0007; }
   [data-hardware="arena"] .arena-charge i { width:22px; height:22px; rotate:45deg; border:2px ridge #d9c7db; border-radius:4px; }
@@ -8528,6 +8530,6 @@ body[data-cabinet-layout="desktop-v5"] .casino-table-hud { bottom: 4.5%; width: 
   .cabinet-escapement i::after { content:''; position:absolute; left:4px; top:1px; width:10px; height:10px; border-radius:50%; background:var(--hardware-face); border:1px solid #fff8; transition:translate 180ms ease-out; }
   .cabinet-escapement i[data-latched="true"]::after { translate:68px 0; background:var(--hardware-light); box-shadow:0 0 7px var(--hardware-light); }
   .machine-controls>.cabinet-escapement { left:20.6%; right:20.6%; }
-  [data-hardware="dragon-race"] .machine-controls>.cabinet-escapement { left:224px; right:224px; }
+  [data-hardware="dragon-race"] .machine-controls>.cabinet-escapement { left:224px; right:224px; top:13px; }
   @media (prefers-reduced-motion:reduce) { .cabinet-escapement i::after { transition:none; } }
 }
