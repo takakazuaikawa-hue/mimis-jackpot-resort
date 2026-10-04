@@ -56,7 +56,7 @@
     else line = state.outs === 2 ? `${voice.out} 二死になった。` : batterVoices[settled.actor.number][2];
     return withPower(line);
   }
-  let auto = false, turbo = false, nextQueued = false, controlTimer = 0, controlEpoch = 0;
+  let auto = false, turbo = false, controlTimer = 0, controlEpoch = 0;
   let settledAt = 0, commandToken = "", commandSince = 0;
   const ART = "./assets/stadium/generated-v1/";
   const MODS = {
@@ -139,7 +139,7 @@
         button.setAttribute("aria-describedby", `${detail.id} ${rule.id}`);
         button.replaceChildren(art, label, detail, rule);
       }
-      button.addEventListener("click", () => { if (!button.isConnected) return; nextQueued = false; action(); save(); render(); });
+      button.addEventListener("click", () => { if (!button.isConnected) return; action(); save(); render(); });
       $("Choices").append(button);
     });
   }
@@ -250,7 +250,7 @@
   audio.onPayoutMix?.(gain => musicPlayers.forEach(player => { player.volume = .22 * gain; }));
   function canAdvanceCommand() { return ["intro", "reward", "next", "champion"].includes(state.pending); }
   function nextReel() { return spin ? spin.stopped.findIndex((n, c) => n === null && !spin.pendingStops.includes(c)) : -1; }
-  function pause() { auto = false; nextQueued = false; clearTimeout(controlTimer); controlEpoch++; }
+  function pause() { auto = false; clearTimeout(controlTimer); controlEpoch++; }
   // One scheduler owns deferred input and AUTO; rerenders replace, never stack, its job.
   function scheduleControls() {
     clearTimeout(controlTimer);
@@ -260,7 +260,7 @@
       controlTimer = setTimeout(() => { if (epoch === controlEpoch && spin === transaction && !document.hidden && !$("Guide").open) action(); }, Math.max(0, due - now));
     };
     if (feature) {
-      if (auto || nextQueued) later(feature.until, () => { dismissFeature(); render(); });
+      if (auto) later(feature.until, () => { dismissFeature(); render(); });
       return;
     }
     if (spin) {
@@ -268,23 +268,53 @@
       else if (auto && nextReel() >= 0) later(spin.lastStopAt ? spin.lastStopAt + (turbo ? 200 : 320) : spin.started + (turbo ? 420 : 900), () => stop(nextReel()));
     } else if (!$("Command").hidden) {
       if (auto && canAdvanceCommand()) later(commandSince + (turbo ? 600 : 1200), () => $("Choices").firstElementChild.click());
-    } else if (auto || nextQueued) {
-      later(settledAt + (nextQueued ? (turbo ? 140 : 300) : (turbo ? 420 : 900)), start);
+    } else if (auto) {
+      later(settledAt + (turbo ? 420 : 900), start);
+    } else {
+      const free = state.replay || state.phase === "bonus";
+      const canStart = window.MimiCabinetArt.ready && !state.pending && state.phase !== "complete"
+        && (free || state.credit >= BET);
+      const readyAt = settledAt + (turbo ? 140 : 300);
+      if (canStart && now < readyAt) later(readyAt, render);
     }
   }
-  function primary() {
-    if (!window.MimiCabinetArt.ready) { if (window.MimiCabinetArt.failed) window.MimiCabinetArt.retry(); render(); return; }
-    if (document.hidden || $("Guide").open) return;
+  function primaryReady() {
+    if (document.hidden || $("Guide").open) return false;
+    if (!window.MimiCabinetArt.ready) return Boolean(window.MimiCabinetArt.failed);
+    if (feature) return true;
+    if (!$("Command").hidden) return canAdvanceCommand() && Boolean($("Choices").firstElementChild);
+    if (spin) return nextReel() >= 0;
+    if (state.pending || state.phase === "complete") return false;
+    const free = state.replay || state.phase === "bonus";
+    if (!free && state.credit < BET) return false;
+    return performance.now() >= settledAt + (turbo ? 140 : 300);
+  }
+  function stopReady(col) {
+    return window.MimiCabinetArt.ready && !document.hidden && !$("Guide").open
+      && !feature && $("Command").hidden && Boolean(spin)
+      && Number.isInteger(col) && col >= 0 && col < 3
+      && spin.stopped[col] === null && !spin.pendingStops.includes(col);
+  }
+  function syncPhysicalReadiness() {
+    const ready = primaryReady();
+    $("Spin").disabled = false;
+    $("Spin").dataset.inputReady = String(ready);
+    $("FeatureContinue").disabled = false;
+    $("FeatureContinue").dataset.inputReady = String(Boolean(feature) && ready);
+    stops.forEach((button, col) => {
+      button.disabled = false;
+      button.dataset.inputReady = String(stopReady(col));
+    });
+    $("Cabinet").dataset.inputReady = String(ready);
+  }
+  function primary(button = $("Spin")) {
+    if (button?.dataset.inputReady === "false" || !primaryReady()) return;
+    if (!window.MimiCabinetArt.ready) { window.MimiCabinetArt.retry(); render(); return; }
     if (feature) { dismissFeature(); render(); return; }
-    if (!$("Command").hidden) { if (canAdvanceCommand()) $("Choices").firstElementChild.click(); return; }
-    if (!spin) {
-      if (performance.now() < settledAt + (turbo ? 140 : 300)) { nextQueued = true; render(); }
-      else start();
-      return;
-    }
+    if (!$("Command").hidden) { if (canAdvanceCommand()) $("Choices").firstElementChild?.click(); return; }
+    if (!spin) { start(); return; }
     const col = nextReel();
     if (col >= 0) stop(col);
-    else { nextQueued = true; render(); }
   }
   // Cue only actual stopped symbols on a shared payline; never infer a win from the flag.
   function renderReelCue() {
@@ -355,7 +385,7 @@
       const moving = Boolean(spin && spin.stopped[c] === null);
       $("Reels").children[c].classList.toggle("is-spinning", moving);
       const queued = Boolean(spin?.pendingStops.includes(c));
-      stops[c].disabled = !window.MimiCabinetArt.ready || !moving || queued || $("Guide").open;
+      stops[c].disabled = false;
       stops[c].textContent = queued ? `STOP ${c + 1} 予約` : spin?.stopped[c] !== null && spin ? `STOP ${c + 1} ✓` : `STOP ${c + 1}`;
     });
     renderBattingResult();
@@ -366,32 +396,34 @@
     const command = !$("Command").hidden;
     const token = command ? `${state.pending}:${state.phase}:${state.team}` : "";
     if (token !== commandToken) { commandToken = token; commandSince = performance.now(); }
-    if (command) nextQueued = false;
     if (state.phase === "complete") auto = false;
-    $("Spin").disabled = (command && !canAdvanceCommand() && !feature) || $("Guide").open;
-    $("Spin").textContent = feature || command ? "PUSH" : nextQueued ? "予約済み" : spin ? (nextReel() < 0 ? "次ゲーム予約" : `STOP ${nextReel() + 1}`) : state.phase === "bonus" || state.replay ? "FREE SPIN" : "SPIN";
-    if (!window.MimiCabinetArt.ready) { $("Spin").disabled = !window.MimiCabinetArt.failed; $("Spin").textContent = window.MimiCabinetArt.failed ? "図柄を再読込" : "図柄読込中"; }
-    $("Cabinet").dataset.input = spin && nextReel() < 0 || nextQueued ? "queued" : "ready";
+    $("Spin").disabled = false;
+    $("Spin").textContent = feature || command ? "PUSH" : spin ? (nextReel() < 0 ? "判定中" : `STOP ${nextReel() + 1}`) : state.phase === "bonus" || state.replay ? "FREE SPIN" : "SPIN";
+    if (!window.MimiCabinetArt.ready) $("Spin").textContent = window.MimiCabinetArt.failed ? "図柄を再読込" : "図柄読込中";
+    $("Cabinet").dataset.input = spin && nextReel() < 0 ? "settling" : "ready";
     $("Cabinet").dataset.auto = String(auto); $("Cabinet").dataset.turbo = String(turbo);
     $("Auto").setAttribute("aria-pressed", String(auto)); $("Turbo").setAttribute("aria-pressed", String(turbo));
     $("Auto").textContent = auto ? command && !canAdvanceCommand() ? "AUTO 待機" : "AUTO ON" : "AUTO OFF";
     $("Turbo").textContent = turbo ? "TURBO ON" : "TURBO OFF";
     $("Home").setAttribute("aria-disabled", String(Boolean(spin)));
-    $("InputHint").textContent = feature ? "PUSH / SPACEで次へ" : nextQueued ? "判定後に1ゲーム開始" : command && !canAdvanceCommand() ? "画面の選択肢を選んでね" : "ボタン / SPACE 連打で進む";
+    $("InputHint").textContent = feature ? "PUSH / SPACEで次へ" : spin && nextReel() < 0 ? "判定中 · 次の入力を待っています" : command && !canAdvanceCommand() ? "画面の選択肢を選んでね" : "ボタン / SPACE 連打で進む";
     if(window.MimiCabinetArt.ready){preload(flow.PLAYERS[state.batter].batting);preload(flow.PLAYERS[(state.batter+1)%flow.PLAYERS.length].image);}
     if (spin && !frame) { last = performance.now(); frame = requestAnimationFrame(tick); }
     scheduleControls();
     renderMusic();
+    // Publish native-action eligibility before the shared command deck reads it.
+    // In a command, that renderer replaces STOP readiness with choice selectability.
+    syncPhysicalReadiness();
     window.MimiCabinetCommands.render();
+    $("Spin").disabled = false;
+    stops.forEach(button => { button.disabled = false; });
   }
   function start() {
-    if (!window.MimiCabinetArt.ready) return;
-    if (spin || feature || !$("Command").hidden || $("Guide").open || document.hidden || state.phase === "complete") return;
+    if (!window.MimiCabinetArt.ready || spin || feature || !$("Command").hidden || $("Guide").open || document.hidden || state.pending || state.phase === "complete") return;
     const free = state.replay || state.phase === "bonus";
     if (!free && state.credit < BET) return;
     state.credit -= free ? 0 : BET; state.replay = false; state.lastWin = 0;
     const flag = core.rollFlag(state.phase === "bonus" ? "bonus" : state.team === 3 ? "hot" : "normal");
-    nextQueued = false;
     spin = { isFree: free, flag, stopped: [null, null, null], started: performance.now(), braking: [false, false, false], pendingStops: [], lastStopAt: 0 };
     attachSession(spin);
     resultActor = null; resultVoiceActor = null; resultHeadline = ""; resultDetail = null;
@@ -404,7 +436,7 @@
     window.dispatchEvent(new CustomEvent('mimi:cabinet-input', {detail:{machineId:'stadium',type:'spin-start',transactionId:spin.session.id}}));
   }
   function stop(col) {
-    if (!window.MimiCabinetArt.ready || !spin || !Number.isInteger(col) || col < 0 || col > 2 || spin.stopped[col] !== null || spin.pendingStops.includes(col) || $("Guide").open || document.hidden) return;
+    if (!stopReady(col)) return;
     if (sessions.queueStop(spin.session, col)) { save(); render(); }
   }
   function commitStop(col) {
@@ -470,11 +502,14 @@
     frame = requestAnimationFrame(tick);
   }
   window.addEventListener("mimi:cabinet-art", render);
-  $("Spin").addEventListener("click", primary);
-  $("FeatureContinue").addEventListener("click", primary);
+  $("Spin").addEventListener("click", () => primary($("Spin")));
+  $("FeatureContinue").addEventListener("click", () => primary($("FeatureContinue")));
   $("Auto").addEventListener("click", () => { if (auto) pause(); else auto = true; render(); });
   $("Turbo").addEventListener("click", () => { turbo = !turbo; save(); render(); });
   stops.forEach((button, c) => button.addEventListener("click", () => stop(c)));
+  [$("Spin"), $("FeatureContinue"), ...stops].forEach(button => {
+    button.addEventListener("pointerdown", () => window.MimiCabinetResponse?.contact(button));
+  });
   $("Home").addEventListener("click", event => { if (spin) event.preventDefault(); else { pause(); save(); pauseMusic(); audio.setEnabled(false); } });
   $("Help").addEventListener("click", () => { pause(); audio.setEnabled(false); $("Guide").showModal(); render(); });
   $("GuideClose").addEventListener("click", () => $("Guide").close());
@@ -487,8 +522,15 @@
   });
   window.addEventListener("keydown", event => {
     if (event.repeat || event.altKey || event.ctrlKey || event.metaKey || $("Guide").open) return;
-    if (event.code === "Space" && (event.target === document.body || event.target === $("Spin") || stops.includes(event.target))) { event.preventDefault(); primary(); }
-    if (["Digit1", "Digit2", "Digit3"].includes(event.code)) { event.preventDefault(); stop(Number(event.code.slice(-1)) - 1); }
+    if (event.code === "Space" && (event.target === document.body || event.target === $("Spin") || event.target === $("FeatureContinue") || stops.includes(event.target))) {
+      event.preventDefault();
+      const button = feature ? $("FeatureContinue") : $("Spin");
+      window.MimiCabinetResponse?.contact(button); primary(button);
+    }
+    if (["Digit1", "Digit2", "Digit3"].includes(event.code)) {
+      const col = Number(event.code.slice(-1)) - 1;
+      event.preventDefault(); window.MimiCabinetResponse?.contact(stops[col]); stop(col);
+    }
   });
   window.addEventListener("resize", resize);
   document.addEventListener("visibilitychange", () => { if (document.hidden) pause(); audio.setEnabled(sound && !document.hidden); render(); });

@@ -15,6 +15,8 @@
   let rewardRun, scenePlan, albumTab = "records", previewOutfit = "buniqro";
   const characterCue = { frame: 0, elapsed: 0, last: 0, loading: 0 };
   let settingsPanel, settingsButton, pressRun, pressGlow, pressCount = 0;
+  let inputObserver, syncingInputs = false;
+  const lastContact = new WeakMap();
   let settledGridResult, spectacle;
   // 疾走ボタンは既存の無料回転だけを駆動する。連射数で配当を増やさない。
   const drive = { node: null, timer: 0, held: false, pending: false, lastPress: -Infinity, started: 0, transaction: 0, engaged: false, exit: false, kick: 0 };
@@ -894,22 +896,74 @@
     window.addEventListener("blur", cancelDrive);
     document.addEventListener("visibilitychange", () => { if (document.hidden) cancelDrive(); else driveTick(); });
   }
+  const physicalInputs = "#spinBtn, #pushBtn, .stop-button, #betDown, #betUp, .dragon-drive";
+  function installPhysicalInputs() {
+    const contactIfUnavailable = event => {
+      if (!active) return;
+      const button = event.target.closest?.(physicalInputs);
+      if (!button || button.dataset.inputReady !== "false") return;
+      if (event.type === "keydown" && ![" ", "Enter"].includes(event.key)) return;
+      event.preventDefault(); event.stopImmediatePropagation();
+      if (event.type === "pointerup") return;
+      const now = performance.now(), previous = lastContact.get(button) ?? -Infinity;
+      if (event.type === "click" && now - previous < 450) return;
+      if (event.type === "keydown" && event.repeat) return;
+      lastContact.set(button, now);
+      window.MimiCabinetResponse?.contact?.(button);
+    };
+    for (const type of ["pointerdown", "pointerup", "click", "keydown"]) document.addEventListener(type, contactIfUnavailable, true);
+    const cabinet = document.querySelector(".machine");
+    if (cabinet) {
+      inputObserver?.disconnect();
+      inputObserver = new MutationObserver(() => { if (!syncingInputs) controls(); });
+      inputObserver.observe(cabinet, { subtree: true, attributes: true, attributeFilter: ["disabled", "aria-disabled", "data-input-ready"] });
+    }
+  }
+  function publishInputReady(button, ready) {
+    if (!button) return;
+    const value = String(ready);
+    if (button.dataset.inputReady !== value) button.dataset.inputReady = value;
+    if (button.disabled) button.disabled = false;
+    if (button.getAttribute("aria-disabled") !== "false") button.setAttribute("aria-disabled", "false");
+  }
   function controls() {
     if (!active || !root) return;
+    syncingInputs = true;
     const spin = document.getElementById("spinBtn"), push = document.getElementById("pushBtn");
-    if (locked || drive.exit || command === 0 || !el(".dragon-album").hidden) { spin.disabled = true; spin.setAttribute("aria-disabled", "true"); spin.classList.add("is-disabled"); }
+    const modal = modalOpen() || saveConflict;
+    const reelsSettled = api.state.spinning && (Array.isArray(api.state.reelsStopped)
+      ? api.state.reelsStopped.every(Boolean) : tx?.landed.length === 3);
+    const spinReady = command !== 0 && !locked && !drive.exit && !modal
+      && !api.state.transitioning && !api.state.chapter1ArrivalPending && !api.state.bossResolutionPending
+      && root.closest(".app-view")?.classList.contains("is-active") !== false && !reelsSettled;
+    publishInputReady(spin, spinReady);
+    spin.classList.toggle("is-disabled", !spinReady);
     if (push) {
       // SPINと同じ場所のPUSHを、結果の確認にも使う。判定前の入力は予約しない。
       const visible = locked || command === 0;
-      const enabled = !api.state.spinning && !modalOpen() && (locked ? canAdvanceResult() : command === 0);
-      const cheering = locked && !modalOpen();
-      push.hidden = !visible; push.disabled = !(enabled || cheering);
+      const enabled = !api.state.spinning && !modal && (locked ? canAdvanceResult() : command === 0);
+      const cheering = locked && !modal;
+      const pushReady = Boolean((enabled || cheering) && visible);
+      push.hidden = !visible;
       push.querySelector("strong").textContent = locked ? mode === "result" ? enabled ? "次へ" : tx?.result?.receipt.payout ? "獲得！" : "結果" : "応援" : "PUSH";
       push.setAttribute("aria-label", locked ? enabled ? "結果を確認して次へ" : "押して応援。結果が見えてから次へ進めます" : "メッセージを次へ進める");
-      push.setAttribute("aria-hidden", String(!visible)); push.setAttribute("aria-disabled", String(push.disabled));
+      push.setAttribute("aria-hidden", String(!visible)); publishInputReady(push, pushReady);
       push.dataset.action = enabled ? "next" : cheering ? "cheer" : "wait";
       let hint = push.querySelector('span'); if (!hint) { hint=document.createElement('span');push.prepend(hint); }
       hint.textContent = enabled ? '次へ進む' : cheering ? '連打で声援！' : '演出を再生中';
+    }
+    for (const [index, button] of [...document.querySelectorAll(".stop-button")].entries()) {
+      const stopped = api.state.reelsStopped?.[index] === true || button.classList.contains("is-pending");
+      const ready = api.state.spinning && !stopped && !locked && !modal && tx?.landed.length !== 3;
+      publishInputReady(button, ready);
+      button.classList.toggle("is-disabled", !ready);
+    }
+    for (const button of [document.getElementById("betDown"), document.getElementById("betUp")]) {
+      if (!button) continue;
+      const ready = !api.state.spinning && !api.state.freeSpin && progress.phase !== "bonus"
+        && !api.state.transitioning && !api.state.bossResolutionPending && !locked && !modal;
+      publishInputReady(button, ready);
+      button.classList.toggle("is-disabled", !ready);
     }
     const free = progress.phase === 'bonus' || displayPhase === 'bonus' && locked || api.state.freeSpin;
     spin.dataset.action = api.state.spinning ? 'stop' : free ? 'free' : 'spin';
@@ -938,6 +992,9 @@
     syncAim(document.querySelector(".stop-button.is-hot-aim") ? "aim" : document.querySelector(".stop-button.is-hot-ready") ? "ready" : "");
     if (drive.node) {
       drive.node.hidden = !driveVisible() || modalOpen();
+      const driveReady = !modalOpen() && !saveConflict && !locked
+        && (drive.exit ? !api.state.spinning && !drive.held : progress.phase === "bonus");
+      publishInputReady(drive.node, driveReady);
       host.dataset.bonusDrive = String(!drive.node.hidden);
       drive.node.querySelector("strong").textContent = drive.exit ? "継続へ" : "疾走";
       drive.node.querySelector("span").textContent = drive.exit ? "一息ついて勝負！" : "連打・長押し";
@@ -945,6 +1002,7 @@
       if (!drive.node.hidden && !drive.timer) drive.timer = setTimeout(driveTick, 60);
       if (drive.node.hidden) cancelDrive();
     }
+    syncingInputs = false;
   }
   function automationChanged() {
     if (!active || !api) return;
@@ -1200,6 +1258,7 @@
       <div data-album-panel="ledger" hidden><p class="dragon-ledger"></p><label class="dragon-volume-label">BGM音量 <input class="dragon-music-volume" type="range" min="0" max="60" step="1"></label><p class="dragon-audio-status"></p></div>
       <p class="album-note"></p></section>`;
     document.querySelector(".theater").append(root);
+    installPhysicalInputs();
     spectacle = window.MimiDragonSpectacle.create(host, root);
     mountDrive();
     mountSettings();

@@ -326,12 +326,45 @@
     if(!window.MimiCabinetArt.ready){$('Spin').disabled=!window.MimiCabinetArt.failed;$('Spin').textContent=window.MimiCabinetArt.failed?'図柄を再読込':'図柄読込中';}
     $('Auto').textContent=auto?(command&&!canAdvanceCommand()?'AUTO 待機':'AUTO ON'):'AUTO OFF';$('Auto').setAttribute('aria-pressed',String(auto));$('Turbo').textContent=turbo?'TURBO ON':'TURBO OFF';$('Turbo').setAttribute('aria-pressed',String(turbo));
     $('InputHint').textContent=command&&!canAdvanceCommand()?'画面の選択肢を選んでね':'SPACE / ボタン連打で進む';$('Home').setAttribute('aria-disabled',String(!!spin));
-    if(spin&&!frame){last=performance.now();frame=requestAnimationFrame(tick);}syncTrialMotion();syncSpell();syncAudio();scheduleControls();window.MimiCabinetCommands.render();
+    if(spin&&!frame){last=performance.now();frame=requestAnimationFrame(tick);}syncTrialMotion();syncSpell();syncAudio();scheduleControls();window.MimiCabinetCommands.render();syncPhysicalInputs();
     if(window.MimiCabinetArt.ready){warmArt(state.phase==='trial'?trialOutcomeArt.trialWin:state.phase==='battle'?currentPerformer().battleArt:null);}
   }
   function dismissFeature(){stopSpell();audio.stopEffects();clearSceneMotion();feature=null;}
   function canAdvanceCommand(){return ['explore','trial','trialWin','intro','reward','next','champion'].includes(state.pending);}
   function nextReel(){return spin?spin.stopped.findIndex((n,c)=>n===null&&!spin.pendingStops.includes(c)):-1;}
+  function primaryInputReady(){
+    if(!window.MimiCabinetArt.ready)return !!window.MimiCabinetArt.failed;
+    if(document.hidden||modalOpen())return false;
+    if(feature)return true;
+    if(!$('Command').hidden)return canAdvanceCommand();
+    if(state.phase==='complete')return false;
+    if(spin)return nextReel()>=0;
+    return (state.replay||state.phase==='bonus'||state.credit>=BET)&&performance.now()>=settledAt+(turbo?140:300);
+  }
+  function stopInputReady(col){
+    if(!window.MimiCabinetArt.ready||document.hidden||modalOpen())return false;
+    if($('Cabinet').dataset.commandDeck==='choice')return stops[col]?.dataset.inputReady==='true';
+    return !!spin&&spin.stopped[col]===null&&!spin.pendingStops.includes(col);
+  }
+  let inputReadinessTimer=0;
+  function publishInput(button,ready){button.disabled=false;button.setAttribute('aria-disabled','false');button.dataset.inputReady=String(!!ready);}
+  function syncPhysicalInputs(){
+    const deck=$('Cabinet').dataset.commandDeck;
+    const commandReady=!!deck&&canAdvanceCommand();
+    publishInput($('Spin'),deck?commandReady:primaryInputReady());
+    stops.forEach((button,col)=>{
+      if(deck==='choice'&&canAdvanceCommand()){
+        button.disabled=false;button.setAttribute('aria-disabled','false');
+        // The shared command-deck owner publishes selectable STOPs.
+        if(!button.hasAttribute('data-input-ready'))button.dataset.inputReady='false';
+      }else publishInput(button,!deck&&stopInputReady(col));
+    });
+    clearTimeout(inputReadinessTimer);inputReadinessTimer=0;
+    const canStart=!deck&&!spin&&!feature&&$('Command').hidden&&state.phase!=='complete'&&!document.hidden&&!modalOpen()&&window.MimiCabinetArt.ready&&(state.replay||state.phase==='bonus'||state.credit>=BET);
+    const readyAt=settledAt+(turbo?140:300),delay=readyAt-performance.now();
+    if(canStart&&delay>0)inputReadinessTimer=setTimeout(()=>{inputReadinessTimer=0;render();},delay+1);
+  }
+  function contactIgnoredInput(button){window.MimiCabinetResponse?.contact?.(button);}
   function pause(){auto=false;nextQueued=false;clearTimeout(controlTimer);controlEpoch++;}
   function scheduleControls(){
     clearTimeout(controlTimer);const epoch=++controlEpoch,transaction=spin,now=performance.now();if(document.hidden||modalOpen())return;
@@ -341,7 +374,7 @@
     else if(!$('Command').hidden){if(auto&&canAdvanceCommand())later(commandSince+(['reward','next','champion'].includes(state.pending)?(turbo?1600:2600):(turbo?600:1200)),()=>$('Choices').firstElementChild.click());}
     else if(auto||nextQueued)later(settledAt+(nextQueued?(turbo?140:300):(turbo?420:900)),start);
   }
-  function primary(){if(!window.MimiCabinetArt.ready){if(window.MimiCabinetArt.failed)window.MimiCabinetArt.retry();render();return;}if(document.hidden||modalOpen())return;if(feature?.cinematic){if(feature.step<cinematicLastStep())cinematicStep(cinematicLastStep());else{dismissFeature();render();}return;}if(feature){dismissFeature();render();return;}if(!$('Command').hidden){if(canAdvanceCommand())$('Choices').firstElementChild.click();return;}if(!spin){if(performance.now()<settledAt+(turbo?140:300)){nextQueued=true;render();}else start();return;}const col=nextReel();if(col>=0)stop(col);else{nextQueued=true;render();}}
+  function primary(){if(!window.MimiCabinetArt.ready){if(window.MimiCabinetArt.failed)window.MimiCabinetArt.retry();render();return;}if(document.hidden||modalOpen())return;if(feature?.cinematic){if(feature.step<cinematicLastStep())cinematicStep(cinematicLastStep());else{dismissFeature();render();}return;}if(feature){dismissFeature();render();return;}if(!$('Command').hidden){if(canAdvanceCommand())$('Choices').firstElementChild.click();return;}if(!spin){if(performance.now()<settledAt+(turbo?140:300))return;start();return;}const col=nextReel();if(col>=0)stop(col);}
   function start(){
     if(!window.MimiCabinetArt.ready)return;
     if(spin||feature||!$('Command').hidden||modalOpen()||document.hidden||state.phase==='complete')return;
@@ -394,12 +427,13 @@
   }
   function tick(now){frame=0;if(!spin)return;const dt=Math.min((now-last)/1000,.1);last=now;[0,1,2].forEach(c=>{if(spin.stopped[c]===null){positions[c]=core.mod(positions[c]-dt*(turbo?34:24),core.stripLength(c));paintReel(c);}});frame=requestAnimationFrame(tick);}
   window.addEventListener('mimi:cabinet-art',render);
+  window.addEventListener('click',e=>{const button=e.target.closest?.('#arenaSpin, [data-arena-stop]');if(!button||button.dataset.inputReady==='true')return;e.preventDefault();e.stopImmediatePropagation();contactIgnoredInput(button);},true);
   $('Spin').addEventListener('click',primary);$('FeatureContinue').addEventListener('click',primary);$('CinemaContinue').addEventListener('click',primary);stops.forEach((b,c)=>b.addEventListener('click',()=>stop(c)));
   $('Auto').addEventListener('click',()=>{if(auto)pause();else{auto=true;if(!$('Command').hidden)commandSince=performance.now();}render();});$('Turbo').addEventListener('click',()=>{turbo=!turbo;save();render();});
   $('Home').addEventListener('click',e=>{if(spin)e.preventDefault();else{pause();save();audioEnabled(false);}});
   $('Help').addEventListener('click',()=>{pause();freezeScene();audioEnabled(false);$('Guide').showModal();render();});$('GuideClose').addEventListener('click',()=>$('Guide').close());$('Guide').addEventListener('close',()=>{resumeScene();audioEnabled(sound&&!document.hidden&&!modalOpen());render();});
   $('Sound').addEventListener('click',()=>{sound=!sound;if(sound)audio.unlock();audioEnabled(sound);$('Sound').textContent=sound?'SOUND ON':'SOUND OFF';$('Sound').setAttribute('aria-pressed',String(sound));if(sound)audio.cue('commandOpen');syncAudio();});
-  window.addEventListener('keydown',e=>{if(e.repeat||e.altKey||e.ctrlKey||e.metaKey||modalOpen())return;if(e.code==='Space'&&(e.target===document.body||e.target===$('Spin')||stops.includes(e.target))){e.preventDefault();primary();}if(['Digit1','Digit2','Digit3'].includes(e.code)){e.preventDefault();stop(Number(e.code.slice(-1))-1);}});
+  window.addEventListener('keydown',e=>{if(e.repeat||e.altKey||e.ctrlKey||e.metaKey||modalOpen())return;if(e.code==='Space'&&(e.target===document.body||e.target===$('Spin')||stops.includes(e.target))){e.preventDefault();if($('Spin').dataset.inputReady==='true')primary();else contactIgnoredInput($('Spin'));}if(['Digit1','Digit2','Digit3'].includes(e.code)){e.preventDefault();const button=stops[Number(e.code.slice(-1))-1];if(button?.dataset.inputReady==='true')stop(Number(e.code.slice(-1))-1);else if(button)contactIgnoredInput(button);}});
   $('TrialMotion').addEventListener('loadeddata',syncTrialMotion);
   $('SpellVideo').addEventListener('playing',()=>{
     const owner=spellOwner;if(!owner||owner!==feature)return;

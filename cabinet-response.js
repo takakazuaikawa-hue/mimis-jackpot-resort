@@ -48,6 +48,66 @@
   });
 })();
 
+/* Physical contact is independent of action eligibility. It never queues play. */
+(() => {
+  'use strict';
+  let lastContact = -Infinity;
+  const selector = '#spinBtn,#pushBtn,.stop-button,[data-arena-stop],[data-guild-stop],[data-stadium-stop],#arenaSpin,#guildSpin,#stadiumSpin';
+  function contact(button) {
+    if (button) { button.dataset.contact = 'true'; clearTimeout(button._contactTimer); button._contactTimer = setTimeout(() => delete button.dataset.contact, 180); }
+    const now = performance.now();
+    if (!window.MimiAudio?.enabled || now - lastContact < 55) return;
+    lastContact = now;
+    window.MimiAudio?.unlock();
+    window.MimiAudio?.cue('press');
+  }
+  window.MimiCabinetResponse = Object.freeze({contact});
+  const release = button => { if (button) delete button.dataset.pressed; };
+  document.addEventListener('pointerdown', event => {
+    const button = event.target.closest(selector); if (!button || event.button !== 0) return;
+    button.dataset.pressed = 'true';
+  }, true);
+  document.addEventListener('pointerup', () => document.querySelectorAll('[data-pressed]').forEach(release), true);
+  document.addEventListener('pointercancel', () => document.querySelectorAll('[data-pressed]').forEach(release), true);
+  window.addEventListener('blur', () => document.querySelectorAll('[data-pressed]').forEach(release));
+  document.addEventListener('keydown', event => {
+    if (!event.repeat && ['Space','Enter'].includes(event.code) && event.target.matches?.(selector)) event.target.dataset.pressed = 'true';
+  }, true);
+  document.addEventListener('keyup', event => release(event.target), true);
+})();
+
+/* Each cabinet has a visible three-stop escapement. Its pawls only latch
+ * on accepted stops; touches during the result merely flex the controls. */
+(() => {
+  'use strict';
+  const shell = document.querySelector('#gameShell,#arenaCabinet,#guildCabinet,#stadiumCabinet');
+  if (!shell) return;
+  const dragon = new URLSearchParams(location.search).get('machine') === 'dragon-race';
+  const machine = dragon ? 'dragon-race' : shell.id === 'gameShell' ? 'jackpot' : shell.id.replace('Cabinet','');
+  shell.dataset.hardware = machine;
+  const deck = shell.querySelector('.machine-controls,.arena-stops,.guild-stops,.stadium-stops');
+  if (!deck) return;
+  const mechanism = document.createElement('div');
+  mechanism.className = 'cabinet-escapement'; mechanism.setAttribute('aria-hidden','true');
+  for (let i=0;i<3;i++) {
+    const pawl = document.createElement('i'); pawl.dataset.latched = 'false'; pawl.style.setProperty('--pawl',i); mechanism.append(pawl);
+  }
+  deck.append(mechanism);
+  let transaction = 0;
+  const input = event => {
+    const d = event.detail || {};
+    if (machine !== 'jackpot' && machine !== 'dragon-race' && d.machineId !== machine) return;
+    if (d.type === 'spin-start') {
+      transaction = Number(d.transactionId); shell.dataset.hardwareCycle = 'spinning';
+      [...mechanism.children].forEach(p => p.dataset.latched = 'false');
+    } else if (d.type === 'stop-accepted' && Number(d.transactionId) === transaction && mechanism.children[d.reelIndex ?? d.col]) {
+      mechanism.children[d.reelIndex ?? d.col].dataset.latched = 'true';
+      if ([...mechanism.children].every(p => p.dataset.latched === 'true')) shell.dataset.hardwareCycle = 'held';
+    }
+  };
+  window.addEventListener(['jackpot','dragon-race'].includes(machine) ? 'mimi:reel-input' : 'mimi:cabinet-input',input);
+})();
+
 /* Decorative cabinet feedback for the four independent machines. Only
  * accepted input and publicly revealed receipts can drive a light burst. */
 (() => {
@@ -81,25 +141,31 @@
       hint.textContent = buttons.length > 1 ? "STOP 1 / 2で選択 → PUSHで決定" : "PUSH · " + buttons[0].textContent;
       buttons.forEach((button, index) => { button.dataset.deckSelected = String(index === selected); });
       stops.forEach((button, index) => {
-        const selectable = buttons.length > 1 && index < buttons.length;
-        button.disabled = !selectable;
+        const selectable = buttons.length > 1 && index < buttons.length && !buttons[index].disabled;
+        button.disabled = false;
+        button.setAttribute('aria-disabled', 'false');
+        button.dataset.inputReady = String(selectable);
         button.textContent = selectable ? `選択 ${index + 1}` : `STOP ${index + 1}`;
         if (selectable) { button.setAttribute("aria-label", buttons[index].textContent + "を選択"); button.setAttribute("aria-pressed", String(index === selected)); }
         else { button.removeAttribute("aria-pressed"); button.removeAttribute("aria-label"); }
       });
     }
     function select(index) {
-      if (!active || !available() || choices.children.length < 2 || !choices.children[index]) return false;
+      if (!active || !available() || primary.dataset.inputReady === 'false' || stops[index]?.dataset.inputReady === 'false' || choices.children.length < 2 || !choices.children[index] || choices.children[index].disabled) return false;
       selected = index; renderCommands(); return true;
     }
     function confirm() {
-      if (!active || !available()) return false;
+      if (!active || !available() || primary.dataset.inputReady === 'false') { window.MimiCabinetResponse.contact(primary); return false; }
       const button = choices.children[selected];
-      if (!button || button.disabled) return false;
+      if (!button || button.disabled) { window.MimiCabinetResponse.contact(primary); return false; }
       button.click(); return true;
     }
     primary.addEventListener("click", event => { if (active && available()) { event.stopImmediatePropagation(); confirm(); } }, true);
-    stops.forEach((button, index) => button.addEventListener("click", event => { if (select(index)) event.stopImmediatePropagation(); }, true));
+    stops.forEach((button, index) => button.addEventListener("click", event => {
+      if (!active || !available()) return;
+      event.stopImmediatePropagation();
+      if (!select(index)) window.MimiCabinetResponse.contact(button);
+    }, true));
     window.addEventListener("keydown", event => {
       if (!active || !available() || event.repeat || event.altKey || event.ctrlKey || event.metaKey) return;
       if (event.code === "Space" && (event.target === document.body || event.target === primary || stops.includes(event.target))) {

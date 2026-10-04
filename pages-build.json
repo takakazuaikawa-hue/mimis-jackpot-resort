@@ -1,8 +1,8 @@
 {
   "status": "PC PLAYTEST / PRODUCTION QUALITY UNAPPROVED",
-  "createdAt": "2026-10-04T11:07:40.575Z",
+  "createdAt": "2026-10-04T12:56:29.439Z",
   "entry": "index.html",
-  "bytes": 938547825,
+  "bytes": 938576948,
   "files": [
     {
       "file": "arena-flow.js",
@@ -11,8 +11,8 @@
     },
     {
       "file": "arena-runtime.js",
-      "bytes": 51119,
-      "sha256": "88ef05c7609ebd6d3b1fbffa063811191ac468cf18b2a0142d71a409ec565463"
+      "bytes": 53570,
+      "sha256": "c377f76ff8e8e1bb1358afca732a1998d42aef43abb24783387a21151b160680"
     },
     {
       "file": "assets/Jackpot.mp3",
@@ -2551,8 +2551,8 @@
     },
     {
       "file": "cabinet-response.js",
-      "bytes": 16604,
-      "sha256": "9950c41e68b85a7e674f7541b3ab946c359414ced6ab069f6b75f073539f2b9c"
+      "bytes": 20561,
+      "sha256": "051f5842f3638d72d235633c60981aa2d6f9fad968940fad1f908ef71da97125"
     },
     {
       "file": "casino-loop.js",
@@ -2971,8 +2971,8 @@
     },
     {
       "file": "guild-runtime.js",
-      "bytes": 28071,
-      "sha256": "ccbe18b54b5d7fa72aedfb170d968c7805daeedd53597393f6c68b23eebdcebd"
+      "bytes": 30414,
+      "sha256": "064eb85ce27c5cf71c07db9c30ab16cd5f96ccfaf35639123caa8cc0c045a5fd"
     },
     {
       "file": "guild-scenes.js",
@@ -3231,8 +3231,8 @@
     },
     {
       "file": "machines/dragon-race/player/visual.css",
-      "bytes": 591078,
-      "sha256": "7f40bf05ebc9a554ec4035596d0967a5fffef0aca619072f7dbecc7efcb9b80d"
+      "bytes": 598786,
+      "sha256": "bb29d3c491093a3b68d901e1102d3d8e29bca3339545f1fdc32930bc938df419"
     },
     {
       "file": "machines/dragon-race/presentation-contract.js",
@@ -3246,8 +3246,8 @@
     },
     {
       "file": "machines/dragon-race/runtime.js",
-      "bytes": 97782,
-      "sha256": "0148ec99f3fd4d49066b3166e4767e16b49cae673f9c610dd796444a6c98d878"
+      "bytes": 101011,
+      "sha256": "de9de4fae754c8986e406d7e3313c834f566b270d3b8b2de015fcae3dcaf8e9b"
     },
     {
       "file": "machines/dragon-race/spectacle.js",
@@ -3386,13 +3386,13 @@
     },
     {
       "file": "stadium-runtime.js",
-      "bytes": 41460,
-      "sha256": "774c8b46becdd18f13d5e418465ce031c04304636398519f897e80486e66c0e7"
+      "bytes": 43187,
+      "sha256": "4909196bb34d1f2b4d2f5ca68c9875421204ab174c73ff0b0ad3a6e9eb3d224c"
     },
     {
       "file": "visual.css",
-      "bytes": 535408,
-      "sha256": "4c83136acde672b34cf823191a038b3fe784ceb6aa22de725faad825e6a71e39"
+      "bytes": 543116,
+      "sha256": "39766f4d2ea9b9ae0444e5dac40515060df84c75bf44ff132f2c25f1ff37f94e"
     }
   ]
 }
