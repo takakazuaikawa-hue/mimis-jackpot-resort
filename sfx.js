@@ -247,6 +247,8 @@
   let mood = "silent";
   let padNodes = [];
   let musicTimer = null;
+  let proceduralMusicOrigin = 0;
+  let proceduralMusicBpm = 0;
   // User-supplied Suno v5.5 instrumentals (permission confirmed 2026-09-06).
   // These are the two long normal-play takes, not boss music despite the title.
   // Stream through the existing master/limiter; do not decode minutes of PCM
@@ -885,6 +887,8 @@
   }
 
   function stopMusic() {
+    proceduralMusicOrigin = 0;
+    proceduralMusicBpm = 0;
     if (renderedMusic) {
       renderedPositions.set(renderedMusic.key, (renderedMusic.offset + context.currentTime - renderedMusic.started) % renderedMusic.source.buffer.duration);
       renderedMusic = null;
@@ -1064,6 +1068,8 @@
       return { oscillator, gain };
     });
     const origin = ctx.currentTime + 0.04;
+    proceduralMusicOrigin = origin;
+    proceduralMusicBpm = score.bpm;
     let cursor = 0;
     function note(index, midi, when, length, level) {
       const voice = voices[index];
@@ -1128,11 +1134,14 @@
     get reelVoiceCount() { return reelVoices.length; },
     get effectVoiceCount() { return effectVoices.size; },
     get musicState() {
+      const running = enabled && context?.state === "running";
       return Object.freeze({
         mood, kind: recordedMusic ? "recorded" : renderedMusic ? "rendered" : music ? "procedural" : "silent",
         track: recordedMusic ? RESORT_TRACKS[recordedIndex].file : renderedMusic ? RENDERED_SCORES[renderedMusic.key].file : null,
         playing: renderedMusic ? 1 : recordedDecks?.filter(deck => !deck.media.paused && !deck.media.ended).length || 0,
-        position: renderedMusic ? (renderedMusic.offset + context.currentTime - renderedMusic.started) % renderedMusic.source.buffer.duration : recordedDecks?.[recordedIndex].media.currentTime || 0,
+        clockPlaying: running && Boolean(renderedMusic || music || recordedDecks?.some(deck => !deck.media.paused && !deck.media.ended)),
+        position: renderedMusic ? (renderedMusic.offset + context.currentTime - renderedMusic.started) % renderedMusic.source.buffer.duration : music && !recordedMusic ? Math.max(0, context.currentTime - proceduralMusicOrigin) : recordedDecks?.[recordedIndex].media.currentTime || 0,
+        bpm: music && !recordedMusic && !renderedMusic ? proceduralMusicBpm : null,
         failed: recordedFailed
       });
     }

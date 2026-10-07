@@ -284,7 +284,7 @@ const consumedPrimaryPointers = new Map(), consumedPrimaryClicks = new WeakSet()
     if (document.hidden || $("Guide").open) return false;
     if (!window.MimiCabinetArt.ready) return Boolean(window.MimiCabinetArt.failed);
     if (feature) return true;
-    if (!$("Command").hidden) return canAdvanceCommand() && Boolean($("Choices").firstElementChild);
+    if (!$("Command").hidden) return Boolean($("Choices").firstElementChild);
     if (spin) return nextReel() >= 0;
     if (state.pending || state.phase === "complete") return false;
     const free = state.replay || state.phase === "bonus";
@@ -313,7 +313,7 @@ const consumedPrimaryPointers = new Map(), consumedPrimaryClicks = new WeakSet()
     if (button?.dataset.inputReady === "false" || !primaryReady()) return;
     if (!window.MimiCabinetArt.ready) { window.MimiCabinetArt.retry(); render(); return; }
     if (feature) { dismissFeature(); render(); return; }
-    if (!$("Command").hidden) { if (canAdvanceCommand()) $("Choices").firstElementChild?.click(); return; }
+    if (!$("Command").hidden) { window.MimiCabinetCommands.confirm(); return; }
     if (!spin) { start(); return; }
     const col = nextReel();
     if (col >= 0) stop(col);

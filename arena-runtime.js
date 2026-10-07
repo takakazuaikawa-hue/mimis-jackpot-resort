@@ -336,7 +336,7 @@
     if(!window.MimiCabinetArt.ready)return !!window.MimiCabinetArt.failed;
     if(document.hidden||modalOpen())return false;
     if(feature)return true;
-    if(!$('Command').hidden)return canAdvanceCommand();
+    if(!$('Command').hidden)return Boolean($('Choices').firstElementChild);
     if(state.phase==='complete')return false;
     if(spin)return nextReel()>=0;
     return (state.replay||state.phase==='bonus'||state.credit>=BET)&&performance.now()>=settledAt+(turbo?140:300);
@@ -350,10 +350,10 @@
   function publishInput(button,ready){button.disabled=false;button.setAttribute('aria-disabled','false');button.dataset.inputReady=String(!!ready);}
   function syncPhysicalInputs(){
     const deck=$('Cabinet').dataset.commandDeck;
-    const commandReady=!!deck&&canAdvanceCommand();
+    const commandReady=!!deck&&!document.hidden&&!modalOpen()&&!feature&&window.MimiCabinetArt.ready&&Boolean($('Choices').firstElementChild);
     publishInput($('Spin'),deck?commandReady:primaryInputReady());
     stops.forEach((button,col)=>{
-      if(deck==='choice'&&canAdvanceCommand()){
+      if(deck==='choice'&&commandReady){
         button.disabled=false;button.setAttribute('aria-disabled','false');
         // The shared command-deck owner publishes selectable STOPs.
         if(!button.hasAttribute('data-input-ready'))button.dataset.inputReady='false';
@@ -376,7 +376,7 @@
     else if(!$('Command').hidden){if(auto&&canAdvanceCommand())later(commandSince+(['reward','next','champion'].includes(state.pending)?(turbo?1600:2600):(turbo?600:1200)),()=>$('Choices').firstElementChild.click());}
     else if(auto||nextQueued)later(settledAt+(nextQueued?(turbo?140:300):(turbo?420:900)),start);
   }
-  function primary(){if(!window.MimiCabinetArt.ready){if(window.MimiCabinetArt.failed)window.MimiCabinetArt.retry();render();return;}if(document.hidden||modalOpen())return;if(feature?.cinematic){if(feature.step<cinematicLastStep())cinematicStep(cinematicLastStep());else{dismissFeature();render();}return;}if(feature){dismissFeature();render();return;}if(!$('Command').hidden){if(canAdvanceCommand())$('Choices').firstElementChild.click();return;}if(!spin){if(performance.now()<settledAt+(turbo?140:300))return;start();return;}const col=nextReel();if(col>=0)stop(col,true);}
+  function primary(){if(!window.MimiCabinetArt.ready){if(window.MimiCabinetArt.failed)window.MimiCabinetArt.retry();render();return;}if(document.hidden||modalOpen())return;if(feature?.cinematic){if(feature.step<cinematicLastStep())cinematicStep(cinematicLastStep());else{dismissFeature();render();}return;}if(feature){dismissFeature();render();return;}if(!$('Command').hidden){window.MimiCabinetCommands.confirm();return;}if(!spin){if(performance.now()<settledAt+(turbo?140:300))return;start();return;}const col=nextReel();if(col>=0)stop(col,true);}
   function start(){
     if(!window.MimiCabinetArt.ready)return;
     if(spin||feature||!$('Command').hidden||modalOpen()||document.hidden||state.phase==='complete')return;

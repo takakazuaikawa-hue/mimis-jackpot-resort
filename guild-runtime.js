@@ -112,7 +112,7 @@
     if(!window.MimiCabinetArt.ready)return !!window.MimiCabinetArt.failed;
     if(paused())return false;
     if(feature)return true;
-    const cmd=command();if(cmd)return !!cmd.safe;
+    const cmd=command();if(cmd)return true;
     if(spin)return nextReel()>=0;
     if(state.phase==='complete')return false;
     return (state.replay||state.phase==='bonus'||state.credit>=BET)&&performance.now()>=settledAt+(turbo?140:300);
@@ -126,10 +126,10 @@
   function publishInput(button,ready){button.disabled=false;button.setAttribute('aria-disabled','false');button.dataset.inputReady=String(!!ready);}
   function syncPhysicalInputs(){
     const deck=$('Cabinet').dataset.commandDeck,cmd=command();
-    const commandReady=!!deck&&!!cmd?.safe;
+    const commandReady=!!deck&&!!cmd&&!paused()&&window.MimiCabinetArt.ready;
     publishInput($('Spin'),deck?commandReady:primaryInputReady());
     stops.forEach((button,col)=>{
-      if(deck==='choice'&&cmd?.safe){
+      if(deck==='choice'&&commandReady){
         button.disabled=false;button.setAttribute('aria-disabled','false');
         if(!button.hasAttribute('data-input-ready'))button.dataset.inputReady='false';
       }else publishInput(button,!deck&&stopInputReady(col));
@@ -162,7 +162,7 @@
     if(feature.storyId)save();const f=feature.frames[step];if(sound&&!paused())audio.cue(f.cue);render();
     if(!motionReduced()&&!paused())sceneAnimation=$('FeatureArt').animate([{opacity:.65,transform:'scale(1.025)'},{opacity:1,transform:'scale(1)'}],{duration:turbo?350:650});
   }
-  function primary(){if(!window.MimiCabinetArt.ready){if(window.MimiCabinetArt.failed)window.MimiCabinetArt.retry();render();return;}if(paused())return;if(feature){if(feature.step<feature.frames.length-1)stepFeature(feature.storyId?feature.step+1:feature.frames.length-1);else{endFeature();render();}return;}const cmd=command();if(cmd){if(cmd.safe)advance(cmd.choices[0][1]);return;}if(!spin){if(performance.now()<settledAt+(turbo?140:300))return;start();return;}const col=nextReel();if(col>=0)stop(col,true);}
+  function primary(){if(!window.MimiCabinetArt.ready){if(window.MimiCabinetArt.failed)window.MimiCabinetArt.retry();render();return;}if(paused())return;if(feature){if(feature.step<feature.frames.length-1)stepFeature(feature.storyId?feature.step+1:feature.frames.length-1);else{endFeature();render();}return;}const cmd=command();if(cmd){window.MimiCabinetCommands.confirm();return;}if(!spin){if(performance.now()<settledAt+(turbo?140:300))return;start();return;}const col=nextReel();if(col>=0)stop(col,true);}
   function start(){if(!window.MimiCabinetArt.ready)return;if(spin||feature||command()||paused())return;endFeature();const free=state.replay||state.phase==='bonus';if(!free&&state.credit<BET)return;state.credit-=free?0:BET;state.replay=false;state.lastWin=0;queued=false;result=null;resultView=null;reaction=null;audio.stopEffects();spin={isFree:free,flag:core.rollFlag(state.phase==='bonus'?'bonus':'normal'),stopped:[null,null,null],pendingStops:[],braking:[false,false,false],started:performance.now(),lastStopAt:0};attach(spin);speaker='ミミ';line=state.phase==='boss'?'この一手も、私が引き受けます！':state.phase==='bonus'?'皆さんの席、ちゃんとありますよ。':'さあ、今夜の見せ場です！';document.querySelectorAll('.guild-symbol.is-win').forEach(n=>n.classList.remove('is-win'));if(sound)audio.spinStart();save();render();window.dispatchEvent(new CustomEvent('mimi:cabinet-input', {detail:{machineId:'guild',type:'spin-start',transactionId:spin.session.id}}));}
   function stop(col,immediate=true){if(!window.MimiCabinetArt.ready||!spin||paused()||!Number.isInteger(col)||col<0||col>2||spin.stopped[col]!==null||spin.pendingStops.includes(col))return;if(sessions.queueStop(spin.session,col)){if(immediate){commitStop(sessions.takeReadyStop(spin.session,()=>true));return;}save();render();}}
   function commitStop(col){if(!spin||col===null||spin.stopped[col]!==null)return;const d=core.chooseStop({col,flag:spin.flag,stopped:sessions.knownStops(spin.session),natural:positions[col]});if(!sessions.recordStop(spin.session,col,d))return;spin.pendingStops=spin.session.pendingStopQueue;spin.stopped[col]=d.index;positions[col]=d.index;spin.braking[col]=true;spin.lastStopAt=performance.now();if(sound&&!paused())audio.reelStop(col,d.slip);save();render();window.dispatchEvent(new CustomEvent('mimi:cabinet-input', {detail:{machineId:'guild',type:'stop-accepted',transactionId:spin.session.id,reelIndex:col}}));const tx=spin;if(!motionReduced())$('Reels').children[col].animate([{transform:'translateY(-8px)'},{transform:'translateY(0)'}],{duration:turbo?48:60});setTimeout(()=>{if(spin!==tx)return;spin.braking[col]=false;sessions.markSettled(spin.session,col);if(spin.stopped.every(n=>n!==null)&&!spin.braking.some(Boolean))settle();else render();},motionReduced()?0:turbo?50:60);}

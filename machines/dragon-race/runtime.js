@@ -31,7 +31,18 @@
   let progress;
   const sprites = new Map();
   const scenery = new Map();
-  const racing = { frame: 0, last: 0, clock: 0, distance: 0, speed: 0, visible: false, reduced: false, background: "lapan", nodes: [] };
+  const racing = {
+    frame: 0, last: 0, clock: 0, phaseClock: 0, motionPhase: "idle",
+    distance: 0, speed: 0, visible: false, reduced: false, background: "lapan", nodes: [],
+    musicPhaseOrigin: "semantic-speed", musicOnsetSequence: -1,
+    musicCycleActive: false, musicCycleSequence: -1, musicCycleElapsed: 0, musicCycleFrameDuration: .12,
+    musicCycleFrame: 0, musicCycleLast: 0
+  };
+  // The generated sheet is authored clockwise as raised -> half downstroke ->
+  // downstroke -> recovery. Keep that real pose order; rank movement remains on
+  // the runner nodes and never leaks into this presentation-only frame clock.
+  const FLIGHT_FRAME_ORDER = Object.freeze([0, 1, 2, 3]);
+  const REDUCED_FLIGHT_FRAMES = Object.freeze({ idle: 1, takeoff: 0, cruise: 1, sprint: 2, brake: 2, finish: 3 });
   const palette = ["#ecbd72", "#75cbe7", "#92d0a8", "#d1a4f8"];
   const courses = ["lapan", "vento", "ringrosso", "stadium"];
   const phrases = {
@@ -378,7 +389,13 @@
           }
         }
       });
-      if (t >= 1580) { attr(root, "finish", "done"); reveal(); return; }
+      if (reduced) drawRacingDragons(0, true);
+      if (t >= 1580) {
+        attr(root, "finish", "done");
+        drawRacingDragons(0, true);
+        reveal();
+        return;
+      }
       finish.frame = requestAnimationFrame(tick);
     };
     finish.frame = requestAnimationFrame(tick);
@@ -539,6 +556,107 @@
     image.src = "./machines/dragon-race/assets/flight-v2/" + id + ".png";
     return entry;
   }
+  function flightMotionPhase() {
+    const finishing = tx && finish.transaction === tx.transactionId;
+    if (finishing) {
+      if (root.dataset.finish === "done") return "finish";
+      if (finish.elapsed >= 600 && finish.elapsed <= 880) return "brake";
+      return "sprint";
+    }
+    if (["result", "quiet"].includes(mode) || tx?.status === "settled") return "finish";
+    if (mode === "photo" || displayPhase === "bonus") return "sprint";
+    if (mode !== "race") return "idle";
+    const stopCount = Math.max(0, Math.min(3, tx?.landed.length || 0));
+    return stopCount === 0 ? "takeoff" : stopCount === 3 ? "sprint" : "cruise";
+  }
+  function syncFlightPhase(phase, dt) {
+    if (racing.motionPhase !== phase) {
+      racing.motionPhase = phase;
+      racing.phaseClock = 0;
+    } else {
+      racing.phaseClock += Math.max(0, Number(dt) || 0);
+    }
+  }
+  function syncMusicWingCycle(phase, dt) {
+    let transport = null;
+    try { transport = window.MimiMusicMotion?.snapshot?.() || null; }
+    catch (_) { transport = null; }
+    const actual = transport?.origin === "actual-music" && transport.audioSynced === true;
+    const sequence = Number(transport?.sequence);
+    const newOnset = actual && Number.isFinite(sequence) && sequence > racing.musicOnsetSequence;
+    const onsetAge = Number(transport?.position) - Number(transport?.latestOnsetPosition);
+    if (newOnset) {
+      // Mark every observed onset as consumed. Pulses that arrive during an
+      // authored cycle never queue a late restart or pin the first pose.
+      racing.musicOnsetSequence = sequence;
+    }
+    if (racing.musicCycleActive) {
+      return;
+    }
+    if (racing.reduced || !["takeoff", "cruise", "sprint"].includes(phase)) {
+      racing.musicCycleElapsed = 0;
+      racing.musicPhaseOrigin = "semantic-speed";
+      return;
+    }
+    if (newOnset && !racing.musicCycleActive && Number.isFinite(onsetAge) && onsetAge >= 0 && onsetAge <= .22) {
+        const speedRatio = Math.max(0, Math.min(1, racing.speed / 900));
+        racing.musicCycleFrameDuration = 0.16 - speedRatio * 0.07;
+        racing.musicCycleElapsed = 0;
+        racing.musicCycleSequence = sequence;
+        racing.musicCycleActive = true;
+        racing.musicPhaseOrigin = "actual-music";
+        startMusicWingMonitor();
+    }
+    if (!racing.musicCycleActive) {
+      racing.musicPhaseOrigin = "semantic-speed";
+      return;
+    }
+  }
+  function flightFrameIndex(phase, runnerIndex, discrete = false) {
+    const stopCount = Math.max(0, Math.min(3, tx?.landed.length || 0));
+    if (racing.reduced) {
+      if (phase === "cruise") return FLIGHT_FRAME_ORDER[stopCount];
+      return REDUCED_FLIGHT_FRAMES[phase] ?? REDUCED_FLIGHT_FRAMES.idle;
+    }
+    if (racing.musicCycleActive) {
+      const stagger = runnerIndex * racing.musicCycleFrameDuration * .35;
+      const elapsed = Math.max(0, racing.musicCycleElapsed - stagger);
+      const step = Math.min(FLIGHT_FRAME_ORDER.length - 1, Math.floor(elapsed / racing.musicCycleFrameDuration));
+      return FLIGHT_FRAME_ORDER[step];
+    }
+    if (discrete) {
+      if (phase === "cruise") return FLIGHT_FRAME_ORDER[stopCount];
+      return REDUCED_FLIGHT_FRAMES[phase] ?? REDUCED_FLIGHT_FRAMES.idle;
+    }
+    if (["idle", "brake", "finish"].includes(phase)) return REDUCED_FLIGHT_FRAMES[phase];
+    const speedRatio = Math.max(0, Math.min(1, racing.speed / 900));
+    const secondsPerFrame = 0.19 - speedRatio * 0.105;
+    if (phase === "takeoff" && racing.phaseClock < secondsPerFrame) return REDUCED_FLIGHT_FRAMES.takeoff;
+    const stagger = runnerIndex * secondsPerFrame * 0.45;
+    return FLIGHT_FRAME_ORDER[Math.floor((racing.phaseClock + stagger) / secondsPerFrame) % FLIGHT_FRAME_ORDER.length];
+  }
+  function paintFlightFrame(canvas, sprite, frameIndex, phase) {
+    const frame = sprite.frames?.[frameIndex] || sprite.pose;
+    if (!frame) return;
+    if (canvas.dataset.flightFrame !== String(frameIndex) || canvas.dataset.dragonPainted !== canvas.dataset.dragon) {
+      const ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(frame, 0, 0);
+      canvas.dataset.dragonPainted = canvas.dataset.dragon;
+      canvas.dataset.flightFrame = String(frameIndex);
+    }
+    canvas.dataset.flightPhase = phase;
+  }
+  function publishFlightFrameState(phase) {
+    const frames = racing.nodes.map(canvas => canvas.dataset.flightFrame || "-").join(",");
+    attr(root, "flightPhase", phase);
+    attr(root, "flightFrames", frames);
+    attr(root, "flightMotion", racing.reduced ? "reduced-discrete" : "authored-four-pose");
+    attr(root, "musicPhaseOrigin", racing.musicPhaseOrigin);
+    attr(root, "musicOnsetSequence", racing.musicOnsetSequence);
+    attr(root, "musicWingCycle", racing.musicCycleActive ? "active" : "idle");
+    attr(root, "musicWingSequence", racing.musicCycleSequence);
+  }
   function paintDragons() {
     if (!root) return;
     const selected = pickId();
@@ -553,12 +671,14 @@
       line.textContent = `${i === 1 ? "★ 応援" : "ライバル"}　${content.DRAGONS[ids[i]]}`;
       const sprite = dragonSprite(ids[i]);
       if (!sprite.ready) return;
-      if (canvas.dataset.dragon === ids[i]) return;
-      canvas.dataset.dragon = ids[i];
-      canvas.setAttribute("aria-label", content.DRAGONS[ids[i]]);
-      const ctx = canvas.getContext("2d"); ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(sprite.pose, 0, 0);
+      if (canvas.dataset.dragon !== ids[i]) {
+        canvas.dataset.dragon = ids[i];
+        canvas.setAttribute("aria-label", content.DRAGONS[ids[i]]);
+      }
+      const phase = flightMotionPhase();
+      paintFlightFrame(canvas, sprite, flightFrameIndex(phase, i, true), phase);
     });
+    publishFlightFrameState(flightMotionPhase());
   }
   function runnerPositions() {
     if (tx && finish.transaction === tx.transactionId) return;
@@ -615,28 +735,53 @@
       }
     }
   }
-  function drawRacingDragons() {
+  function drawRacingDragons(dt = 0, discrete = false) {
+    const phase = flightMotionPhase();
+    syncFlightPhase(phase, dt);
+    syncMusicWingCycle(phase, discrete ? 0 : dt);
     racing.nodes.forEach((canvas, i) => {
       const sprite = sprites.get(canvas.dataset.dragon);
       if (!sprite?.ready) return;
-      const ctx = canvas.getContext("2d"), t = racing.clock;
-      ctx.clearRect(0, 0, 192, 144);
       // 4枚の異なる体形を高速切替すると鼻・腹・脚まで跳ねる。伸ばした翼での滑空を基準にする。
       // 順位を変える横移動はrunnerPositionsだけが所有し、ここでは鼻先を軸に呼吸する。
-      ctx.drawImage(sprite.frames[1], 0, 0);
-      const flight = Math.sin(t * 2.2 + i * 1.9);
-      const lean = -Math.min(2.8, racing.speed / 380) + flight * .35;
-      canvas.style.transform = `translateY(${(flight * 1.7).toFixed(2)}px) rotate(${lean.toFixed(2)}deg)`;
+      paintFlightFrame(canvas, sprite, flightFrameIndex(phase, i, discrete), phase);
+      // Position/rank belongs to the runner node. The canvas now shows only
+      // authored wing/body poses, never a whole-character bob or rotation.
+      canvas.style.removeProperty("transform");
     });
+    publishFlightFrameState(phase);
+  }
+  function musicWingSuspended() {
+    return document.hidden || !racing.visible || !root.closest(".app-view")?.classList.contains("is-active") || modalOpen();
+  }
+  function startMusicWingMonitor() {
+    if (!racing.musicCycleActive || racing.musicCycleFrame || musicWingSuspended()) return;
+    racing.musicCycleLast = 0;
+    racing.musicCycleFrame = requestAnimationFrame(musicWingFrame);
+  }
+  function musicWingFrame(now) {
+    racing.musicCycleFrame = 0;
+    if (!racing.musicCycleActive) return;
+    if (musicWingSuspended()) { racing.musicCycleLast = 0; return; }
+    const dt = Math.min(.05, racing.musicCycleLast ? (now - racing.musicCycleLast) / 1000 : 0);
+    racing.musicCycleLast = now;
+    racing.musicCycleElapsed += dt;
+    const stagger = racing.musicCycleFrameDuration * .35 * 2;
+    if (racing.musicCycleElapsed >= racing.musicCycleFrameDuration * FLIGHT_FRAME_ORDER.length + stagger) {
+      racing.musicCycleActive = false;
+      racing.musicCycleElapsed = 0;
+      racing.musicCycleLast = 0;
+      racing.musicPhaseOrigin = "semantic-speed";
+      drawRacingDragons(0, true);
+      return;
+    }
+    drawRacingDragons(0);
+    racing.musicCycleFrame = requestAnimationFrame(musicWingFrame);
   }
   function stopRacing() {
     cancelAnimationFrame(racing.frame); racing.frame = 0; racing.last = 0;
     racing.speed = 0;
-    racing.nodes.forEach(canvas => {
-      canvas.style.removeProperty("transform");
-      const sprite = sprites.get(canvas.dataset.dragon);
-      if (sprite?.ready) { const ctx = canvas.getContext("2d"); ctx.clearRect(0, 0, 192, 144); ctx.drawImage(sprite.pose, 0, 0); }
-    });
+    drawRacingDragons(0, true);
   }
   function raceFrame(now) {
     racing.frame = 0;
@@ -653,16 +798,24 @@
     if (finishing && finish.elapsed >= 600 && finish.elapsed <= 880) racing.speed = 0;
     racing.distance += racing.speed * dt; racing.clock += dt;
     drawScenery();
-    if (!finishing) drawRacingDragons();
-    else racing.nodes.forEach(canvas => { canvas.style.transform = "none"; });
+    drawRacingDragons(dt);
     racing.frame = requestAnimationFrame(raceFrame);
   }
   function syncRacing(background) {
     racing.background = background;
     racing.reduced = reducedMotion();
     racing.visible = Boolean(root.closest(".app-view")?.classList.contains("is-active")) && document.getElementById("helpOverlay")?.hidden !== false;
+    if (racing.reduced && racing.musicCycleActive) {
+      cancelAnimationFrame(racing.musicCycleFrame);
+      racing.musicCycleFrame = 0;
+      racing.musicCycleLast = 0;
+      racing.musicCycleElapsed = 0;
+      racing.musicCycleActive = false;
+      racing.musicPhaseOrigin = "semantic-speed";
+    }
     if (racing.reduced || !racing.visible || document.hidden || ["town","boss"].includes(root.dataset.surface) || !["race", "photo", "result", "quiet"].includes(mode)) stopRacing();
     else if (!racing.frame) { racing.last = 0; racing.frame = requestAnimationFrame(raceFrame); }
+    startMusicWingMonitor();
   }
   function render() {
     if (!active || !root || !api) return;
@@ -1300,6 +1453,7 @@
     mountDrive();
     mountSettings();
     music = new Audio(); music.loop = true; music.preload = "none";
+    window.MimiMusicMotion?.registerMedia?.(music);
     api.audio.onPayoutMix?.(syncMusicVolume);
     music.addEventListener("error", () => { musicFailed = true; });
     document.addEventListener("pointerup", () => { if (musicBlocked) syncSound(); });
@@ -1367,6 +1521,6 @@
     syncAim,
     // 三本着地〜共通決着の境界も回転中。演出ロックが立つ前に次のBETを許可しない。
     blocked: () => saveConflict || locked || drive.exit || command === 0 || (api?.state.spinning && tx?.landed.length === 3) || (root && modalOpen()),
-    snapshot: () => JSON.parse(JSON.stringify({ progress, tx, command, locked, displaySection, displayPhase, saveError, saveConflict, preferences, music: { track: musicTrack, playing: music ? !music.paused : false, failed: musicFailed, blocked: musicBlocked }, scene: root?.dataset.scene, controller: controller?.snapshot(), racing: { active: Boolean(racing.frame), speed: racing.speed, distance: racing.distance, clock: racing.clock } })),
+    snapshot: () => JSON.parse(JSON.stringify({ progress, tx, command, locked, displaySection, displayPhase, saveError, saveConflict, preferences, music: { track: musicTrack, playing: music ? !music.paused : false, failed: musicFailed, blocked: musicBlocked }, scene: root?.dataset.scene, controller: controller?.snapshot(), racing: { active: Boolean(racing.frame), speed: racing.speed, distance: racing.distance, clock: racing.clock, phaseClock: racing.phaseClock, motionPhase: racing.motionPhase, musicPhaseOrigin: racing.musicPhaseOrigin, musicOnsetSequence: racing.musicOnsetSequence, musicCycleActive: racing.musicCycleActive, musicCycleSequence: racing.musicCycleSequence, musicCycleElapsed: racing.musicCycleElapsed, frames: racing.nodes.map(canvas => Number(canvas.dataset.flightFrame)) } })),
   });
 }());

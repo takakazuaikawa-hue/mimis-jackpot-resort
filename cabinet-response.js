@@ -167,14 +167,25 @@
       if (!select(index)) window.MimiCabinetResponse.contact(button);
     }, true));
     window.addEventListener("keydown", event => {
-      if (!active || !available() || event.repeat || event.altKey || event.ctrlKey || event.metaKey) return;
-      if (event.code === "Space" && (event.target === document.body || event.target === primary || stops.includes(event.target))) {
+      if (!active || !available() || event.altKey || event.ctrlKey || event.metaKey) return;
+      const stopIndex = stops.indexOf(event.target);
+      const stopKey = stopIndex >= 0 && (event.code === "Space" || event.code === "Enter");
+      const confirmKey = event.target === primary && (event.code === "Space" || event.code === "Enter")
+        || event.target === document.body && event.code === "Space";
+      if (event.repeat) {
+        if (stopKey || confirmKey) { event.preventDefault(); event.stopImmediatePropagation(); }
+        return;
+      }
+      if (stopKey) {
+        event.preventDefault(); event.stopImmediatePropagation();
+        if (!select(stopIndex)) window.MimiCabinetResponse.contact(event.target);
+      } else if (confirmKey) {
         event.preventDefault(); event.stopImmediatePropagation(); confirm();
       } else if (/^Digit[123]$/.test(event.code) && select(Number(event.code.slice(-1)) - 1)) {
         event.preventDefault(); event.stopImmediatePropagation();
       }
     }, true);
-    window.MimiCabinetCommands = Object.freeze({ render: renderCommands });
+    window.MimiCabinetCommands = Object.freeze({ render: renderCommands, confirm });
   }
   if (!dragon) {
     let ready = false, failed = false, ticket = 0, images = [];
