@@ -16,7 +16,10 @@
   const characterCue = { frame: 0, elapsed: 0, last: 0, loading: 0 };
   let settingsPanel, settingsButton, pressRun, pressGlow, pressCount = 0;
   let inputObserver, syncingInputs = false;
-  const lastContact = new WeakMap();
+  const unavailablePointers = new Map();
+  const unavailableClicks = new WeakSet();
+  const readyPointers = new Map();
+  const readyClicks = new WeakSet();
   let settledGridResult, spectacle;
   // 疾走ボタンは既存の無料回転だけを駆動する。連射数で配当を増やさない。
   const drive = { node: null, timer: 0, held: false, pending: false, lastPress: -Infinity, started: 0, transaction: 0, engaged: false, exit: false, kick: 0 };
@@ -900,18 +903,52 @@
   function installPhysicalInputs() {
     const contactIfUnavailable = event => {
       if (!active) return;
+      if (event.type === "pointerup" || event.type === "pointercancel") {
+        const owner = unavailablePointers.get(event.pointerId);
+        if (owner) {
+          unavailablePointers.delete(event.pointerId);
+          event.preventDefault(); event.stopImmediatePropagation();
+          if (event.type === "pointercancel") unavailableClicks.delete(owner);
+          return;
+        }
+        const readyOwner = readyPointers.get(event.pointerId);
+        if (!readyOwner) return;
+        readyPointers.delete(event.pointerId);
+        if (event.type === "pointercancel") readyClicks.delete(readyOwner);
+        return;
+      }
       const button = event.target.closest?.(physicalInputs);
-      if (!button || button.dataset.inputReady !== "false") return;
+      if (!button) return;
+      if (event.type === "click" && event.detail > 0 && unavailableClicks.has(button)) {
+        unavailableClicks.delete(button);
+        event.preventDefault(); event.stopImmediatePropagation();
+        return;
+      }
+      if (event.type === "click" && event.detail > 0 && readyClicks.has(button)) {
+        readyClicks.delete(button);
+        return;
+      }
+      if (event.type === "pointerdown" && (event.button !== 0 || event.isPrimary === false)) return;
+      if (event.type === "pointerdown") {
+        unavailableClicks.delete(button);
+        readyClicks.delete(button);
+        if (button.dataset.inputReady !== "false") {
+          readyPointers.set(event.pointerId, button);
+          readyClicks.add(button);
+          return;
+        }
+      }
+      if (button.dataset.inputReady !== "false") return;
       if (event.type === "keydown" && ![" ", "Enter"].includes(event.key)) return;
       event.preventDefault(); event.stopImmediatePropagation();
-      if (event.type === "pointerup") return;
-      const now = performance.now(), previous = lastContact.get(button) ?? -Infinity;
-      if (event.type === "click" && now - previous < 450) return;
       if (event.type === "keydown" && event.repeat) return;
-      lastContact.set(button, now);
+      if (event.type === "pointerdown") {
+        unavailablePointers.set(event.pointerId, button);
+        unavailableClicks.add(button);
+      }
       window.MimiCabinetResponse?.contact?.(button);
     };
-    for (const type of ["pointerdown", "pointerup", "click", "keydown"]) document.addEventListener(type, contactIfUnavailable, true);
+    for (const type of ["pointerdown", "pointerup", "pointercancel", "click", "keydown"]) document.addEventListener(type, contactIfUnavailable, true);
     const cabinet = document.querySelector(".machine");
     if (cabinet) {
       inputObserver?.disconnect();

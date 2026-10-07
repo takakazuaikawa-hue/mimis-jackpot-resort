@@ -5,7 +5,9 @@
   const sessions = window.MimiSpinSession;
   const KEY = "mimi.stadium.slot.v1", BET = 30;
   const $ = id => document.getElementById(`stadium${id}`);
-  const stops = [...document.querySelectorAll("[data-stadium-stop]")];
+const stops = [...document.querySelectorAll("[data-stadium-stop]")];
+const consumedStopClicks = new WeakSet();
+const consumedPrimaryPointers = new Map(), consumedPrimaryClicks = new WeakSet();
   let state = flow.create(), spin = null, saved = null, sound = false, frame = 0, last = 0;
   let resultActor = null, resultVoiceActor = null, resultText = "いちばん上まで、改造していこう。", resultHeadline = "";
   // Fixed nine: the voice follows the batter who actually faced this pitch.
@@ -264,7 +266,7 @@
       return;
     }
     if (spin) {
-      if (spin.pendingStops.length) later(spin.started + 420, () => commitStop(sessions.takeReadyStop(spin.session, () => true)));
+      if (spin.pendingStops.length) later(now, () => commitStop(sessions.takeReadyStop(spin.session, () => true)));
       else if (auto && nextReel() >= 0) later(spin.lastStopAt ? spin.lastStopAt + (turbo ? 200 : 320) : spin.started + (turbo ? 420 : 900), () => stop(nextReel()));
     } else if (!$("Command").hidden) {
       if (auto && canAdvanceCommand()) later(commandSince + (turbo ? 600 : 1200), () => $("Choices").firstElementChild.click());
@@ -384,9 +386,8 @@
       paintReel(c);
       const moving = Boolean(spin && spin.stopped[c] === null);
       $("Reels").children[c].classList.toggle("is-spinning", moving);
-      const queued = Boolean(spin?.pendingStops.includes(c));
       stops[c].disabled = false;
-      stops[c].textContent = queued ? `STOP ${c + 1} 予約` : spin?.stopped[c] !== null && spin ? `STOP ${c + 1} ✓` : `STOP ${c + 1}`;
+      stops[c].textContent = `STOP ${c + 1}`;
     });
     renderBattingResult();
     renderReelCue();
@@ -436,8 +437,11 @@
     window.dispatchEvent(new CustomEvent('mimi:cabinet-input', {detail:{machineId:'stadium',type:'spin-start',transactionId:spin.session.id}}));
   }
   function stop(col) {
-    if (!stopReady(col)) return;
-    if (sessions.queueStop(spin.session, col)) { save(); render(); }
+    if (stops[col]?.dataset.inputReady === "false" || !stopReady(col)) return;
+    const transaction = spin;
+    if (!sessions.queueStop(transaction.session, col)) return;
+    const accepted = sessions.takeReadyStop(transaction.session, () => true);
+    if (accepted !== null) commitStop(accepted);
   }
   function commitStop(col) {
     if (!spin || col === null || spin.stopped[col] !== null) return;
@@ -450,14 +454,14 @@
     window.dispatchEvent(new CustomEvent('mimi:cabinet-input', {detail:{machineId:'stadium',type:'stop-accepted',transactionId:spin.session.id,reelIndex:col}}));
     const transaction = spin;
     const node = $("Reels").children[col];
-    node.animate(reduced.matches ? [] : [{ transform: "translateY(-9px)" }, { transform: "translateY(2px)" }, { transform: "translateY(0)" }], { duration: reduced.matches ? 0 : turbo ? 70 : 180 });
+    node.animate(reduced.matches ? [] : [{ transform: "translateY(-9px)" }, { transform: "translateY(2px)" }, { transform: "translateY(0)" }], { duration: reduced.matches ? 0 : 55 });
     setTimeout(() => {
       if (spin !== transaction) return;
       spin.braking[col] = false;
       sessions.markSettled(spin.session, col);
       if (spin.stopped.every(n => n !== null) && !spin.braking.some(Boolean)) settle();
       else render();
-    }, reduced.matches ? 0 : turbo ? 80 : 200);
+    }, reduced.matches ? 0 : 55);
   }
   function settle() {
     if (!spin || !sessions.resolve(spin.session)) return;
@@ -502,13 +506,44 @@
     frame = requestAnimationFrame(tick);
   }
   window.addEventListener("mimi:cabinet-art", render);
+  window.addEventListener("click", event => {
+    const button = event.target.closest?.("#stadiumSpin, #stadiumFeatureContinue, [data-stadium-stop]");
+    if (!button) return;
+    if (event.detail > 0 && consumedPrimaryClicks.has(button)) consumedPrimaryClicks.delete(button);
+    else if (consumedStopClicks.has(button)) consumedStopClicks.delete(button);
+    else return;
+    event.preventDefault(); event.stopImmediatePropagation();
+  }, true);
+  document.addEventListener("pointerup", event => {
+    const primary = consumedPrimaryPointers.get(event.pointerId);
+    if (primary) consumedPrimaryPointers.delete(event.pointerId);
+    setTimeout(() => stops.forEach(button => consumedStopClicks.delete(button)), 0);
+  }, true);
+  document.addEventListener("pointercancel", event => {
+    const primary = consumedPrimaryPointers.get(event.pointerId);
+    if (primary) { consumedPrimaryPointers.delete(event.pointerId); consumedPrimaryClicks.delete(primary); }
+    stops.forEach(button => consumedStopClicks.delete(button));
+  }, true);
   $("Spin").addEventListener("click", () => primary($("Spin")));
   $("FeatureContinue").addEventListener("click", () => primary($("FeatureContinue")));
   $("Auto").addEventListener("click", () => { if (auto) pause(); else auto = true; render(); });
   $("Turbo").addEventListener("click", () => { turbo = !turbo; save(); render(); });
-  stops.forEach((button, c) => button.addEventListener("click", () => stop(c)));
-  [$("Spin"), $("FeatureContinue"), ...stops].forEach(button => {
-    button.addEventListener("pointerdown", () => window.MimiCabinetResponse?.contact(button));
+  stops.forEach((button, c) => {
+    button.addEventListener("click", () => stop(c));
+    button.addEventListener("pointerdown", event => {
+      if (event.button !== 0 || event.isPrimary === false) return;
+      const actualStop = button.dataset.inputReady === "true" && Boolean(spin) && $("Command").hidden && stopReady(c);
+      if (!actualStop) window.MimiCabinetResponse?.contact(button);
+      if ($("Command").hidden) consumedStopClicks.add(button);
+      stop(c);
+    });
+  });
+  [$("Spin"), $("FeatureContinue")].forEach(button => {
+    button.addEventListener("pointerdown", event => {
+      if (event.button !== 0 || event.isPrimary === false) return;
+      consumedPrimaryPointers.set(event.pointerId, button); consumedPrimaryClicks.add(button);
+      window.MimiCabinetResponse?.contact(button); primary(button);
+    });
   });
   $("Home").addEventListener("click", event => { if (spin) event.preventDefault(); else { pause(); save(); pauseMusic(); audio.setEnabled(false); } });
   $("Help").addEventListener("click", () => { pause(); audio.setEnabled(false); $("Guide").showModal(); render(); });
@@ -521,8 +556,23 @@
     renderMusic();
   });
   window.addEventListener("keydown", event => {
-    if (event.repeat || event.altKey || event.ctrlKey || event.metaKey || $("Guide").open) return;
-    if (event.code === "Space" && (event.target === document.body || event.target === $("Spin") || event.target === $("FeatureContinue") || stops.includes(event.target))) {
+    const stopColumn = stops.indexOf(event.target);
+    if (event.altKey || event.ctrlKey || event.metaKey) return;
+    if (event.repeat) {
+      if ((event.code === "Space" || event.code === "Enter")
+        && (stopColumn >= 0 || event.target === $("Spin") || event.target === $("FeatureContinue"))) event.preventDefault();
+      return;
+    }
+    if ($("Guide").open) return;
+    if ((event.code === "Space" || event.code === "Enter") && stopColumn >= 0) {
+      // Let the shared deck's native Enter click choose an eligible command option.
+      if (event.code === "Enter" && !$("Command").hidden && stops[stopColumn].dataset.inputReady === "true") return;
+      event.preventDefault();
+      window.MimiCabinetResponse?.contact(stops[stopColumn]); stop(stopColumn);
+      return;
+    }
+    if ((event.code === "Space" && (event.target === document.body || event.target === $("Spin") || event.target === $("FeatureContinue")))
+      || (event.code === "Enter" && (event.target === $("Spin") || event.target === $("FeatureContinue")))) {
       event.preventDefault();
       const button = feature ? $("FeatureContinue") : $("Spin");
       window.MimiCabinetResponse?.contact(button); primary(button);

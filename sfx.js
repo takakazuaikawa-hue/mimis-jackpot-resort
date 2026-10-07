@@ -99,15 +99,15 @@
 
   /* [sample id, gain, playback rate, delay seconds]. */
   const CUE_LAYERS = Object.freeze({
-    press: [["chipLay", 0.28, 1.16, 0]],
-    spin: [["diceShake", 0.17, 0.92, 0], ["cardShove", 0.1, 0.76, 0.025]],
-    stop1: [["cardSlideFirst", 0.34, 0.88, 0, -0.42], ["chipLay", 0.18, 0.92, 0.01, -0.34]],
-    stop2: [["cardSlideSecond", 0.36, 1.0, 0, 0], ["chipLay", 0.19, 1.03, 0.01, 0]],
-    stop3: [["cardSlideFinal", 0.39, 1.12, 0, 0.42], ["chipLay", 0.22, 1.14, 0.01, 0.34]],
+    press: [["chipLay", 0.28, 1.16, 0, 0, 0.055]],
+    spin: [["chipLay", 0.3, 0.92, 0, 0, 0.065]],
+    stop1: [["chipLay", 0.28, 0.98, 0, -0.42, 0.055]],
+    stop2: [["chipLay", 0.3, 1.08, 0, 0, 0.055]],
+    stop3: [["chipLay", 0.32, 1.18, 0, 0.42, 0.055]],
     commandOpen: [["packOpen", 0.22, 1.24, 0], ["cardPlace", 0.12, 1.18, 0.06]],
-    commandAdvance: [["cardSlide", 0.24, 1.08, 0], ["chipLay", 0.14, 1.26, 0.045]],
+    commandAdvance: [["chipLay", 0.28, 1.16, 0, 0, 0.055]],
     commandReady: [["cardFan", 0.27, 1.12, 0], ["chipsStack", 0.2, 1.18, 0.085]],
-    notice: [["packTakeOut", 0.27, 1.08, 0]],
+    notice: [["chipLay", 0.18, 1.24, 0, 0, 0.055]],
     tenpai: [["cardFan", 0.3, 0.96, 0], ["cardSlide", 0.13, 1.16, 0.075]],
     hot: [["cardFan", 0.34, 0.86, 0], ["dieThrow", 0.2, 0.78, 0.08]],
     win: [["chipsStack", 0.42, 1.03, 0], ["chipsHandle", 0.35, 1.13, 0.075]],
@@ -282,6 +282,7 @@
   let sampleState = "idle";
   let sampleLoadPromise = null;
   const sampleBuffers = new Map();
+  const contactOffsets = new Map();
   const samplePlayCounts = new Map();
   const sampleFamilyCounts = new Map();
   let reelVoices = [];
@@ -340,7 +341,7 @@
   function ensure() {
     if (!AudioContextClass) return null;
     if (!context) {
-      context = new AudioContextClass();
+      context = new AudioContextClass({ latencyHint: "interactive" });
       master = context.createGain();
       sampleBus = context.createGain();
       synthBus = context.createGain();
@@ -401,6 +402,7 @@
       if (!response.ok) throw new Error(`Audio ${response.status}: ${file}`);
       const buffer = await decodeAudio(ctx, await response.arrayBuffer());
       sampleBuffers.set(id, buffer);
+      if (/^chipLay[1-3]$/.test(id)) contactOffsets.set(id, contactOffset(buffer));
     })).then(results => {
       const failed = results.filter(result => result.status === "rejected").length;
       sampleState = sampleBuffers.size === 0 ? "failed" : failed ? "partial" : "ready";
@@ -410,6 +412,21 @@
       return sampleState;
     });
     return sampleLoadPromise;
+  }
+
+  function contactOffset(buffer) {
+    // The recordings include 45-86ms of handling before the actual impact.
+    // Decode once, retain 2ms of attack, and start physical cues at that edge.
+    const channels = Array.from({ length: buffer.numberOfChannels }, (_, col) => buffer.getChannelData(col));
+    let peak = 0;
+    for (const channel of channels) for (const value of channel) peak = Math.max(peak, Math.abs(value));
+    const threshold = Math.max(0.02, peak * 0.03);
+    for (let index = 0; index < buffer.length; index += 1) {
+      if (channels.some(channel => Math.abs(channel[index]) >= threshold)) {
+        return Math.max(0, index / buffer.sampleRate - 0.002);
+      }
+    }
+    return 0;
   }
 
   function unlock() {
@@ -461,7 +478,7 @@
     return reduced;
   }
 
-  function playSample(id, gainValue = 0.3, playbackRate = 1, delay = 0, pan = 0) {
+  function playSample(id, gainValue = 0.3, playbackRate = 1, delay = 0, pan = 0, contactDuration = 0) {
     const ctx = ensure();
     const sampleId = resolveSampleId(id);
     const buffer = sampleBuffers.get(sampleId);
@@ -482,7 +499,17 @@
       gain.connect(sampleBus);
     }
     if (Object.hasOwn(PAYOUT_FILES, sampleId)) payoutVoices.set(source, gain);
-    trackEffect(source).start(ctx.currentTime + Math.max(0, delay));
+    const start = ctx.currentTime + Math.max(0, delay);
+    if (contactDuration > 0) {
+      // A button owns just the impact, never the hand/card scrape in its tail.
+      const level = gain.gain.value;
+      gain.gain.setValueAtTime(level, start);
+      gain.gain.setValueAtTime(level, start + Math.max(0, contactDuration - 0.012));
+      gain.gain.exponentialRampToValueAtTime(0.0001, start + contactDuration);
+    }
+    if (contactDuration > 0) trackEffect(source).start(start, contactOffsets.get(sampleId) || 0);
+    else trackEffect(source).start(start);
+    if (contactDuration > 0) source.stop(start + contactDuration);
     return true;
   }
 
@@ -538,12 +565,13 @@
     const ctx = ensure();
     stopReelLoop(0.02);
     if (!ctx || !enabled || reduced) return 0;
-    const size = Math.max(1, Math.floor(ctx.sampleRate * 0.34));
+    const size = Math.max(1, Math.floor(ctx.sampleRate * 0.5));
     const buffer = ctx.createBuffer(1, size, ctx.sampleRate);
     const data = buffer.getChannelData(0);
     for (let i = 0; i < size; i += 1) {
-      const mechanicalPulse = Math.sin((i / ctx.sampleRate) * Math.PI * 2 * 34) * 0.22;
-      data[i] = (Math.random() * 2 - 1) * 0.54 + mechanicalPulse;
+      const time = i / ctx.sampleRate;
+      const mechanicalPulse = 0.82 + Math.cos(time * Math.PI * 2 * 34) * 0.18;
+      data[i] = (Math.sin(time * Math.PI * 2 * 96) * 0.45 + Math.sin(time * Math.PI * 2 * 192) * 0.17) * mechanicalPulse;
     }
     [
       { frequency: 230, rate: 0.91, gain: 0.015, pan: -0.46 },
@@ -609,11 +637,11 @@
 
   function fallbackCue(id) {
     const cues = {
-      press: () => { tone(180, 0.045, "square", 0.018); noise(0.025, 0.009); },
-      spin: () => { tone(110, 0.12, "sawtooth", 0.025); tone(220, 0.09, "triangle", 0.018, 0.05); },
-      stop1: () => { tone(165, 0.055, "square", 0.026); noise(0.035, 0.014); },
-      stop2: () => { tone(220, 0.055, "square", 0.026); noise(0.035, 0.014); },
-      stop3: () => { tone(294, 0.065, "square", 0.03); noise(0.045, 0.016); },
+      press: () => { tone(180, 0.035, "sine", 0.026); tone(920, 0.012, "triangle", 0.008); },
+      spin: () => { tone(130, 0.045, "sine", 0.028); tone(920, 0.012, "triangle", 0.009); },
+      stop1: () => { tone(165, 0.04, "sine", 0.03); tone(920, 0.012, "triangle", 0.008); },
+      stop2: () => { tone(220, 0.04, "sine", 0.03); tone(1040, 0.012, "triangle", 0.008); },
+      stop3: () => { tone(294, 0.04, "sine", 0.032); tone(1160, 0.012, "triangle", 0.008); },
       commandOpen: () => { tone(392, 0.08, "sine", 0.022); tone(523, 0.12, "triangle", 0.02, 0.055); },
       commandAdvance: () => { tone(523, 0.07, "triangle", 0.023); tone(659, 0.1, "sine", 0.018, 0.045); },
       commandReady: () => [523, 659, 784].forEach((note, index) => tone(note, 0.12, "triangle", 0.025, index * 0.055)),
@@ -705,20 +733,18 @@
     return Object.freeze({ flag: ROLE_CUE_PROFILES[flag] ? flag : "none", heat: amount });
   }
 
-  function roleStop(flag, ordinal = 1, col = ordinal - 1) {
+  function roleStop(flag, ordinal = 1, col = ordinal - 1, options = {}) {
     const profile = roleCueProfile(flag);
     const stop = Math.max(1, Math.min(3, Math.trunc(Number(ordinal) || 1)));
     const column = Math.max(0, Math.min(2, Math.trunc(Number(col) || 0)));
     const rate = profile.rates[stop - 1];
-    const recordedAccent = stop === 3;
+    const immediate = options.immediate === true;
+    const recordedAccent = stop === 3 && !immediate;
     unlock();
-    // STOP 1/2 already carry two physical recorded impacts each. Keep the
-    // three-step role phrase in the restrained tonal layer, then place its
-    // recorded timbre only on the river/STOP 3 decision. This preserves the
-    // authored stop1 -> stop2 -> stop3 identity without stacking nine recorded
-    // transients into every ordinary spin.
-    if (recordedAccent) playSample(profile.sample, 0.079, rate, 0.018, [-0.42, 0, 0.42][column]);
-    tone(profile.base * (1 + stop * 0.25), 0.085 + stop * 0.015, stop === 3 ? "triangle" : "sine", 0.008 + stop * 0.002, 0.028);
+    // V5 already sounds its physical contact at acceptance. Its role phrase
+    // starts on that same edge and never adds a delayed second impact.
+    if (recordedAccent) playSample("chipLay", 0.079, rate, 0.018, [-0.42, 0, 0.42][column], 0.055);
+    tone(profile.base * (1 + stop * 0.25), 0.085 + stop * 0.015, stop === 3 ? "triangle" : "sine", 0.008 + stop * 0.002, immediate ? 0 : 0.028);
     return Object.freeze({ flag: ROLE_CUE_PROFILES[flag] ? flag : "none", stop, column, rate, recordedAccent });
   }
 
@@ -768,10 +794,9 @@
     const cabinetPan = [-0.42, 0, 0.42][column];
     const selected = reduced ? layers.slice(0, 1) : layers;
     const played = selected.reduce((didPlay, layer) => {
-      const [sampleId, gainValue, playbackRate, delay] = layer;
-      return playSample(sampleId, (gainValue + slipAmount * 0.018) * 0.7, playbackRate * rateScale, delay, cabinetPan) || didPlay;
+      const [sampleId, gainValue, playbackRate, delay, , contactDuration] = layer;
+      return playSample(sampleId, (gainValue + slipAmount * 0.018) * 0.7, playbackRate * rateScale, delay, cabinetPan, contactDuration) || didPlay;
     }, false);
-    if (slipAmount >= 3) noise(0.045 + slipAmount * 0.012, (0.01 + slipAmount * 0.003) * 0.7);
     if (!played) fallbackCue(id);
     return remaining;
   }

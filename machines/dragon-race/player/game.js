@@ -702,7 +702,7 @@
     playfield.classList.remove("is-deal-resolving");
     els.shell.dataset.chapter1PokerDeal = street;
     els.shell.classList.remove("is-chapter1-deal-resolving");
-    void playfield.offsetWidth;
+    if (!usesChapter1CommandSurface()) void playfield.offsetWidth;
     button.classList.add("is-deal-resolving");
     playfield.classList.add("is-deal-resolving");
     els.shell.classList.add("is-chapter1-deal-resolving");
@@ -742,7 +742,7 @@
     if (suitNode) suitNode.textContent = faceUp ? suit : "";
     if (!changed || isMotionReduced()) return;
     element.classList.remove("is-new");
-    void element.offsetWidth;
+    if (!usesChapter1CommandSurface()) void element.offsetWidth;
     element.classList.add("is-new");
   }
 
@@ -850,7 +850,7 @@
     if (outcome === "pending") syncChapter1ReelReaction(stopCount);
     if (stopCount <= 0 || (stopCount >= 3 && outcome !== "pending") || isMotionReduced()) return;
     playfield.classList.remove("is-action-resolving");
-    void playfield.offsetWidth;
+    if (!usesChapter1CommandSurface()) void playfield.offsetWidth;
     playfield.classList.add("is-action-resolving");
     playfield.addEventListener("animationend", function clearPokerAction(event) {
       if (event.target !== playfield) return;
@@ -1898,9 +1898,9 @@
   let frameHandle = 0;
   let lastFrame = 0;
 
-  function requestFrame() {
+  function requestFrame(resetClock = true) {
     if (frameHandle) return;
-    lastFrame = 0;
+    if (resetClock) lastFrame = 0;
     frameHandle = window.requestAnimationFrame(tick);
   }
 
@@ -1912,7 +1912,7 @@
     const dt = lastFrame ? Math.min(0.1, (now - lastFrame) / 1000) : 0.016;
     lastFrame = now;
     const active = advance(dt);
-    if (active || reels.some(reel => reel.phase !== "stopped")) requestFrame();
+    if (active || reels.some(reel => reel.phase !== "stopped")) requestFrame(!usesChapter1CommandSurface());
   }
 
   /** 1 フレーム分すすめる。戻り値は「まだ動いているか」。 */
@@ -1936,10 +1936,14 @@
         setBlur(reel, reel.speed > SPIN_SPEED_TENPAI + 2);
         active = true;
       } else if (reel.phase === "brake") {
-        reel.brakeT += dt;
+        reel.brakeT = usesChapter1CommandSurface()
+          ? Math.max(0, (performance.now() - reel.brakeStartedAt) / 1000)
+          : reel.brakeT + dt;
         const t = Math.min(1, reel.brakeT / reel.brakeDur);
         const eased = 1 - Math.pow(1 - t, 3);
-        reel.pos = reel.brakeFrom + (reel.brakeTo - reel.brakeFrom) * eased;
+        reel.pos = usesChapter1CommandSurface()
+          ? core.mod(reel.brakeTo, reel.length)
+          : reel.brakeFrom + (reel.brakeTo - reel.brakeFrom) * eased;
         setBlur(reel, false);
         if (t >= 1) {
           reel.pos = core.mod(reel.brakeTo, reel.length);
@@ -2537,7 +2541,7 @@
     if (!state.spinning || !reel) return;
     if (reel.phase !== "accel" && reel.phase !== "spin") return;
     if (reel.pendingStop) return;
-    if (reel.spinTime < MIN_SPIN_SEC) {
+    if (!usesChapter1CommandSurface() && reel.spinTime < MIN_SPIN_SEC) {
       reel.pendingStop = true;
       spinSession.queueStop(currentSpin, col);
       updateButtons();
@@ -2572,8 +2576,18 @@
     reel.brakeFrom = reel.pos;
     reel.brakeTo = natural - decision.slip;
     reel.brakeT = 0;
-    reel.brakeDur = Math.max(0.09, 0.06 + (reel.pos - reel.brakeTo) * 0.05);
+    reel.brakeStartedAt = performance.now();
+    reel.brakeDur = usesChapter1CommandSurface() ? 0.05 : Math.max(0.09, 0.06 + (reel.pos - reel.brakeTo) * 0.05);
     reel.phase = "brake";
+    if (usesChapter1CommandSurface()) {
+      // Like the independent cabinets, latch the selected symbols in this
+      // input task. Decorative braking/settlement must not delay their paint.
+      reel.pos = core.mod(reel.brakeTo, reel.length);
+      reel.band.style.setProperty("--q", String(reel.pos + reel.length));
+      markWindowCells();
+      setBlur(reel, false);
+      reel.node.dataset.reelPhase = "brake";
+    }
     spinSession.recordStop(currentSpin, reel.col, {
       natural,
       index: decision.index,
@@ -2589,6 +2603,9 @@
       els.shell.dataset.reelState = "resolving";
     }
     audio.reelStop(reel.col, decision.slip);
+    if (usesChapter1CommandSurface() && currentStageScript().id === "treasure") {
+      audio.roleStop?.(currentSpin?.flag || state.flag || "none", state.reelsStopped.filter(Boolean).length, reel.col, { immediate: true });
+    }
     if (dragon.active) dragon.accepted(currentSpin.id, reel.col);
     publishReelEvent("mimi:reel-input", {
       type: "stop-accepted",
@@ -2620,7 +2637,7 @@
     syncGrid();
     impact(reel.col);
     reel.node.classList.remove("is-landing");
-    void reel.node.offsetWidth;
+    if (!usesChapter1CommandSurface()) void reel.node.offsetWidth;
     reel.node.classList.add("is-landing");
     reel.node.dataset.reelPhase = "stopped";
     window.setTimeout(() => reel.node.classList.remove("is-landing"), 420);
@@ -2629,11 +2646,11 @@
       // 大きく滑った = 制御が働いた合図。実機の「スベリ」演出。
       reel.node.classList.add("is-slipped");
       window.setTimeout(() => reel.node.classList.remove("is-slipped"), 620);
-      audio.cue("notice");
+      if (!usesChapter1CommandSurface()) audio.cue("notice");
     }
 
     const roleStopCount = Math.min(3, currentSpin?.stops?.filter(stop => stop?.settled).length || 0);
-    if (currentStageScript().id === "treasure") audio.roleStop?.(currentSpin?.flag || state.flag || "none", roleStopCount, reel.col);
+    if (!usesChapter1CommandSurface() && currentStageScript().id === "treasure") audio.roleStop?.(currentSpin?.flag || state.flag || "none", roleStopCount, reel.col);
     commitChapter1StopDeal(reel.col, roleStopCount);
     syncChapter1PokerTable(roleStopCount, "pending");
 
@@ -4262,7 +4279,7 @@
   function impact(col) {
     if (isMotionReduced()) return;
     els.reelFrame.classList.remove("shake");
-    void els.reelFrame.offsetWidth;
+    if (!usesChapter1CommandSurface()) void els.reelFrame.offsetWidth;
     els.reelFrame.classList.add("shake");
     const x = 24 + col * 26;
     for (let i = 0; i < 8; i += 1) {
@@ -4403,26 +4420,33 @@
   function bind() {
     window.addEventListener("mimi:presentation-lifecycle", handlePresentationLifecycle);
     window.addEventListener("mimi:casino-arrival", announceChapter1Opponent);
-    const onPress = (el, fn) => {
+    const onPress = (el, fn, instant = false) => {
       let pointerHandled = false;
-      el.addEventListener("pointerup", event => {
-        if (dragon.active && (el.disabled || el.getAttribute("aria-disabled") === "true")) return;
+      const pressOnDown = instant && usesChapter1CommandSurface();
+      el.addEventListener(pressOnDown ? 'pointerdown' : 'pointerup', event => {
+        if (event.button !== 0 || event.isPrimary === false) return;
+        if (dragon.active && (el.disabled || el.getAttribute('aria-disabled') === 'true')) return;
         event.preventDefault();
         pointerHandled = true;
         fn();
-        window.setTimeout(() => { pointerHandled = false; }, 350);
+        if (!pressOnDown) window.setTimeout(() => { pointerHandled = false; }, 350);
       });
-      el.addEventListener("click", event => {
-        if (dragon.active && (el.disabled || el.getAttribute("aria-disabled") === "true")) return;
-        if (pointerHandled) {
-          event.preventDefault();
-          return;
-        }
+      el.addEventListener('click', event => {
+        if (pointerHandled) { event.preventDefault(); pointerHandled = false; return; }
+        if (dragon.active && (el.disabled || el.getAttribute('aria-disabled') === 'true')) return;
         fn();
+      });
+      el.addEventListener('pointercancel', () => { pointerHandled = false; });
+      if (pressOnDown) el.addEventListener('keydown', event => {
+        if (!['Space', 'Enter'].includes(event.code)) return;
+        event.preventDefault();
+        if (event.repeat) return;
+        if (dragon.active && (el.disabled || el.getAttribute('aria-disabled') === 'true')) return;
+        pointerHandled = false; fn();
       });
     };
 
-    onPress(els.spin, startSpin);
+    onPress(els.spin, startSpin, true);
     onPress(els.push, () => {
       if (dragon.active && dragon.push()) return;
       if (advanceChapter1Command()) return;
@@ -4431,7 +4455,7 @@
         return;
       }
       stopNextReel();
-    });
+    }, true);
     onPress(els.betDown, () => changeBet(-1));
     onPress(els.betUp, () => changeBet(1));
     onPress(els.auto, () => {
@@ -4481,7 +4505,7 @@
       startSpin();
     });
     els.stopButtons.forEach(button => {
-      onPress(button, () => stopReel(Number(button.dataset.stop)));
+      onPress(button, () => stopReel(Number(button.dataset.stop)), true);
     });
     window.addEventListener("keydown", event => {
       if (!els.helpOverlay.hidden) {
